@@ -28,7 +28,7 @@ $sg->dismiss();
 
 =end codeNNN
 
-M<B::Hooks::EndOfScope> 使用 M<Variable::Magic> 中的魔术 B<$^H>. 采用该模块的列表中 A<http://cpants.perl.org/dist/used_by/B-Hooks-EndOfScope> 最常见的有 M<Catalyst::Runtime>, M<Devel::Declare>, M<namespace::clean> 等。
+M<B::Hooks::EndOfScope> 使用 M<Variable::Magic> 中的魔术 B<$^H>. 采用该模块的列表中 A<http://cpants.perl.org/dist/used_by/B-Hooks-EndOfScope> 有 M<Catalyst::Runtime>, M<Devel::Declare>, M<namespace::clean> 等。
 
 =begin codeNNN
 
