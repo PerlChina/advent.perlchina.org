@@ -6,6 +6,30 @@
 
 =for advent_author Fayland Lam
 
-CPAN 上有很多支持在 scope 结束后运行某些代码，比如 M<Scope::Guard>, M<Hook::Scope>, M<B::Hooks::EndOfScope>
+CPAN 上有很多支持在 scope 结束后运行某些代码，其中最常用的是 M<Scope::Guard> 和 M<B::Hooks::EndOfScope>
 
-M<Scope::Guard>
+M<Scope::Guard> 采用最常见的 B<DESTROY> 方法。采用该模块的列表中 A<http://cpants.perl.org/dist/used_by/Scope-Guard> 有 M<DBIx::Class>, M<Devel::GlobalDestruction>, M<autobox> 等。
+
+=begin codeNNN
+
+use Net::FTP;
+use Scope::Guard;
+
+my $err;
+my $sg = Scope::Guard->new(
+    sub { email_error($err); die $err; }
+);
+my $ftp = Net::FTP->new($host, Debug => 0)
+  or do { return $err = "Cannot connect to $host: $@"; };
+$ftp->login($user, $pass)
+  or do { return $err = "Cannot login " . $ftp->message; };
+
+$sg->dismiss();
+
+=end codeNNN
+
+M<B::Hooks::EndOfScope> 使用 M<Variable::Magic> 中的魔术 B<$^H>. 采用该模块的列表中 A<http://cpants.perl.org/dist/used_by/B-Hooks-EndOfScope> 最常见的有 M<Catalyst::Runtime>, M<Devel::Declare>, M<namespace::clean> 等。
+
+=begin codeNNN
+
+=end codeNNN
