@@ -6,9 +6,9 @@
 
 =for advent_author Fayland Lam
 
-CPAN ���кܶ�֧���� scope ����������ĳЩ���룬������õ��� M<Scope::Guard> �� M<B::Hooks::EndOfScope>
+CPAN 上有很多支持在 scope 结束后运行某些代码，其中最常用的是 M<Scope::Guard> 和 M<B::Hooks::EndOfScope>
 
-M<Scope::Guard> ��������� B<DESTROY> ���������ø�ģ����б��� A<http://cpants.perl.org/dist/used_by/Scope-Guard> �� M<DBIx::Class>, M<Devel::GlobalDestruction>, M<autobox> �ȡ�
+M<Scope::Guard> 采用最常见的 B<DESTROY> 方法。采用该模块的列表中 A<http://cpants.perl.org/dist/used_by/Scope-Guard> 有 M<DBIx::Class>, M<Devel::GlobalDestruction>, M<autobox> 等。
 
 =begin codeNNN
 
@@ -28,7 +28,7 @@ $sg->dismiss();
 
 =end codeNNN
 
-M<B::Hooks::EndOfScope> ʹ�� M<Variable::Magic> �е�ħ�� B<$^H>. ���ø�ģ����б��� A<http://cpants.perl.org/dist/used_by/B-Hooks-EndOfScope> ������� M<Catalyst::Runtime>, M<Devel::Declare>, M<namespace::clean> �ȡ�
+M<B::Hooks::EndOfScope> 使用 M<Variable::Magic> 中的魔术 B<$^H>. 采用该模块的列表中 A<http://cpants.perl.org/dist/used_by/B-Hooks-EndOfScope> 最常见的有 M<Catalyst::Runtime>, M<Devel::Declare>, M<namespace::clean> 等。
 
 =begin codeNNN
 
