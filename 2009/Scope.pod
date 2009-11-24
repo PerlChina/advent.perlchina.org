@@ -1,0 +1,11 @@
+=for advent_year 2009
+
+=for advent_day XX
+
+=for advent_title Scope
+
+=for advent_author Fayland Lam
+
+CPAN 上有很多支持在 scope 结束后运行某些代码，比如 M<Scope::Guard>, M<Hook::Scope>, M<B::Hooks::EndOfScope>
+
+M<Scope::Guard>
