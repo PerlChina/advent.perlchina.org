@@ -1,0 +1,12 @@
+=for advent_year 2009
+
+=for advent_day XX
+
+=for advent_title Padre
+
+=for advent_author Fayland Lam
+
+如果您在寻找一个免费的，高度可扩展的，对 Perl 拥有良好支持的 IDE, 那么 M<Padre> 是个很不错的选择。
+
+Padre 由 Gábor Szabó 发起，使用 Perl 编写，主要目标是给 Perl 开发者一个良好的开发环境。主页在 A<http://padre.perlide.org/>
+
