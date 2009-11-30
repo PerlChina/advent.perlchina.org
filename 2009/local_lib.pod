@@ -1,6 +1,6 @@
 =for advent_year 2009
 
-=for advent_day XX
+=for advent_day 1
 
 =for advent_title local::lib
 
@@ -59,4 +59,4 @@ use lib '/home/username/perl5/lib/perl5/x86_64-linux-gnu-thread-multi/';
 
 =end codeNNN
 
-谢谢。
+更多内容请参阅 A<http://search.cpan.org/dist/local-lib/lib/local/lib.pm>, 谢谢。
