@@ -42,11 +42,19 @@ source ~/.bashrc
 
 或者在命令行执行
 
+=begin pre
+
 [perler]$ source ~/.bashrc
+
+=end pre
 
 步骤四，安装模块等
 
+=begin pre
+
 [perler]$ cpan Moose
+
+=end pre
 
 模块安装与您在 root 下安装流程一样，区别在于它将安装模块到 ~/perl5/lib/perl5/ 和 ~/perl5/lib/perl5/x86_64-linux-gnu-thread-multi/ （这个目录在不同的机子下可能不一样，请通过 ls ~/perl5/lib/perl5/ 获取）
 
