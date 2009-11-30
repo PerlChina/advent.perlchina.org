@@ -1,0 +1,72 @@
+=for advent_year 2009
+
+=for advent_day 1
+
+=for advent_title local::lib
+
+=for advent_author Fayland Lam
+
+=encoding utf8
+
+A<local::lib> 是我最推荐的一个模块。
+
+当您想安装一个模块，却没有 root 权限的时候（在某个虚拟主机下）或者您不想覆盖该模块时，local::lib 应该是您所能想到的第一个模块。
+
+以 dreamhost 主机为例，
+
+步骤一，找到下载链接。打开 A<http://search.cpan.org/dist/local-lib/> 得到下载链接 http://search.cpan.org/CPAN/authors/id/A/AP/APEIRON/local-lib-1.004009.tar.gz
+
+步骤二，执行命令。
+
+=begin pre
+
+[perler]$ wget http://search.cpan.org/CPAN/authors/id/A/AP/APEIRON/local-lib-1.004009.tar.gz
+[perler]$ tar zxf local-lib-1.004009.tar.gz
+[perler]$ cd local-lib-1.004009
+[perler]$ perl Makefile.PL --bootstrap
+[perler]$ make test && make install
+
+=end pre
+
+步骤三，设置系统环境
+
+=begin pre
+
+echo 'eval $(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib)' >>~/.bashrc
+
+=end pre
+
+您可能想登录时就直接添加 local::lib 目录，添加下面一行到 ~/.bash_profile
+
+source ~/.bashrc
+
+或者在命令行执行
+
+=begin pre
+
+[perler]$ source ~/.bashrc
+
+=end pre
+
+步骤四，安装模块等
+
+=begin pre
+
+[perler]$ cpan Moose
+
+=end pre
+
+模块安装与您在 root 下安装流程一样，区别在于它将安装模块到 ~/perl5/lib/perl5/ 和 ~/perl5/lib/perl5/x86_64-linux-gnu-thread-multi/ （这个目录在不同的机子下可能不一样，请通过 ls ~/perl5/lib/perl5/ 获取）
+
+一般在 source ~/.bashrc 之后，您就可以在 pl 里使用安装过的模块如 use Moose;
+
+但是如果在 .cgi 环境下，请通过 use lib 来手动添加
+
+=begin codeNNN
+
+use lib '/home/username/perl5/lib/perl5/';
+use lib '/home/username/perl5/lib/perl5/x86_64-linux-gnu-thread-multi/';
+
+=end codeNNN
+
+更多内容请参阅 A<http://search.cpan.org/dist/local-lib/lib/local/lib.pm>, 谢谢。
