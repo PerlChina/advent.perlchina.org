@@ -6,17 +6,19 @@
 
 =for advent_author Fayland Lam
 
-A<local::lib> ÊÇÎÒ×îÍÆ¼öµÄÒ»¸öÄ£¿é¡£
+=encoding utf8
 
-µ«ÄúÏë°²×°Ò»¸öÄ£¿é£¬È´Ã»ÓĞ root È¨ÏŞµÄÊ±ºò£¨ÔÚÄ³¸öĞéÄâÖ÷»úÏÂ£©»òÕßÄú²»Ïë¸²¸Ç¸ÃÄ£¿éÊ±£¬local::lib Ó¦¸ÃÊÇÄúËùÄÜÏëµ½µÄµÚÒ»¸öÄ£¿é¡£
+A<local::lib> æ˜¯æˆ‘æœ€æ¨èçš„ä¸€ä¸ªæ¨¡å—ã€‚
 
-ÒÔ dreamhost Ö÷»úÎªÀı£¬
+ä½†æ‚¨æƒ³å®‰è£…ä¸€ä¸ªæ¨¡å—ï¼Œå´æ²¡æœ‰ root æƒé™çš„æ—¶å€™ï¼ˆåœ¨æŸä¸ªè™šæ‹Ÿä¸»æœºä¸‹ï¼‰æˆ–è€…æ‚¨ä¸æƒ³è¦†ç›–è¯¥æ¨¡å—æ—¶ï¼Œlocal::lib åº”è¯¥æ˜¯æ‚¨æ‰€èƒ½æƒ³åˆ°çš„ç¬¬ä¸€ä¸ªæ¨¡å—ã€‚
 
-²½ÖèÒ»£¬ÕÒµ½ÏÂÔØÁ´½Ó¡£´ò¿ª A<http://search.cpan.org/dist/local-lib/> µÃµ½ÏÂÔØÁ´½Ó C<http://search.cpan.org/CPAN/authors/id/A/AP/APEIRON/local-lib-1.004009.tar.gz>
+ä»¥ dreamhost ä¸»æœºä¸ºä¾‹ï¼Œ
 
-²½Öè¶ş£¬Ö´ĞĞÃüÁî¡£
+æ­¥éª¤ä¸€ï¼Œæ‰¾åˆ°ä¸‹è½½é“¾æ¥ã€‚æ‰“å¼€ A<http://search.cpan.org/dist/local-lib/> å¾—åˆ°ä¸‹è½½é“¾æ¥ http://search.cpan.org/CPAN/authors/id/A/AP/APEIRON/local-lib-1.004009.tar.gz
 
-=begin codeNNN
+æ­¥éª¤äºŒï¼Œæ‰§è¡Œå‘½ä»¤ã€‚
+
+=begin pre
 
 [perler]$ wget http://search.cpan.org/CPAN/authors/id/A/AP/APEIRON/local-lib-1.004009.tar.gz
 [perler]$ tar zxf local-lib-1.004009.tar.gz
@@ -24,33 +26,33 @@ A<local::lib> ÊÇÎÒ×îÍÆ¼öµÄÒ»¸öÄ£¿é¡£
 [perler]$ perl Makefile.PL --bootstrap
 [perler]$ make test && make install
 
-=end codeNNN
+=end pre
 
-²½ÖèÈı£¬ÉèÖÃÏµÍ³»·¾³
+æ­¥éª¤ä¸‰ï¼Œè®¾ç½®ç³»ç»Ÿç¯å¢ƒ
 
-=begin code
+=begin pre
 
 echo 'eval $(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib)' >>~/.bashrc
 
-=end code
+=end pre
 
-Äú¿ÉÄÜÏëµÇÂ¼Ê±¾ÍÖ±½ÓÌí¼Ó local::lib Ä¿Â¼£¬Ìí¼ÓÏÂÃæÒ»ĞĞµ½ ~/.bash_profile
+æ‚¨å¯èƒ½æƒ³ç™»å½•æ—¶å°±ç›´æ¥æ·»åŠ  local::lib ç›®å½•ï¼Œæ·»åŠ ä¸‹é¢ä¸€è¡Œåˆ° ~/.bash_profile
 
 source ~/.bashrc
 
-»òÕßÔÚÃüÁîĞĞÖ´ĞĞ
+æˆ–è€…åœ¨å‘½ä»¤è¡Œæ‰§è¡Œ
 
 [perler]$ source ~/.bashrc
 
-²½ÖèËÄ£¬°²×°Ä£¿éµÈ
+æ­¥éª¤å››ï¼Œå®‰è£…æ¨¡å—ç­‰
 
 [perler]$ cpan Moose
 
-Ä£¿é°²×°ÓëÄúÔÚ root ÏÂ°²×°Á÷³ÌÒ»Ñù£¬Çø±ğÔÚÓÚËü½«°²×°Ä£¿éµ½ ~/perl5/lib/perl5/ ºÍ ~/perl5/lib/perl5/x86_64-linux-gnu-thread-multi/ £¨Õâ¸öÄ¿Â¼ÔÚ²»Í¬µÄ»ú×ÓÏÂ¿ÉÄÜ²»Ò»Ñù£¬ÇëÍ¨¹ı ls ~/perl5/lib/perl5/ »ñÈ¡£©
+æ¨¡å—å®‰è£…ä¸æ‚¨åœ¨ root ä¸‹å®‰è£…æµç¨‹ä¸€æ ·ï¼ŒåŒºåˆ«åœ¨äºå®ƒå°†å®‰è£…æ¨¡å—åˆ° ~/perl5/lib/perl5/ å’Œ ~/perl5/lib/perl5/x86_64-linux-gnu-thread-multi/ ï¼ˆè¿™ä¸ªç›®å½•åœ¨ä¸åŒçš„æœºå­ä¸‹å¯èƒ½ä¸ä¸€æ ·ï¼Œè¯·é€šè¿‡ ls ~/perl5/lib/perl5/ è·å–ï¼‰
 
-Ò»°ãÔÚ source ~/.bashrc Ö®ºó£¬Äú¾Í¿ÉÒÔÔÚ pl ÀïÊ¹ÓÃ°²×°¹ıµÄÄ£¿éÈç use Moose;
+ä¸€èˆ¬åœ¨ source ~/.bashrc ä¹‹åï¼Œæ‚¨å°±å¯ä»¥åœ¨ pl é‡Œä½¿ç”¨å®‰è£…è¿‡çš„æ¨¡å—å¦‚ use Moose;
 
-µ«ÊÇÈç¹ûÔÚ .cgi »·¾³ÏÂ£¬ÇëÍ¨¹ı use lib À´ÊÖ¶¯Ìí¼Ó
+ä½†æ˜¯å¦‚æœåœ¨ .cgi ç¯å¢ƒä¸‹ï¼Œè¯·é€šè¿‡ use lib æ¥æ‰‹åŠ¨æ·»åŠ 
 
 =begin codeNNN
 
@@ -59,4 +61,4 @@ use lib '/home/username/perl5/lib/perl5/x86_64-linux-gnu-thread-multi/';
 
 =end codeNNN
 
-¸ü¶àÄÚÈİÇë²ÎÔÄ A<http://search.cpan.org/dist/local-lib/lib/local/lib.pm>, Ğ»Ğ»¡£
+æ›´å¤šå†…å®¹è¯·å‚é˜… A<http://search.cpan.org/dist/local-lib/lib/local/lib.pm>, è°¢è°¢ã€‚
