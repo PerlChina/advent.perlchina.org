@@ -8,7 +8,7 @@
 
 A<local::lib> 是我最推荐的一个模块。
 
-但你想安装一个模块，却没有 root 权限的时候（在某个虚拟主机下）或者你不想覆盖该模块时，local::lib 应该是您所能想到的第一个模块。
+但您想安装一个模块，却没有 root 权限的时候（在某个虚拟主机下）或者您不想覆盖该模块时，local::lib 应该是您所能想到的第一个模块。
 
 以 dreamhost 主机为例，
 
@@ -34,7 +34,7 @@ echo 'eval $(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib)' >>~/.bashrc
 
 =end code
 
-你可能想登录时就直接添加 local::lib 目录，添加下面一行到 ~/.bash_profile
+您可能想登录时就直接添加 local::lib 目录，添加下面一行到 ~/.bash_profile
 
 source ~/.bashrc
 
