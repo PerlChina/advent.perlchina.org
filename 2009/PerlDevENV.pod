@@ -38,7 +38,7 @@ $ cd perl-5.11.2
 
 =begin pre
 
-$ Configure -Dusedevel -Dprefix=~/perl -des
+$ Configure -Dusedevel -Dprefix=$HOME/perl -des
 
 =end pre
 
@@ -47,7 +47,7 @@ $ Configure -Dusedevel -Dprefix=~/perl -des
 =begin pre
 
 -Dusedevel 使用开发版本的 perl，因为我们这个是 devel 版本，所以得加上这个
--Dprefix=~/perl 指定我们自己编译的这个 perl 将被安装到当前用户家目录下的 perl 目录中
+-Dprefix=$HOME/perl 指定我们自己编译的这个 perl 将被安装到当前用户家目录下的 perl 目录中
 -des 指定其他配置参数采用 perl 默认配置
 
 =end pre
