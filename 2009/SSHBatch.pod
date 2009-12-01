@@ -1,0 +1,18 @@
+=for advent_year 2009
+
+=for advent_day XX
+
+=for advent_title SSH::Batch
+
+=for advent_author cnhackTNT
+
+介绍 M<SSH::Batch>
+
+=begin codeNNN
+
+
+=end codeNNN
+
+=begin codeNNN
+
+=end codeNNN
