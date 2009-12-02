@@ -70,7 +70,8 @@ $ make install
 
 =begin pre
 
-alias devperl='PATH=${PATH_NORMAL:-$PATH};export PATH_NORMAL=$PATH;export PATH=/home/dev/perl/bin:$PATH;echo -e "\nPATH=$PATH\nPATH_NORMAL=$PATH_NORMAL\nDevperl!\n"'
+# 如果你之前编译 perl 时采用了不同的 prefix，请根据自己的环境做相应修改
+alias devperl='PATH=${PATH_NORMAL:-$PATH};export PATH_NORMAL=$PATH;export PATH=$HOME/perl/bin:$PATH;echo -e "\nPATH=$PATH\nPATH_NORMAL=$PATH_NORMAL\nDevperl!\n"'
 alias sysperl='PATH=${PATH_NORMAL:-$PATH};export PATH=$PATH;unset PATH_NORMAL;echo -e "\nPATH=$PATH\nSysperl!\n"'
 
 =end pre
