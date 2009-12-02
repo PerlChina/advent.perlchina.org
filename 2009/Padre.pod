@@ -10,3 +10,27 @@
 
 Padre 由 Gábor Szabó 发起，使用 Perl 编写，主要目标是给 Perl 开发者一个良好的开发环境。主页在 A<http://padre.perlide.org/>
 
+以下是使用 Padre 的几大理由：
+
+一，它由 Perl 所编写。
+
+由 Perl 编写意味着高度可扩展，您可以使用您最熟悉和喜欢的 Perl 来编写插件，满足自己的需求。
+
+二，初学者模式。
+
+它能自动识别指出一些初学者常见的错误。
+
+还有一些初学者常用的功能如变量替换，查找变量申明，括号对齐和补齐等。
+
+三，丰富的功能。
+
+通过一些插件扩展，您能 Tidy HTML/XML/JavaScript/Perl, 验证 HTML/XML/CSS 错误，检查拼写语法等。
+
+针对 Perl, 拥有 Ecliptic, 调试器，Critic, ClassSniff, DataWalker, REPL, PAR 等丰富插件。
+
+常见的框架支持，Catalyst, Mojolicious 等。
+
+四，Perl 6
+
+Perl 6 高亮语法支持，Parrot 和 Rakudo 支持。
+
