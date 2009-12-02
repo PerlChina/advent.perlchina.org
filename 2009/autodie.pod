@@ -1,0 +1,10 @@
+=for advent_year 2009
+
+=for advent_day XX
+
+=for advent_title autodie
+
+=for advent_author Fayland Lam
+
+A<autodie>
+
