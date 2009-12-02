@@ -34,7 +34,7 @@ Padre 由 Gábor Szabó 发起，使用 Perl 编写，主要目标是给 Perl �
 
 Perl 6 高亮语法支持，Parrot 和 Rakudo 支持。
 
-M<Padre> 的下载安装可以参考 L<http://padre.perlide.org/download.html>, 大部分的操作系统都有直接安装文件。
+M<Padre> 的下载安装可以参考 A<http://padre.perlide.org/download.html>, 大部分的操作系统都有直接安装文件。
 
 截屏参考 A<http://padre.perlide.org/screenshots.html>
 
