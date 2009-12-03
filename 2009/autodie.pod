@@ -6,7 +6,7 @@
 
 =for advent_author Fayland Lam
 
-ÔÚ±àÐ´ Perl ½Å±¾µÄÊ±ºò£¬ÎÒÃÇ¾­³£Ê¹ÓÃÀàËÆÏÂÃæµÄ´úÂëÀ´¼ì²éÄÚÖÃº¯Êý£¨Èç open£©ÊÇ·ñ³É¹¦¡£
+åœ¨ç¼–å†™ Perl è„šæœ¬çš„æ—¶å€™ï¼Œæˆ‘ä»¬ç»å¸¸ä½¿ç”¨ç±»ä¼¼ä¸‹é¢çš„ä»£ç æ¥æ£€æŸ¥å†…ç½®å‡½æ•°ï¼ˆå¦‚ openï¼‰æ˜¯å¦æˆåŠŸã€‚
 
 =begin code
 
@@ -14,7 +14,7 @@ open(my $fh, '<', $filename) or die "Can't open $filename - $!";
 
 =end code
 
-ÎÒÃÇ¾­³£·¢ÏÖÓÐÌ«¶àµØ·½ÐèÒªÖØ¸´Ð´£¬»òÕß¾­³£ÒÅÍüÁËÕâÑùÐ´¡£ÏëÍµÀÁ£¿ÕÒ A<autodie>.
+æˆ‘ä»¬ç»å¸¸å‘çŽ°æœ‰å¤ªå¤šåœ°æ–¹éœ€è¦é‡å¤å†™ï¼Œæˆ–è€…ç»å¸¸é—å¿˜äº†è¿™æ ·å†™ã€‚æƒ³å·æ‡’ï¼Ÿæ‰¾ A<autodie>.
 
 =begin codeNNN
 
@@ -35,7 +35,7 @@ if ($@ and $@->isa('autodie::exception')) {
 
 =end codeNNN
 
-autodie ²»½ö½ö¶ÔÏµÍ³º¯ÊýÆð×÷ÓÃ£¬»¹¿ÉÒÔ¶Ô×Ô¶¨Òåº¯ÊýÆä×÷ÓÃ¡£
+autodie ä¸ä»…ä»…å¯¹ç³»ç»Ÿå‡½æ•°èµ·ä½œç”¨ï¼Œè¿˜å¯ä»¥å¯¹è‡ªå®šä¹‰å‡½æ•°å…¶ä½œç”¨ã€‚
 
 =begin code
 
@@ -46,7 +46,7 @@ move('noexists.txt', 'another.txt');
 
 =end code
 
-µ±ÒÆ¶¯Ê§°ÜÊ±»á×Ô¶¯±¨´í£¬Èç
+å½“ç§»åŠ¨å¤±è´¥æ—¶ä¼šè‡ªåŠ¨æŠ¥é”™ï¼Œå¦‚
 
 =begin pre
 
@@ -54,6 +54,6 @@ Can't move('noexists.txt', 'another.txt'): Bad file descriptor at t.pl line 9
 
 =end pre
 
-¸ü¶àµÄÇë²Î¿¼ A<autodie> doc ºÍ A<http://perltraining.com.au/tips/2008-08-20.html|Perl Training Australia - autodie>
+æ›´å¤šçš„è¯·å‚è€ƒ A<autodie> doc å’Œ A<http://perltraining.com.au/tips/2008-08-20.html|Perl Training Australia - autodie>
 
-Ð»Ð»¡£
+è°¢è°¢ã€‚
