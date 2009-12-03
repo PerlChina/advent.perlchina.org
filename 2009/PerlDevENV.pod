@@ -74,6 +74,10 @@ $ make install
 alias devperl='PATH=${PATH_NORMAL:-$PATH};export PATH_NORMAL=$PATH;export PATH=$HOME/perl/bin:$PATH;echo -e "\nPATH=$PATH\nPATH_NORMAL=$PATH_NORMAL\nDevperl!\n"'
 alias sysperl='PATH=${PATH_NORMAL:-$PATH};export PATH=$PATH;unset PATH_NORMAL;echo -e "\nPATH=$PATH\nSysperl!\n"'
 
+# 你可能还需要改一下编译完成后 $HOME/perl/bin 目录下可执行文件的名字
+$ cd $HOME/perl/bin
+$ ls | perl -ne 'chomp; ($n)=$_=~ /(.+?)5\.11\.2/g; `ln -s $_ $n` if $n'
+
 =end pre
 
 这样，在默认情况下，你使用的都会是系统的 perl, 而一旦你想开始做些 perl 开发，或者通过 cpan 安装新模块，便可以在命令行敲入 B<devperl> 命令然后回车，立马就切换过去了。此时你无论运行 cpan, perl 或是 perldoc, 调用的都是你自己编译的 perl 中的相应程序，而且这时通过 cpan 安装的模块也通通会保存到 B<~/perl> 下的相应目录里，不会弄乱你的系统。
