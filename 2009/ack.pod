@@ -1,6 +1,6 @@
 =for advent_year 2009
 
-=for advent_day XX
+=for advent_day 6
 
 =for advent_title ack
 
