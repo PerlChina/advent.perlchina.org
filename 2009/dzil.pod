@@ -6,5 +6,13 @@
 
 =for advent_author Fayland Lam
 
-A<Dist::Zilla>
+A<Dist::Zilla> 对模块作者来说是件利器。
+
+它与 M<ExtUtils::MakeMaker>, M<Module::Build>, M<Module::Install> 不同，它不是安装模块。它们的共同点是都可以打包一个 CPAN .tar.gz
+
+它与 M<Module::Starter> 不同。它不仅仅可以构建模块的框架。
+
+它与 M<ShipIt> 不同。它不仅仅可以发布代码。
+
+它是所有的综合体。它可以构建框架，打包代码并且发布代码，它最大的优点在于节省您的时间。让你专心编写代码而无需考虑多余的事情。
 
