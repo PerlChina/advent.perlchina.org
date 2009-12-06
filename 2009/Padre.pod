@@ -24,15 +24,15 @@ Padre 由 Gábor Szabó 发起，使用 Perl 编写，主要目标是给 Perl �
 
 三，丰富的功能。
 
-通过一些插件扩展，您能 Tidy HTML/XML/JavaScript/Perl, 验证 HTML/XML/CSS 错误，检查拼写语法等。
+通过一些插件扩展，您能 Tidy A<http://search.cpan.org/dist/Padre-Plugin-HTML/|HTML>/A<http://search.cpan.org/dist/Padre-Plugin-XML/|XML>/A<http://search.cpan.org/dist/Padre-Plugin-JavaScript/|JavaScript>/Perl, 验证 HTML/XML/CSS 错误，检查拼写语法等。
 
-针对 Perl, 拥有 Ecliptic, 调试器，Critic, ClassSniff, DataWalker, REPL, PAR 等丰富插件。
+针对 Perl, 拥有 A<http://search.cpan.org/dist/Padre-Plugin-Ecliptic/|Ecliptic>, A<http://search.cpan.org/dist/Padre-Plugin-Debugger/|调试器>，A<http://search.cpan.org/dist/Padre-Plugin-PerlCritic/|Critic>, A<http://search.cpan.org/dist/Padre-Plugin-ClassSniff/|ClassSniff>, A<http://search.cpan.org/dist/Padre-Plugin-DataWalker/|DataWalker>, A<http://search.cpan.org/dist/Padre-Plugin-REPL/|REPL>, A<http://search.cpan.org/dist/Padre-Plugin-PAR/|PAR> 等丰富插件。
 
-常见的框架支持，Catalyst, Mojolicious 等。
+常见的框架支持，A<http://search.cpan.org/dist/Padre-Plugin-Catalyst/|Catalyst>, A<http://search.cpan.org/dist/Padre-Plugin-Mojolicious/|Mojolicious> 等。
 
 四，Perl 6
 
-Perl 6 高亮语法支持，Parrot 和 Rakudo 支持。
+A<http://search.cpan.org/dist/Padre-Plugin-Perl6/|Perl 6> 高亮语法支持，Parrot 和 Rakudo 支持。
 
 M<Padre> 的下载安装可以参考 A<http://padre.perlide.org/download.html>, 大部分的操作系统都有直接安装文件。
 
