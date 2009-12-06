@@ -1,6 +1,6 @@
 =for advent_year 2009
 
-=for advent_day XX
+=for advent_day 7
 
 =for advent_title Padre
 
@@ -28,7 +28,7 @@ Padre 由 Gábor Szabó 发起，使用 Perl 编写，主要目标是给 Perl �
 
 针对 Perl, 拥有 A<http://search.cpan.org/dist/Padre-Plugin-Ecliptic/|Ecliptic>, A<http://search.cpan.org/dist/Padre-Plugin-Debugger/|调试器>，A<http://search.cpan.org/dist/Padre-Plugin-PerlCritic/|Critic>, A<http://search.cpan.org/dist/Padre-Plugin-ClassSniff/|ClassSniff>, A<http://search.cpan.org/dist/Padre-Plugin-DataWalker/|DataWalker>, A<http://search.cpan.org/dist/Padre-Plugin-REPL/|REPL>, A<http://search.cpan.org/dist/Padre-Plugin-PAR/|PAR> 等丰富插件。
 
-常见的框架支持，A<http://search.cpan.org/dist/Padre-Plugin-Catalyst/|Catalyst>, A<http://search.cpan.org/dist/Padre-Plugin-Mojolicious/|Mojolicious> 等。
+常见的框架支持 A<http://search.cpan.org/dist/Padre-Plugin-Catalyst/|Catalyst>, A<http://search.cpan.org/dist/Padre-Plugin-Mojolicious/|Mojolicious> 等。
 
 四，Perl 6
 
