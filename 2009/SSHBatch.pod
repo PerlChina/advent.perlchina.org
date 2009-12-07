@@ -213,6 +213,7 @@ $ key2nodes -u cnhacktnt '{allcluster}'
 =end pre
 
 然后程序会问你一次密码，你输入就OK了。
+建议在执行这命令前，修改你的 /etc/ssh/ssh_config 配置文件，加上 I<StrictHostKeyChecking no> 配置项，不然的话，如果对方机器不在你的本地的 I<known_hosts> 里面，那么程序会运行不正常, 为安全起见，在成功把 I<key> 传过去后，可以把该配置项的 B<no> 改为 B<ask>。
 
 如果有任何问题，请来 A<http://groups.google.com/group/perlchina|Perlchina 的邮件列表>询问。（或发送任意邮件到 B<perlchina+subscribe@googlegroups.com> 申请加入列表）
 
