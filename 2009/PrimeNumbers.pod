@@ -1,0 +1,106 @@
+=for advent_year 2009
+
+=for advent_day 8
+
+=for advent_title Prime Numbers
+
+=for advent_author Joe Jiang
+
+质数的计算是一个曾经非常有趣的话题，现在对我们来说也还是一个稍微有些难度的编程训练。下面我们就用这个话题来看看 Perl 和其他语言解决数学问题的能力。当然首先我们得有个基准程序：
+
+=begin pre
+
+% matho-primes 1 10
+2
+3
+5
+7
+
+=end pre
+
+如果你在运行类似 Debian 的系统，这个程序可以从 apt-get install mathomatic-primes 获得。它是 mathomatic 软件包的一个插件，恰好可以满足我们的需求。
+
+然后，我们可以用 Perl 来实现同样的功能，当然为了好玩，这会是一个 One-liner 脚本（其实是个 bash function）：
+
+=begin pre
+
+prime ()
+{
+    perl -e '@screen=(0,0,2..$ARGV[0]); map { my $p=$_; if ($screen[$p]) { $screen[$_ * $p]=0 for 2..$#screen/$p }} 2..sqrt($#screen); print qq($_\n) for grep {$_} @screen' $1
+}
+
+% prime 10
+2
+3
+5
+7
+
+=end pre
+
+这个程序的原理是开个大数组（名叫 @screen ），并把其中下标为质数的元素置为下标本身。质数的定义是从 2 到 sqrt() 都无法整除的数字，所以一旦发现质数，就可以把他的若干倍数值下标的元素都置为 0。最后数组中剩下不为 0 的元素就是质数。
+
+那么这个程序的速度如何呢？用 time 来测试对比一下：
+
+=begin pre
+
+$ time matho-primes 1 1000000 > /dev/null
+
+real    0m0.151s
+user    0m0.152s
+sys    0m0.004s
+
+$ time prime 1000000 > /dev/null
+
+real    0m0.846s
+user    0m0.768s
+sys    0m0.076s
+
+=end pre
+
+在第二次运行速度的比较来看，我们的程序大概是 C 语言程序的 1/6 速度。坦白说，自己觉得这个速度还不错。
+
+那么其他语言呢？在网上找来一个 Python 版本，用作对比：
+
+=begin pre
+
+$ python
+Python 2.6.2 (release26-maint, Apr 19 2009, 01:58:18)
+[GCC 4.3.3] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> aux = {}; [aux.setdefault(p, p) for p in range(2, 10) if 0 not in [p%d for d in aux if p>=d*d]];
+[2, 3, 5, 7]
+
+% time python -c 'aux = {}; [aux.setdefault(p, p) for p in range(2, 1000000) if 0 not in [p%d for d in aux if p>=d*d]];'
+...
+
+=end pre
+
+应该说，Python 的 for ... if ... 后缀语法确实很酷。但是直到文章发表为止，脚本还没有结束。不知道为什么这个科学家发明的语言在数学上不太便捷。欢迎大家踊跃指出原因。
+
+另外又在网上找到一段 Haskell 程序，应该承认这是非常简短的程序：
+
+=begin pre
+
+$ ghci
+GHCi, version 6.8.2: http://www.haskell.org/ghc/  :? for help
+Loading package base ... linking ... done.
+Prelude> let primes = sieve [2..] where sieve (p:xs) = p : sieve [x | x<-xs, x `mod` p /= 0]
+take 4 primes
+[2,3,5,7]
+Prelude> Leaving GHCi.
+
+$ cat | time ghci > /dev/null
+let primes = sieve [2..] where sieve (p:xs) = p : sieve [x | x<-xs, x `mod` p /= 0]
+take 78498 primes
+^D
+...
+
+=end pre
+
+ghci 这个命令行程序来自于软件包 ghc6，是 Haskell 的 Runtime evaluator。安装命令是 apt-get install ghc6。
+
+注意这个程序的参数是需要输出的质数个数，而不是最大值。2 到 1000000 一共有 78498 个质数，这可以从 matho-primes 1 1000000 | wc -l 命令计算出来。
+
+直到文章发表为止，脚本还没有结束。其他更加复杂的版本应该可以运行的更快，但是估计不太用适合 One-liner 的方法来运行了。
+
+应该还可以找到其他语言的一些实现，不过限于个人的知识有限，就先不去尝试了。欢迎大家把更加有效的实现发在网上，自己认为有趣的语言值得花点时间证明一下。
