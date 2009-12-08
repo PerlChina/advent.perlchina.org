@@ -1,0 +1,9 @@
+=for advent_year 2009
+
+=for advent_day XX
+
+=for advent_title IO::All
+
+=for advent_author cnhackTNT
+
+M<IO::All> 介绍
