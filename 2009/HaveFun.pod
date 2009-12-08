@@ -1,6 +1,6 @@
 =for advent_year 2009
 
-=for advent_day XX
+=for advent_day 9
 
 =for advent_title Have Fun
 
@@ -61,9 +61,11 @@ print "Hello World\n";
 =begin code
 
 use Acme::EyeDrops qw(sightly);
-print sightly( { Shape       => 'camel',
-                 SourceFile  => 'hello.pl',
-                 Regex       => 1 } );
+print sightly( {
+    Shape       => 'camel',
+    SourceFile  => 'hello.pl',
+    Regex       => 1
+} );
 
 =end code
 
