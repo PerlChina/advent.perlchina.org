@@ -1,6 +1,6 @@
 =for advent_year 2009
 
-=for advent_day 8
+=for advent_day 10
 
 =for advent_title Padre
 
@@ -32,10 +32,16 @@ Padre 由 Gábor Szabó 发起，使用 Perl 编写，主要目标是给 Perl �
 
 四，Perl 6
 
-A<http://search.cpan.org/dist/Padre-Plugin-Perl6/|Perl 6> 高亮语法支持，Parrot 和 Rakudo 支持。
+虽然 Perl 6 不会在今年的圣诞发布，但是这并不妨碍我们去尝试她。
+
+Padre 拥有 A<http://search.cpan.org/dist/Padre-Plugin-Perl6/|Perl 6> 高亮语法支持，Parrot 和 Rakudo 支持。Win32 用户可以直接下载 A<http://padre.perlide.org/download.html|Padre Standalone Plus Six> 来同时拥有 Strawberry Perl + Padre + Rakudo.
 
 M<Padre> 的下载安装可以参考 A<http://padre.perlide.org/download.html>, 大部分的操作系统都有直接安装文件。
 
-截屏参考 A<http://padre.perlide.org/screenshots.html>
+截屏参考 A<http://padre.perlide.org/screenshots.html>，如
+
+<img src='http://padre.perlide.org/trac/raw-attachment/wiki/Screenshots/Padre_0.47_Win7_autocomplete.jpg' />
+
+今年的 Catalyst Advent Calendar 有一篇 A<http://www.catalystframework.org/calendar/2009/9|Developing Catalyst Applications with Padre>，可以阅读一下。
 
 谢谢。
