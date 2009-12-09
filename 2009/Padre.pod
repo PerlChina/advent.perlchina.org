@@ -38,4 +38,6 @@ M<Padre> 的下载安装可以参考 A<http://padre.perlide.org/download.html>, 
 
 截屏参考 A<http://padre.perlide.org/screenshots.html>
 
+今年的 Catalyst Advent Calendar 有一篇 <http://www.catalystframework.org/calendar/2009/9|Developing Catalyst Applications with Padre>，可以阅读一下。
+
 谢谢。
