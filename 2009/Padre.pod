@@ -42,6 +42,6 @@ M<Padre> 的下载安装可以参考 A<http://padre.perlide.org/download.html>, 
 
 <img src='http://padre.perlide.org/trac/raw-attachment/wiki/Screenshots/Padre_0.47_Win7_autocomplete.jpg' />
 
-今年的 Catalyst Advent Calendar 有一篇 <http://www.catalystframework.org/calendar/2009/9|Developing Catalyst Applications with Padre>，可以阅读一下。
+今年的 Catalyst Advent Calendar 有一篇 A<http://www.catalystframework.org/calendar/2009/9|Developing Catalyst Applications with Padre>，可以阅读一下。
 
 谢谢。
