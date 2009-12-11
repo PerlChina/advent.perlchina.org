@@ -6,7 +6,7 @@
 
 =for advent_author Fayland Lam
 
-M<Devel::REPL> ÓÉÅ£ÈË Matt S Trout Ëù¿ª·¢¡£Õû¸ö¿ª·¢¹ý³ÌÍ¨¹ý blog ·¢²¼£¬¼«¾ß²Î¿¼¼ÛÖµ¡£
+M<Devel::REPL> ç”±ç‰›äºº Matt S Trout æ‰€å¼€å‘ã€‚æ•´ä¸ªå¼€å‘è¿‡ç¨‹é€šè¿‡ blog å‘å¸ƒï¼Œæžå…·å‚è€ƒä»·å€¼ã€‚
 
 A<http://chainsawblues.vox.com/library/post/a-perl-read-excute-print-loop-repl.html>
 
@@ -16,7 +16,7 @@ A<http://chainsawblues.vox.com/library/post/writing-a-perl-repl-part-3---lexical
 
 A<http://chainsawblues.vox.com/library/post/develrepl-part-4---script-options-rc-files-profiles-and-packaging.html>
 
-£¨ÉÏÊöµØÖ·ÐèÒªÅÀÇ½£©
+ï¼ˆä¸Šè¿°åœ°å€éœ€è¦çˆ¬å¢™ï¼‰
 
 =begin pre
 
@@ -34,7 +34,8 @@ $ my $resp = $ua->get('http://google.com');
 $HTTP_Response1 = HTTP::Response=HASH(0x9694a14);
 
 $ $_REPL->load_plugin('Timing');
-1                                                                                                   $ $resp = $ua->get('http://google.com');
+1
+$ $resp = $ua->get('http://google.com');
 Took 0.152513027191162 seconds.
 $HTTP_Response1 = HTTP::Response=HASH(0x96ad904);
 
@@ -60,10 +61,10 @@ $ exit
 
 =end pre
 
-±¾ÎÄÖ»×ö¼òµ¥½éÉÜ£¬¸ü¶à¸üÏê¾¡µÄ¹¦ÄÜ¾ÍÐèÒª×Ô¼ºÈ¥³¢ÊÔ¡£
+æœ¬æ–‡åªåšç®€å•ä»‹ç»ï¼Œæ›´å¤šæ›´è¯¦å°½çš„åŠŸèƒ½å°±éœ€è¦è‡ªå·±åŽ»å°è¯•ã€‚
 
-ÁíÍâ£¬¿ÉÒÔ×Ô¶¨Òå profile Ä£¿é»òÕß rc ÎÄ¼þÀ´¹¹½¨×Ô¼ºµÄ re.pl »·¾³¡£
+å¦å¤–ï¼Œå¯ä»¥è‡ªå®šä¹‰ profile æ¨¡å—æˆ–è€… rc æ–‡ä»¶æ¥æž„å»ºè‡ªå·±çš„ re.pl çŽ¯å¢ƒã€‚
 
-»ùÓÚ¸ÃÄ£¿éµÄÀ©Õ¹ÓÐ M<Carp::REPL> ºÍ M<CatalystX::REPL>£¬¶¼ÊÇ·Ç³£ºÃµÄ¹¤¾ß¡£
+åŸºäºŽè¯¥æ¨¡å—çš„æ‰©å±•æœ‰ M<Carp::REPL> å’Œ M<CatalystX::REPL>ï¼Œéƒ½æ˜¯éžå¸¸å¥½çš„å·¥å…·ã€‚
 
-Enjoy! Ð»Ð»¡£
+Enjoy! è°¢è°¢ã€‚
