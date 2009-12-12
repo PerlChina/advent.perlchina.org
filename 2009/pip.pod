@@ -34,9 +34,9 @@ $ pip http://foo.com/DBI-1.37-MSWin32-5.8.0.par
 
 另外您还可以创建自己的 p5i 文件，来简化模块安装和系统维护。
 
-趁着篇幅还短，这里再介绍一下另一个 CPAN::Inject 的应用 M<cpanf>
+趁着篇幅还短，这里再介绍一下 CPAN::Inject 的另一个应用 M<cpanf>
 
-如果您跟我一样订阅了 CPAN 的 A<http://search.cpan.org/uploads.rdf|RSS) 的话，可能看见一个新模块或者模块的新版本时，会忍不住想试试。但是如果这个模块还没有到到您的镜像时，您无法使用 cpan 来安装（即使 reload index 也没用）。这个时候，您可以尝试下用 cpanf 来安装这个模块。
+如果您跟我一样订阅了 CPAN 的 A<http://search.cpan.org/uploads.rdf|RSS) 的话，可能看见一个新模块或者模块的新版本时，会忍不住想试试。但是如果这个模块还没有到达您的镜像时，您无法使用 cpan 来安装（即使 reload index 也没用）。这个时候，您可以尝试下用 cpanf 来安装这个模块。
 
 这个模块使用了 FriendFeed CPAN relatime bot (http://friendfeed.com/cpan) 和最快的镜像 A<http://cpan.cpantesters.org/>，可以让您可以在第一时间尝鲜。
 
