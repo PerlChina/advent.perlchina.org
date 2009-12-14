@@ -1,0 +1,69 @@
+=for advent_year 2009
+
+=for advent_day 13
+
+=for advent_title Unicode Charnames
+
+=for advent_author Joe Jiang
+
+可能因为创造者学的是语言而非计算机科学的缘故，Perl 支持 Unicode 的处理已经很久了，远在 2000 年的 5.6 版本就开始支持。直到如今的 5.10.1 版本支持 Unicode 的 5.1.0 版本，Perl 保持了一贯的特色，接近并支持自然语言。
+
+作为验证，可以从目前比较容易获得的 5.8.8 版本开始检查，对比有名字的字符的数量。
+
+=begin pre
+
+% perl -C3 -Mcharnames=:full -le 'print qq(@{[$a=sprintf(qq(\\x{%04x}),$_)]}\t@{[eval q(").$a.q(")]}\t@{[charnames::viacode($_)]}) for 0x0 .. 0xffff' | perl -lane 'print join q( ),@F[2..$#F] if $F[2] ne undef'| wc -l
+13058
+
+=end pre
+
+同样的命令在 5.10.0 上运行得到 13398，在 5.10.1 上运行得到 14706。查阅 perldoc perldelta 得知 5.8.8 支持的 Unicode 版本大概是 4.1.0，而 5.10.0 则更加确定，是 5.0.0。
+
+上面的命令很好玩，能让你的机器跑一阵子。如果把后面的管道换成 less 或 more 也很有用，可以列出 0xffff 以下所有的 unicode 的编码和名字。
+
+=begin pre
+
+\x{0000}        ^@      
+\x{0001}        ^A      START OF HEADING
+\x{0002}        ^B      START OF TEXT
+\x{0003}        ^C      END OF TEXT
+...
+
+=end pre
+
+所以本文开头的命令正是利用了最右边一列的名字，用 wc -l 来数算有名的 Unicode 码的数量。
+
+如果我们在这个输出中往下滚动，就会看到很多稀奇古怪的文字，比如这一段：
+
+=begin pre
+
+\x{03d0}        ϐ       GREEK BETA SYMBOL
+\x{03d1}        ϑ       GREEK THETA SYMBOL
+...
+\x{0488}        ҈        COMBINING CYRILLIC HUNDRED THOUSANDS SIGN
+\x{0489}        ҉        COMBINING CYRILLIC MILLIONS SIGN
+...
+\x{336f}        ㍯      IDEOGRAPHIC TELEGRAPH SYMBOL FOR HOUR TWENTY-THREE
+\x{3370}        ㍰      IDEOGRAPHIC TELEGRAPH SYMBOL FOR HOUR TWENTY-FOUR
+...
+\x{4e00}        一      
+\x{4e01}        丁      
+...
+
+=end pre
+
+由此可知，我们的程序并没有数算中日韩文的符号，所以结果的数量不是非常巨大。统计的对象主要是这些能用英文来描述的字符，而这些字符在 Perl 里面可以用 charnames 模块的 viacode 子程序查出名字，也就是大家看到的 charnames::viacode()。例如下面的代码能打印出一个特殊的六角形：
+
+=begin pre
+
+$ perl -C3 -Mcharnames=:full -e 'print qq(\x{2394}\t),charnames::viacode(0x2394),qq(\n)'
+⎔	SOFTWARE-FUNCTION SYMBOL
+
+$ perl -Mcharnames=:full -C3 -le 'print qq(\N{SOFTWARE-FUNCTION SYMBOL})'
+⎔ 
+
+=end pre
+
+如上所示，\N{} 的写法非常 English，同样需要 charnames 模块的支持。
+
+程序中也有些很难懂的地方，自己也觉得还有待完善。比如中间一列的字符打印使用了这样的代码 \t@{[eval q(").$a.q(")]}\t，不过这毕竟是一行代码，可以在茶余饭后反复改进，这大概是 Perl 的爱好者总能保持憨厚微笑的原因之一吧。
