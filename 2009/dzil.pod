@@ -145,6 +145,18 @@ Module::B = 0
 
 =end pre
 
+在更改模块完毕后，您可以
+
+=begin pre
+
+$ dzil test
+$ dzil build
+$ dzil release
+
+=end pre
+
+来测试，打包和发布代码。
+
 如果上述对您来说还是太繁琐的话，您可以写 Dist::Zilla 的插件。Dist::Zilla 里有个插件的技巧
 
 =begin code
