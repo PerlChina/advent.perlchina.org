@@ -6,33 +6,33 @@
 
 =for advent_author Fayland Lam
 
-A<Dist::Zilla> ¶ÔÄ£¿é×÷ÕßÀ´ËµÊÇ¼þÀûÆ÷¡£
+A<Dist::Zilla> å¯¹æ¨¡å—ä½œè€…æ¥è¯´æ˜¯ä»¶åˆ©å™¨ã€‚
 
-ËüÓë M<ExtUtils::MakeMaker>, M<Module::Build>, M<Module::Install> ²»Í¬£¬Ëü²»ÊÇ°²×°Ä£¿é¡£ËüÃÇµÄ¹²Í¬µãÊÇ¶¼¿ÉÒÔ´ò°üÒ»¸ö CPAN .tar.gz
+å®ƒä¸Ž M<ExtUtils::MakeMaker>, M<Module::Build>, M<Module::Install> ä¸åŒï¼Œå®ƒä¸æ˜¯å®‰è£…æ¨¡å—ã€‚å®ƒä»¬çš„å…±åŒç‚¹æ˜¯éƒ½å¯ä»¥æ‰“åŒ…ä¸€ä¸ª CPAN .tar.gz
 
-ËüÓë M<Module::Starter> ²»Í¬¡£Ëü²»½ö½ö¿ÉÒÔ¹¹½¨Ä£¿éµÄ¿ò¼Ü¡£
+å®ƒä¸Ž M<Module::Starter> ä¸åŒã€‚å®ƒä¸ä»…ä»…å¯ä»¥æž„å»ºæ¨¡å—çš„æ¡†æž¶ã€‚
 
-ËüÓë M<ShipIt> ²»Í¬¡£Ëü²»½ö½ö¿ÉÒÔ·¢²¼´úÂë¡£
+å®ƒä¸Ž M<ShipIt> ä¸åŒã€‚å®ƒä¸ä»…ä»…å¯ä»¥å‘å¸ƒä»£ç ã€‚
 
-ËüÊÇËùÓÐµÄ×ÛºÏÌå¡£Ëü¿ÉÒÔ¹¹½¨¿ò¼Ü£¬´ò°ü´úÂë²¢ÇÒ·¢²¼´úÂë£¬Ëü×î´óµÄÓÅµãÔÚÓÚ½ÚÊ¡ÄúµÄÊ±¼ä¡£ÈÃÄã×¨ÐÄ±àÐ´´úÂë¶øÎÞÐè¿¼ÂÇ¶àÓàµÄÊÂÇé¡£
+å®ƒæ˜¯æ‰€æœ‰çš„ç»¼åˆä½“ã€‚å®ƒå¯ä»¥æž„å»ºæ¡†æž¶ï¼Œæ‰“åŒ…ä»£ç å¹¶ä¸”å‘å¸ƒä»£ç ï¼Œå®ƒæœ€å¤§çš„ä¼˜ç‚¹åœ¨äºŽèŠ‚çœæ‚¨çš„æ—¶é—´ã€‚è®©ä½ ä¸“å¿ƒç¼–å†™ä»£ç è€Œæ— éœ€è€ƒè™‘å¤šä½™çš„äº‹æƒ…ã€‚
 
-ÒÔÏÂÊÇÒ»¸ö¼òµ¥µÄÁ÷³ÌÀý×Ó¡£
+ä»¥ä¸‹æ˜¯ä¸€ä¸ªç®€å•çš„æµç¨‹ä¾‹å­ã€‚
 
-Í¨³£ÎÒÃÇ»áÔÚÎÒÃÇµÄ home Ä¿Â¼ÏÂ´´½¨Ò»¸ö .dzil/config.ini À´±£´æÄ£¿éÅäÖÃµÄ»ù±¾×ÊÁÏ¡£
+é€šå¸¸æˆ‘ä»¬ä¼šåœ¨æˆ‘ä»¬çš„ home ç›®å½•ä¸‹åˆ›å»ºä¸€ä¸ª .dzil/config.ini æ¥ä¿å­˜æ¨¡å—é…ç½®çš„åŸºæœ¬èµ„æ–™ã€‚
 
 =begin pre
 
 $ mkdir ~/.dzil
 $ vi ~/.dzil/config.ini
 
-# Windows Ò»°ãÊÇ
+# Windows ä¸€èˆ¬æ˜¯
 C:\Documents and Settings\Administrator>perl -e "mkdir '.dzil'"
 C:\Documents and Settings\Administrator>cd .dzil
 C:\Documents and Settings\Administrator\.dzil>notepad config.ini
 
 =begin pre
 
-config.ini ÀïµÄÄÚÈÝ£¨¿ÉÒÔÌí¼Ó¸ü¶àµÄ£¬ÏÂÎÄ»áÌáµ½£©
+config.ini é‡Œçš„å†…å®¹ï¼ˆå¯ä»¥æ·»åŠ æ›´å¤šçš„ï¼Œä¸‹æ–‡ä¼šæåˆ°ï¼‰
 
 =begin pre
 
@@ -43,7 +43,7 @@ copyright_holder = Fayland Lam
 
 =end pre
 
-×îºÃ»ù±¾¸öÈË×ÊÁÏÅäÖÃÖ®ºó£¬ÎÒÃÇ¾Í¿ÉÒÔ´´½¨Ò»¸öÐÂµÄ dist.ini Ä£¿éÁË¡£
+æœ€å¥½åŸºæœ¬ä¸ªäººèµ„æ–™é…ç½®ä¹‹åŽï¼Œæˆ‘ä»¬å°±å¯ä»¥åˆ›å»ºä¸€ä¸ªæ–°çš„ dist.ini æ¨¡å—äº†ã€‚
 
 =begin pre
 
@@ -51,7 +51,7 @@ $ dzil new TestModule-A
 
 =end pre
 
-´ò¿ª TestModule-A Ä¿Â¼£¬»áÓÐÒ»¸ö dist.ini ÎÄ¼þ
+æ‰“å¼€ TestModule-A ç›®å½•ï¼Œä¼šæœ‰ä¸€ä¸ª dist.ini æ–‡ä»¶
 
 =begin pre
 
@@ -65,19 +65,19 @@ copyright_holder = Fayland Lam
 
 =end pre
 
-Óë Module::Starter ²»Í¬£¬Ëü²¢²»´´½¨ÈÎºÎÄ¿Â¼»òÆäËûÎÄ¼þ¡£´ó²¿·ÖµÄÎÄ¼þ¶¼½«Í¨¹ý dist.ini À´ÅäÖÃÉú³É¡£
+ä¸Ž Module::Starter ä¸åŒï¼Œå®ƒå¹¶ä¸åˆ›å»ºä»»ä½•ç›®å½•æˆ–å…¶ä»–æ–‡ä»¶ã€‚å¤§éƒ¨åˆ†çš„æ–‡ä»¶éƒ½å°†é€šè¿‡ dist.ini æ¥é…ç½®ç”Ÿæˆã€‚
 
-±ÈÈç Makefile.PL, Ä¬ÈÏµÄ [@Classic] »áÔÚ dzil build µÄÊ±ºò×Ô¶¯Éú³É¡£
+æ¯”å¦‚ Makefile.PL, é»˜è®¤çš„ [@Classic] ä¼šåœ¨ dzil build çš„æ—¶å€™è‡ªåŠ¨ç”Ÿæˆã€‚
 
-±ÈÈç README, ÎÒÃÇ¿ÉÒÔÓÃÄ¬ÈÏµÄ [@Classic] À´Éú³ÉÒ»¸ö¼òµ¥µÄ£¬»òÕßÒ²¿ÉÒÔÍ¨¹ý M<Dist::Zilla::Plugin::ReadmeFromPod> À´´Ó POD Éú³É¡£
+æ¯”å¦‚ README, æˆ‘ä»¬å¯ä»¥ç”¨é»˜è®¤çš„ [@Classic] æ¥ç”Ÿæˆä¸€ä¸ªç®€å•çš„ï¼Œæˆ–è€…ä¹Ÿå¯ä»¥é€šè¿‡ M<Dist::Zilla::Plugin::ReadmeFromPod> æ¥ä»Ž POD ç”Ÿæˆã€‚
 
-±ÈÈç POD ÀïµÄ NAME, AUTHOR ºÍ COPYRIGHT AND LICENSE£¬¶¼½«Í¨¹ý M<Dist::Zilla::Plugin::PodWeaver> À´Éú³É¡£
+æ¯”å¦‚ POD é‡Œçš„ NAME, AUTHOR å’Œ COPYRIGHT AND LICENSEï¼Œéƒ½å°†é€šè¿‡ M<Dist::Zilla::Plugin::PodWeaver> æ¥ç”Ÿæˆã€‚
 
-±ÈÈçÒ»Ð© Repository µÄ×ÊÁÏ£¬¿ÉÒÔÍ¨¹ý M<Dist::Zilla::Plugin::Repository> À´Éú³É¡£
+æ¯”å¦‚ä¸€äº› Repository çš„èµ„æ–™ï¼Œå¯ä»¥é€šè¿‡ M<Dist::Zilla::Plugin::Repository> æ¥ç”Ÿæˆã€‚
 
-±ÈÈç t/00-compile.t ¿ÉÒÔÍ¨¹ý M<Dist::Zilla::Plugin::CompileTests> Éú³É¡£
+æ¯”å¦‚ t/00-compile.t å¯ä»¥é€šè¿‡ M<Dist::Zilla::Plugin::CompileTests> ç”Ÿæˆã€‚
 
-ÏëÏë¿´£¬Èç¹ûÉÏÃæµÄÎÄ¼þ¶¼½«Ä¬ÈÏÉú³É£¬Äã»¹ÐèÒª×öÊ²Ã´ÄØ£¿ÄúÖ»ÐèÒªÐ´ÕæÕýÓÐÒâÒåµÄ´úÂëÁË£¬¶ø²»ÐèÒª¹ØÐÄÕâÐ©Ö¦½Ú¡£
+æƒ³æƒ³çœ‹ï¼Œå¦‚æžœä¸Šé¢çš„æ–‡ä»¶éƒ½å°†é»˜è®¤ç”Ÿæˆï¼Œä½ è¿˜éœ€è¦åšä»€ä¹ˆå‘¢ï¼Ÿæ‚¨åªéœ€è¦å†™çœŸæ­£æœ‰æ„ä¹‰çš„ä»£ç äº†ï¼Œè€Œä¸éœ€è¦å…³å¿ƒè¿™äº›æžèŠ‚ã€‚
 
 =begin pre
 
@@ -106,9 +106,9 @@ __END__
 
 =end pre
 
-ABSTRACT ½«ÊÇ NAME head1 µÄÃèÊö¡£
+ABSTRACT å°†æ˜¯ NAME head1 çš„æè¿°ã€‚
 
-×îºóÄú¿ÉÒÔ»¹Íü¼ÇÁË Changes
+æœ€åŽæ‚¨å¯ä»¥è¿˜å¿˜è®°äº† Changes
 
 =begin pre
 
@@ -120,9 +120,9 @@ Revision history for TestModule::A
 
 =end pre
 
-ÊÇ²»ÊÇÐ´ Changes ÓÐµã·±Ëö£¿Äú¿ÉÒÔÐ´Ò»¸ö plugin À´×Ô¶¯Éú³É Changes. ÊÇ²»ÊÇ¾­³£»áÔÚ·¢²¼Ç°Íü¼Ç¸üÐÂ Changes, ¿ÉÒÔÊ¹ÓÃ M<Dist::Zilla::Plugin::CheckChangeLog> À´ÌáÐÑÄã¡£
+æ˜¯ä¸æ˜¯å†™ Changes æœ‰ç‚¹ç¹çï¼Ÿæ‚¨å¯ä»¥å†™ä¸€ä¸ª plugin æ¥è‡ªåŠ¨ç”Ÿæˆ Changes. æ˜¯ä¸æ˜¯ç»å¸¸ä¼šåœ¨å‘å¸ƒå‰å¿˜è®°æ›´æ–° Changes, å¯ä»¥ä½¿ç”¨ M<Dist::Zilla::Plugin::CheckChangeLog> æ¥æé†’ä½ ã€‚
 
-×îºóµÄ dist.ini ¿ÉÄÜÊÇÕâÑùµÄ
+æœ€åŽçš„ dist.ini å¯èƒ½æ˜¯è¿™æ ·çš„
 
 =begin pre
 
@@ -145,7 +145,7 @@ Module::B = 0
 
 =end pre
 
-Èç¹ûÉÏÊö¶ÔÄúÀ´Ëµ»¹ÊÇÌ«·±ËöµÄ»°£¬Äú¿ÉÒÔÐ´ Dist::Zilla µÄ²å¼þ¡£Dist::Zilla ÀïÓÐ¸ö²å¼þµÄ¼¼ÇÉ
+å¦‚æžœä¸Šè¿°å¯¹æ‚¨æ¥è¯´è¿˜æ˜¯å¤ªç¹ççš„è¯ï¼Œæ‚¨å¯ä»¥å†™ Dist::Zilla çš„æ’ä»¶ã€‚Dist::Zilla é‡Œæœ‰ä¸ªæ’ä»¶çš„æŠ€å·§
 
 =begin code
 
@@ -158,8 +158,8 @@ Module::B = 0
 
 =end code
 
-¿ÉÒÔÈÃÄã·Ö²½ÖèÀ´±àÐ´¶ÔÓ¦µÄ²å¼þ¡£Ä¿Ç° CPAN ÉÏÓÐºÜ¶à²å¼þÈç£º
+å¯ä»¥è®©ä½ åˆ†æ­¥éª¤æ¥ç¼–å†™å¯¹åº”çš„æ’ä»¶ã€‚ç›®å‰ CPAN ä¸Šæœ‰å¾ˆå¤šæ’ä»¶å¦‚ï¼š
 
-M<Dist::Zilla::Plugin::Git>, M<Dist::Zilla::Plugin::PerlTidy>, M<Dist::Zilla::Plugin::Prepender>, M<Dist::Zilla::Plugin::Release> µÈ£¬¶¼ÊÇ·Ç³£ÓÐÓÃºÍ³¢ÊÔµÄ¡£
+M<Dist::Zilla::Plugin::Git>, M<Dist::Zilla::Plugin::PerlTidy>, M<Dist::Zilla::Plugin::Prepender>, M<Dist::Zilla::Plugin::Release> ç­‰ï¼Œéƒ½æ˜¯éžå¸¸æœ‰ç”¨å’Œå°è¯•çš„ã€‚
 
-Ð»Ð»¡£
+è°¢è°¢ã€‚
