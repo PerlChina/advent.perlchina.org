@@ -170,8 +170,6 @@ $ dzil release
 
 =end code
 
-可以让你分步骤来编写对应的插件。目前 CPAN 上有很多插件如：
-
-M<Dist::Zilla::Plugin::Git>, M<Dist::Zilla::Plugin::PerlTidy>, M<Dist::Zilla::Plugin::Prepender>, M<Dist::Zilla::Plugin::Release> 等，都是非常有用和尝试的。
+可以让你分步骤来编写对应的插件。目前 CPAN 上有很多插件如 M<Dist::Zilla::Plugin::Git>, M<Dist::Zilla::Plugin::PerlTidy>, M<Dist::Zilla::Plugin::Prepender>, M<Dist::Zilla::Plugin::Release> 等，都是非常有用和尝试的。
 
 谢谢。
