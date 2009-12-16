@@ -1,6 +1,6 @@
 =for advent_year 2009
 
-=for advent_day XX
+=for advent_day 17
 
 =for advent_title dzil
 
@@ -30,7 +30,7 @@ C:\Documents and Settings\Administrator>perl -e "mkdir '.dzil'"
 C:\Documents and Settings\Administrator>cd .dzil
 C:\Documents and Settings\Administrator\.dzil>notepad config.ini
 
-=begin pre
+=end pre
 
 config.ini 里的内容（可以添加更多的，下文会提到）
 
