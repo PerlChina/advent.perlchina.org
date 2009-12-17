@@ -1,0 +1,24 @@
+=for advent_year 2009
+
+=for advent_day XX 
+
+=for advent_title IPC::DirQueue
+
+=for advent_author cnhackTNT
+
+=head3 什么是 Queue
+
+B<Queue> 就是队列，在我们生活中非常常见，比如你在超市，在银行排队，买房子排号
+
+
+
+
+
+
+=head3 Queue 有什么用途
+
+=head3 IPC::DirQueue
+
+如果有任何问题，请来 A<http://groups.google.com/group/perlchina|Perlchina 的邮件列表>询问。（或发送任意邮件到 B<perlchina+subscribe@googlegroups.com> 申请加入列表）
+
+Ok! Enjoy! :-)
