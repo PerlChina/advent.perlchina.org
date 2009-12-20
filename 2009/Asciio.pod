@@ -1,0 +1,17 @@
+=for advent_year 2009
+
+=for advent_day 20
+
+=for advent_title Asciio
+
+=for advent_author Fayland Lam
+
+M<App::Asciio> 是一个专门搞 ASCII 图表的工具。
+
+虽然它有点难安装，但是整个程序还是比较好用的。
+
+程序基于 Gtk2, 整体通过右键菜单来编辑文件，然后保存为 txt 或其他格式。参见图片：
+
+<img src='Asciio.png' border='0' />
+
+谢谢。
