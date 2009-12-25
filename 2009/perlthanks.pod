@@ -1,0 +1,128 @@
+=for advent_year 2009
+
+=for advent_day 25
+
+=for advent_title perlthanks
+
+=for advent_author Fayland Lam
+
+今天是圣诞节，是个感恩的节日。
+
+于此同时，我们应当对 perl 的开发者致以最好的祝福。
+
+从 perl-5.8.9 开始，perl 都开始带有一个 A<http://perldoc.perl.org/5.8.9/perlthanks.html|perlthanks> 的小程序，该程序将给 perl-porter 新闻组发送感谢信。
+
+如果您的 perl 版本小于 5.8.9, 那么可以遵循如下步骤来发送。
+
+=begin pre
+
+$ wget http://search.cpan.org/CPAN/authors/id/L/LB/LBROCARD/perl-5.11.2.tar.bz2
+$ tar xvjf perl-5.11.2.tar.bz2
+$ cd perl-5.11.2/utils
+$ perl perlbug.PL
+$ perl perlbug -T
+
+=end pre
+
+perlbug -T 或者 perlthanks 启动之后，您就可以编写标题和内容，然后就发送了，非常简单。
+
+=begin pre
+
+This program provides an easy way to send a thank-you message
+back to the authors and maintainers of perl.
+
+If you wish to submit a bug report, please run it without the -T
+flag (or run the program perlbug rather than perlthanks)
+
+First of all, please provide a subject for the message.
+Subject: Merry Christmas!
+Perl's developers may need your email address to contact you for
+further information about your issue or to inform you when it is
+resolved.  If the default shown is not your email address,
+please correct it.
+
+Your address [fayland@perl]: fayland@gmail.com
+
+
+perlbug can send a copy of this report to your local perl
+administrator.  If the address below is wrong, please correct
+it, or enter 'none' or 'yourself' to not send a copy.
+
+Local perl administrator [root@localhost]: none
+
+
+It's now time to compose your thank-you message.
+
+Some information about your local perl configuration will
+automatically be included at the end of your message, because
+we're curious about the different ways that people build and use
+perl. If you'd rather not share this information, you're welcome
+to delete it.
+
+You will probably want to use a text editor to enter the body of
+your report. If "vi" is the editor you want to use, then just
+press Enter, otherwise type in the name of the editor you would
+like to use.
+
+If you have already composed the body of your report, you may
+enter "file", and perlbug will prompt you to enter the name of
+the file containing your report.
+
+Editor [vi]: vi
+
+This is a thank-you report for perl from fayland@gmail.com,
+generated with the help of perlbug 1.39 running under perl 5.8.8.
+
+
+-----------------------------------------------------------------
+[Please enter your thank-you message here]
+
+Thanks for all of your work. and Merry Xmas!
+
+[You're welcome to delete anything below this line]
+-----------------------------------------------------------------
+---
+Flags:
+    category=thanks
+    severity=none
+---
+省略一部分。
+
+You have finished composing your message. At this point, you have
+a few options. You can:
+
+    * [Se]nd the message to perl-thanks@perl.org,
+    * [D]isplay the message on the screen,
+    * [R]e-edit the message
+    * Display or change the message's [su]bject
+    * Save the message to a [f]ile to mail at another time
+    * [Q]uit without sending a message
+
+Action (Send/Display/Edit/Subject/Save to File): Send
+
+
+Are you certain you want to send this message?
+
+Please type "yes" if you are [no]: yes
+
+Message sent
+
+Thank you for taking the time to send a thank-you message!
+
+=end pre
+
+所有的步骤都非常简单，我希望大家都能发送一封邮件来感谢 Perl 的开发者和贡献者。
+
+=============================================
+
+结后语：
+
+至此，2009 的 CN Perl Advent Calendar 就结束了。
+
+感谢 cnhackTNT, Joe Jiang 和 Alexe, 没有你们，这会是一个孤单的十二月。
+
+特别感谢我的妻子对我默默地支持，即使在我儿子生病的时候还能让我来抽空完成这项任务。谢谢。
+
+最后，祝大家在新的一年里工作顺利，世事顺心。
+
+谢谢，来年再会。
