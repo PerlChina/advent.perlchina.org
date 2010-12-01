@@ -6,9 +6,9 @@
 
 =for advent_author Fayland Lam
 
-A<cpanm> 应该是 2010 年最值得推荐的模块之一。
+M<cpanm> 应该是 2010 年最值得推荐的模块之一。
 
-我们通常使用 A<cpan> 来安装所需要的模块，但是有时候你会觉得 cpan 很不好用。比如
+我们通常使用 M<cpan> 来安装所需要的模块，但是有时候你会觉得 cpan 很不好用。比如
 
 * 你想快速安装一个模块，但是 cpan 很慢，它需要 update 它的 index 来知道最新的模块版本
 
