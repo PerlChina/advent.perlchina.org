@@ -6,21 +6,21 @@
 
 =for advent_author Fayland Lam
 
-A<cpanm> Ӧ���� 2010 ����ֵ���Ƽ���ģ��֮һ��
+A<cpanm> 应该是 2010 年最值得推荐的模块之一。
 
-����ͨ��ʹ�� A<cpan> ����װ����Ҫ��ģ�飬������ʱ�������� cpan �ܲ����á�����
+我们通常使用 A<cpan> 来安装所需要的模块，但是有时候你会觉得 cpan 很不好用。比如
 
-* ������ٰ�װһ��ģ�飬���� cpan ����������Ҫ update ���� index ��֪�����µ�ģ��汾
+* 你想快速安装一个模块，但是 cpan 很慢，它需要 update 它的 index 来知道最新的模块版本
 
-* �����������ڴ����޵�����°�װģ�飬���� dreamhost �� slicehost �������ϣ��㾭����õ� out of memory! ����
+* 比如你想在内存有限的情况下安装模块，比如 dreamhost 或 slicehost 的主机上，你经常会得到 out of memory! 错误。
 
-* ������Ҫ�ںܶ�server��װģ�飬�㲻��ش��κ����⣬ϣ��ʹ��Ĭ�ϵ�ѡ���������Զ�����װ��
+* 比如你要在很多server安装模块，你不想回答任何问题，希望使用默认的选项来进行自动化安装。
 
-* �������֪�����ģ�鰲װ�Ĵ��������������Ҫ������Ļ�� debug ��Ϣ��
+* 如果你想知道这个模块安装的大致情况，而不需要整个屏幕的 debug 信息。
 
-������Ҫ�ľ��� cpanm��
+那你需要的就是 cpanm。
 
-��װ cpanm ����ͨ����ԭʼ�� cpan ����װ������
+安装 cpanm 可以通过最原始的 cpan 来安装。比如
 
 =begin pre
 
@@ -28,7 +28,7 @@ $ cpan App::cpanminus
 
 =end pre
 
-���������ͨ�� cpanm ����װ App::cpanminus ��cpan ��������ʱ��ǳ����ã�
+或者你可以通过 cpanm 来安装 App::cpanminus （cpan 不完整的时候非常有用）
 
 =begin pre
 
@@ -36,7 +36,7 @@ $ curl -L http://cpanmin.us | perl - --sudo App::cpanminus
 
 =end pre
 
-����������÷ǳ���Ȥ��
+这种情况会变得非常有趣。
 
 =begin pre
 
@@ -52,4 +52,4 @@ Successfully installed App-cpanminus-1.1004
 
 =end pre
 
-Tatsuhiko Miyagawa ��Ʒ������Ʒ���Ҵ����ٶ඼�������ȥ���ԡ�:)
+Tatsuhiko Miyagawa 出品必属精品。我吹的再多都不及大家去试试。:)
