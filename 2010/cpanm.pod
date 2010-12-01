@@ -1,0 +1,55 @@
+=for advent_year 2010
+
+=for advent_day 1
+
+=for advent_title cpanm
+
+=for advent_author Fayland Lam
+
+A<cpanm> 应该是 2010 年最值得推荐的模块之一。
+
+我们通常使用 A<cpan> 来安装所需要的模块，但是有时候你会觉得 cpan 很不好用。比如
+
+* 你想快速安装一个模块，但是 cpan 很慢，它需要 update 它的 index 来知道最新的模块版本
+
+* 比如你想在内存有限的情况下安装模块，比如 dreamhost 或 slicehost 的主机上，你经常会得到 out of memory! 错误。
+
+* 比如你要在很多server安装模块，你不想回答任何问题，希望使用默认的选项来进行自动化安装。
+
+* 如果你想知道这个模块安装的大致情况，而不需要整个屏幕的 debug 信息。
+
+那你需要的就是 cpanm。
+
+安装 cpanm 可以通过最原始的 cpan 来安装。比如
+
+=begin pre
+
+$ cpan App::cpanminus
+
+=end pre
+
+或者你可以通过 cpanm 来安装 App::cpanminus （cpan 不完整的时候非常有用）
+
+=begin pre
+
+$ curl -L http://cpanmin.us | perl - --sudo App::cpanminus
+
+=end pre
+
+这种情况会变得非常有趣。
+
+=begin pre
+
+$ curl -L http://cpanmin.us | perl - App::cpanminus
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  166k  100  166k    0     0   258k      0 --:--:-- --:--:-- --:--:--  258k
+--> Working on App::cpanminus
+Fetching http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/App-cpanminus-1.1004.tar.gz ... OK
+Configuring App-cpanminus-1.1004 ... OK
+Building and testing App-cpanminus-1.1004 ... OK
+Successfully installed App-cpanminus-1.1004
+
+=end pre
+
+Tatsuhiko Miyagawa 出品必属精品。我吹的再多都不及大家去试试。:)
