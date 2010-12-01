@@ -1,0 +1,35 @@
+=for advent_year 2009
+
+=for advent_day 24
+
+=for advent_title PSGI/Plack
+
+=for advent_author Fayland Lam
+
+想明白 M<Plack> 之前，很有必要认识一下 M<PSGI>。
+
+PSGI 是 Perl Web Server Gateway Interface Specification 的简称。它借鉴于 Python 的 A<http://www.python.org/dev/peps/pep-0333/|WSGI> 和 Ruby 的 A<http://rack.rubyforge.org/|Rack>
+
+而 Plack 是对 PSGI SPEC 的一个实现。
+
+一个更直观的认识是看如下这个图片：
+
+<img src='http://farm3.static.flickr.com/2763/4177260769_3ff8c0eb90.jpg' border='0' />
+
+PSGI/Plack 是个很新的事物，由 Tatsuhiko Miyagawa 在今年十月所开发。虽然时间很短，但是发展很迅速。到目前为止已经有好多个基于 Plack 的应用，如 mst 的 M<Web::Simple>, 作者本人的 M<Tatsumaki> 等 framework 和 A<http://github.com/frioux/perlcritic-web> 等例子。而更多的是 Plack 的 Middleware.
+
+Middleware 是个中间件。整个概念跟下面的图片很类似：
+
+<img src='http://pylonshq.com/docs/en/0.9.7/_images/pylons_as_onion.png' border='0' />
+
+它的意义在于更底层的操作整个 HTTP 流程，而无须在框架里处理。不同的框架如 Catalyst 或 CGI::Application, 都可以使用相同的中间件，只要它们都跑在 PSGI 上。
+
+PSGI 是框架作者的福音，写一个符合 PSGI SPEC 的框架，您无须去写 Engine, Plack 的 Server 有 Standalone, AnyEvent, 或者运行在 lighttpd, nginx 或 Apache. 您也无须去写一些 Plugins, 所有的 Middleware 都可以运用在您的框架之上。
+
+如果您要写一个简单的 server 来运行一个简单的 cgi, 你也可以直接写成 psgi 格式，这样您无须 Apache 或其他服务器，使用简单的 Standalone 或 AnyEvent 来运行就可以了。
+
+本文并不描述如何安装启动 Plack 或者介绍某个中间件，这方面的内容都可以在今年的 A<http://advent.plackperl.org/|Plack Advent Calendar> 里看到。:)
+
+介于水平有限，只能介绍到这里。
+
+今天是平安夜，祝各位平安夜快乐。谢谢。

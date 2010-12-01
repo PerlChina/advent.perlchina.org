@@ -1,0 +1,175 @@
+=for advent_year 2009
+
+=for advent_day 17
+
+=for advent_title dzil
+
+=for advent_author Fayland Lam
+
+A<Dist::Zilla> 对模块作者来说是件利器。
+
+它与 M<ExtUtils::MakeMaker>, M<Module::Build>, M<Module::Install> 不同，它不是安装模块。它们的共同点是都可以打包一个 CPAN .tar.gz
+
+它与 M<Module::Starter> 不同。它不仅仅可以构建模块的框架。
+
+它与 M<ShipIt> 不同。它不仅仅可以发布代码。
+
+它是所有的综合体。它可以构建框架，打包代码并且发布代码，它最大的优点在于节省您的时间。让你专心编写代码而无需考虑多余的事情。
+
+以下是一个简单的流程例子。
+
+通常我们会在我们的 home 目录下创建一个 .dzil/config.ini 来保存模块配置的基本资料。
+
+=begin pre
+
+$ mkdir ~/.dzil
+$ vi ~/.dzil/config.ini
+
+# Windows 一般是
+C:\Documents and Settings\Administrator>perl -e "mkdir '.dzil'"
+C:\Documents and Settings\Administrator>cd .dzil
+C:\Documents and Settings\Administrator\.dzil>notepad config.ini
+
+=end pre
+
+config.ini 里的内容（可以添加更多的，下文会提到）
+
+=begin pre
+
+[=Dist::Zilla::App::Command::new]
+author  = Fayland Lam <fayland@gmail.com>
+license = Perl_5
+copyright_holder = Fayland Lam
+
+=end pre
+
+最好基本个人资料配置之后，我们就可以创建一个新的 dist.ini 模块了。
+
+=begin pre
+
+$ dzil new TestModule-A
+
+=end pre
+
+打开 TestModule-A 目录，会有一个 dist.ini 文件
+
+=begin pre
+
+name    = TestModule-A
+version = 1.000
+author  = Fayland Lam <fayland@gmail.com>
+license = Perl_5
+copyright_holder = Fayland Lam
+
+[@Classic]
+
+=end pre
+
+与 Module::Starter 不同，它并不创建任何目录或其他文件。大部分的文件都将通过 dist.ini 来配置生成。
+
+比如 Makefile.PL, 默认的 [@Classic] 会在 dzil build 的时候自动生成。
+
+比如 README, 我们可以用默认的 [@Classic] 来生成一个简单的，或者也可以通过 M<Dist::Zilla::Plugin::ReadmeFromPod> 来从 POD 生成。
+
+比如 POD 里的 NAME, AUTHOR 和 COPYRIGHT AND LICENSE，都将通过 M<Dist::Zilla::Plugin::PodWeaver> 来生成。
+
+比如一些 Repository 的资料，可以通过 M<Dist::Zilla::Plugin::Repository> 来生成。
+
+比如 t/00-compile.t 可以通过 M<Dist::Zilla::Plugin::CompileTests> 生成。
+
+想想看，如果上面的文件都将默认生成，你还需要做什么呢？您只需要写真正有意义的代码了，而不需要关心这些枝节。
+
+=begin pre
+
+$ mkdir lib/TestModule/A.pm
+$ vi lib/TestModule/A.pm
+package TestModule::A;
+# ABSTRACT: [[Abstract of module]]
+
+use strict;
+use warnings;
+use Module::A;
+use Module::B;
+
+[[YOUR CODE]]
+
+1;
+__END__
+=head1 SYNOPSIS
+
+[[YOUR SYNOPSIS]]
+=head1 DESCRIPTION
+
+[[YOUR DESCRIPTION]]
+
+=cut
+
+=end pre
+
+ABSTRACT 将是 NAME head1 的描述。
+
+最后您可以还忘记了 Changes
+
+=begin pre
+
+$ vi Changes
+Revision history for TestModule::A
+
+0.01    2009.12.15
+        First version, released on an unsuspecting world.
+
+=end pre
+
+是不是写 Changes 有点繁琐？您可以写一个 plugin 来自动生成 Changes. 是不是经常会在发布前忘记更新 Changes, 可以使用 M<Dist::Zilla::Plugin::CheckChangeLog> 来提醒你。
+
+最后的 dist.ini 可能是这样的
+
+=begin pre
+
+name    = TestModule-A
+version = 1.000
+author  = Fayland Lam <fayland@gmail.com>
+license = Perl_5
+copyright_holder = Fayland Lam
+
+[@Classic]
+
+[Prereq]
+Module::A = 0
+Module::B = 0
+
+[PodWeaver]
+[Repository]
+[ReadmeFromPod]
+[CheckChangeLog]
+
+=end pre
+
+在更改模块完毕后，您可以
+
+=begin pre
+
+$ dzil test
+$ dzil build
+$ dzil release
+
+=end pre
+
+来测试，打包和发布代码。
+
+如果上述对您来说还是太繁琐的话，您可以写 Dist::Zilla 的插件。Dist::Zilla 里有个插件的技巧
+
+=begin code
+
+  $_->before_build for $self->plugins_with(-BeforeBuild)->flatten;
+
+  $_->gather_files    for $self->plugins_with(-FileGatherer)->flatten;
+  $_->prune_files     for $self->plugins_with(-FilePruner)->flatten;
+  $_->munge_files     for $self->plugins_with(-FileMunger)->flatten;
+  $_->setup_installer for $self->plugins_with(-InstallTool)->flatten;
+
+=end code
+
+可以让你分步骤来编写对应的插件。目前 CPAN 上有很多插件如 M<Dist::Zilla::Plugin::Git>, M<Dist::Zilla::Plugin::PerlTidy>, M<Dist::Zilla::Plugin::Prepender>, M<Dist::Zilla::Plugin::Release> 等，都是非常有用和尝试的。
+
+谢谢。

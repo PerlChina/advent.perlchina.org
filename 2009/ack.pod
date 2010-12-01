@@ -1,0 +1,70 @@
+=for advent_year 2009
+
+=for advent_day 6
+
+=for advent_title ack
+
+=for advent_author Fayland Lam
+
+A<ack> 类似 grep, 能做 99% grep 做的事情。
+
+=begin pre
+
+[fayland@perl .cpan]$ ack --perl XXX .
+build/Config-INI-MVP-0.024-ntIMhU/inc/Module/Install/Makefile.pm
+241:    # XXX - This is currently unused; not sure if it breaks other MM-users
+
+build/Config-INI-MVP-0.024-ntIMhU/lib/Config/INI/MVP/Reader.pm
+96:# XXX: These should be attributes with builders and blah blah blah, but I just
+
+build/Pod-Weaver-3.093130-CWMqF_/lib/Pod/Weaver/Plugin/EnsurePod5.pm
+18:  # XXX: This is really stupid. -- rjbs, 2009-10-24
+
+build/Pod-Weaver-3.093130-CWMqF_/t/ini-config.t
+80:# XXX: This test is extremely risky as things change upstream.
+
+build/Pod-Weaver-3.093130-CWMqF_/t/basic.t
+80:# XXX: This test is extremely risky as things change upstream.
+
+build/Email-Sender-0.093110-x5M__z/lib/Email/Sender/Transport/Test.pm
+72:  # XXX: We must report partial success (failures) if applicable.
+
+=end pre
+
+A<http://betterthangrep.com/>
+
+十大理由使用 ack:
+
+* 快速。比 grep 快多了
+
+* 使用 Perl 编写
+
+* 能在 Windows 下运行
+
+* 默认忽略您不要的东西。比如 .svn .git 目录，vim 的临时文件等。
+
+* 支持文件类型，比如 --perl 或者 --nohtml 等，无需 find -type
+
+* 可以得到某种类型文件的列表，比如得到 perl 文件的列表
+
+=begin pre
+
+$ ack -f --perl > all-perl-files
+
+=end pre
+
+* 语法加亮。
+
+* 使用我们最熟悉的 Perl 正则
+
+* 支持大部分 grep 参数如 -w -c -l
+
+* ack 只有三个字符，grep 有四个，而 grep -r 是六个。
+
+最后，它能合并到流行的编辑器中，如 Vim, Emacs 和 TextMate. 参考 A<http://search.cpan.org/perldoc?ack#ACK_&_OTHER_TOOLS>
+
+而 Perl 编辑器 A<Padre> 就是使用 ack 来做文件搜索。
+
+最后，感谢牛人 Andy Lester (petdance) 给我们带来了 ack.
+
+谢谢。

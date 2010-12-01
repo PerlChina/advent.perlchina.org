@@ -1,0 +1,23 @@
+=for advent_year 2009
+
+=for advent_day 19
+
+=for advent_title Send Link by Copy
+
+=for advent_author Joe Jiang
+
+A<Gtk2> 模块提供了与剪贴板打交道的能力，因此我们可以尝试用它来改进 Firefox 的一个功能，那就是很有用的 Send Link（中文叫做发送页面）。
+
+如果使用过其他浏览器比如 Opera 或者 IE，你就可能会用过这个拷贝当前页面地址的功能。这个功能对于那些关闭了地址栏的页面特别重要，在 Firefox 中你需要在当前页面上点击右键并选择 View Page Info，然后拷贝弹出的 Page Info 对话框中 Address 栏目的内容，并关闭对话框。这非常麻烦，让我们找一个偷懒的途径。
+
+如果你恰好和我一样讨厌 Firefox 调用 email 客户端来发送链接，那么替换掉它会是一个很好的尝试，在此我们的假想敌是大多数 Linux 默认的 MTA evolution。
+
+=begin pre
+
+sudo pp -e 'use URI::Escape; use Gtk2; Gtk2->init; $c=Gtk2::Clipboard->get(Gtk2::Gdk->SELECTION_CLIPBOARD); $c->set_text(uri_unescape(join(qq(\n), map {s/mailto:\?body=//;s/&subject.*//;$_} @ARGV))); $c->store;' -o $(which evolution)
+
+=end pre
+
+在我们调用下面的单行脚本之后，你会发现任务已经完成。首先是把默认的 evolution 替换掉了（但是应该承认办法相当粗鲁），然后测试一下在当前页面点击右键，并选择 Send Link，然后可以在任何位置 Ctrl-V 调出 URL 地址。
+
+这个单行脚本从标准输入读取 mailto:... 地址串，用 URI::Escape 模块解码，并且使用了 Gtk2::Clipboard 完成 Copy 动作。整个脚本用 PAR 来包装，原理就是这么简单，现在你应该可以用自己喜爱的语言实现同样的功能。

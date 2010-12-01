@@ -1,0 +1,70 @@
+=for advent_year 2009
+
+=for advent_day 12
+
+=for advent_title Devel::REPL
+
+=for advent_author Fayland Lam
+
+M<Devel::REPL> 由牛人 Matt S Trout 所开发。整个开发过程通过 blog 发布，极具参考价值。
+
+A<http://chainsawblues.vox.com/library/post/a-perl-read-excute-print-loop-repl.html>
+
+A<http://chainsawblues.vox.com/library/post/writing-a-perl-read-eval-print-loop-repl---part-2.html>
+
+A<http://chainsawblues.vox.com/library/post/writing-a-perl-repl-part-3---lexical-environments.html>
+
+A<http://chainsawblues.vox.com/library/post/develrepl-part-4---script-options-rc-files-profiles-and-packaging.html>
+
+（上述地址需要爬墙）
+
+=begin pre
+
+[fayland@perl ~]$ re.pl
+
+$ use WWW::Mechanize;
+
+$ my $ua = WWW::Mechanize->new;
+my ($jar,$parser);
+$jar = HTTP::Cookies=HASH(0x90530bc);
+$parser = undef;
+$WWW_Mechanize1 = WWW::Mechanize=HASH(0x94d1da4);
+
+$ my $resp = $ua->get('http://google.com');
+$HTTP_Response1 = HTTP::Response=HASH(0x9694a14);
+
+$ $_REPL->load_plugin('Timing');
+1
+$ $resp = $ua->get('http://google.com');
+Took 0.152513027191162 seconds.
+$HTTP_Response1 = HTTP::Response=HASH(0x96ad904);
+
+$ $ua->cookie_jar->as_string;
+Took 0.000859975814819336 seconds.
+Set-Cookie3: NID="29=EGf4gTTIzOZkezAPclz4IQnixlbALIP3tBnjzoU05vmI81T4duI8a7hPD49gYpwcwCTPnFlZlbdoSGw0Bz7amPObGUcbkKlK3yRUrbEJWVyGS3aTUY4ECmfOkmc7C-UG"; path="/"; domain=.google.com; path_spec; expires="2010-06-12 13:21:07Z"; HttpOnly; version=0
+Set-Cookie3: PREF="ID=2704ee5d6f52e4ca:U=34269efc86f19890:TM=1260537667:LM=1260537775:S=QZ3yjOx-nf6n6K5U"; path="/"; domain=.google.com; path_spec; expires="2011-12-11 13:22:55Z"; version=0
+
+$ sub fact {
+
+> my $n = shift;
+
+> return 1 if $n < 2;
+
+> return $n * fact($n-1);
+
+> }
+
+$ fact(10);
+3628800
+
+$ exit
+
+=end pre
+
+本文只做简单介绍，更多更详尽的功能就需要自己去尝试。
+
+另外，可以自定义 profile 模块或者 rc 文件来构建自己的 re.pl 环境。
+
+基于该模块的扩展有 M<Carp::REPL> 和 M<CatalystX::REPL>，都是非常好的工具。
+
+Enjoy! 谢谢。

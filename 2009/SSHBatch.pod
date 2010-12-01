@@ -1,0 +1,220 @@
+=for advent_year 2009
+
+=for advent_day 5 
+
+=for advent_title SSH::Batch
+
+=for advent_author cnhackTNT
+
+毫不夸张，SSH 已经成为我每天工作生活必备的工具之一了，相信很多做运维或者在 Linux/Unix 下做开发的朋友也一样，经常需要 SSH 到某台机器上去做点什么。当你只有一台服务器的时候，并不会觉得敲一串命令有啥不爽，但是当你有多台服务器，每台都需要你 SSH 上去做点什么的时候，如果还纯人工纯手动，那就太郁闷了。
+
+于是，A<http://agentzh.spaces.live.com|agentzh++> 写了 M<SSH::Batch> 来拯救你了～!
+
+用 cpan 来安装它吧！
+
+=begin pre
+
+$ sudo cpan SSH::Batch
+
+=end pre
+
+M<SSH::Batch> 是基于 M<Net::OpenSSH> 的，而 M<Net::OpenSSH> 是基于 A<http://www.openssh.org|OpenSSH> 的二进制客户端的，所以只要你机器上装了 OpenSSH 客户端，此外没有其他太多的依赖模块，但正因为此，该模块在 Windows 上是无法使用的。事实上，在 perl 的世界里如果需要编程操纵 SSH， M<Net::OpenSSH> 是首选的模块，而 M<Net::SSH::*> 系列的模块，我个人不是很推荐，一来依赖太多，二来有些模块缺人管理，也许以后情况会好些。
+
+用 cpan 安装好 SSH::Batch 后，实际上给你提供了几个方便的 perl 程序，他们分别是： M<atnodes>， M<key2nodes>， M<tonodes>， M<fornodes>。
+
+=head4 fornodes
+
+这个命令不做 SSH 操作，因为 M<SSH::Batch> 的这些命令使用特定格式的字符串来表示机器集群，B<fornodes> 命令就负责将这些字符串解析成具体一台台的服务器 IP 地址或者域名（也许你有点云里雾里，没关系，继续看下去）。
+
+=head4 atnodes
+
+通过 SSH 在指定的机器集群上运行指定的命令。
+
+=head4 key2nodes
+
+如果你使用密钥作为 SSH 登录验证的方式，这个程序可以很方便地帮你把你生成的公钥传输到指定的机器集群上去（方便的前提是，你在这些机器上用户名都一样，且用同一个密码）。
+
+=head4 tonodes
+
+传输指定的文件到指定的机器集群上去。
+
+=head3 如何表示我要管理的机器集群？
+
+前面说到过，M<SSH::Batch> 提供的这些命令用一种特定的方式来表示机器集群，举例来说：
+
+=begin pre
+
+10.0.0.1              # 代表 IP 地址为 10.0.0.1 的机器
+10.0.0.[1,2,9]        # 代表 10.0.0.1， 10.0.0.2， 10.0.0.9 这三台不同 IP 的机器
+192.168.1.[2-20]      # 代表 192.168.1.2， 192.168.1.3 ... 192.168.1.20 这19台不同 IP 的机器
+[a-c].example.com     # 代表 a.example.com，b.example.com，c.example.com 三台机器
+serv[1-2].example.com # 代表 serv1.example.com，serv2.example.com 两台机器
+
+=end pre
+
+这样，只要你的机器们拥有相似的 IP 地址或者域名，那么用例子中的形式，你就不需要把一个一个 IP 地址或者域名列出来来表示他们了。
+
+前面提到过 B<fornodes>, 我们来验证一下：
+
+=begin pre
+
+$ fornodes '10.0.0.[1,2,9]'
+10.0.0.1 10.0.0.2 10.0.0.9
+
+$ fornodes 'serv[1-2].example.com'
+serv1.example.com serv2.example.com
+
+=end pre
+
+哦耶！
+
+Wait... 如果我想操作 I<foo[1-10].example.com> 但是不要其中的 foo4.example.com 怎么办？你当然可以用这种表示方法：
+
+=begin pre
+
+foo[1-3,5-10].example.com
+
+=end pre
+
+或者还可以
+
+=begin pre
+
+foo[1-10].example.com - foo4.example.com
+
+=end pre
+
+还能做减法？！当然！M<SSH::Batch> 将你不同的机器集群当作不同的集合，而其中的机器就是一个个的元素。你可以从集合中随意去掉或者增加一些元素，当然也可以取集合间的并集，交集，子集。
+
+说到这里，不得不提一下 B<~/.fornodesrc> 这个文件，这是 B<fornodes> 命令默认读取的配置文件，里面包含你自定义的一些机器集合，比如说：
+
+=begin pre
+
+$ cat ~/.fornodesrc
+cluster1=admin.key.com worker[1-3].foo.com client[1-5].foo.com
+cluster2=admin.key.com worker[1-5].bar.com client[1-3].bar.com
+wk_and_cl={cluster1} + {cluster2} - admin.*.com
+allcluster={cluster1} + {cluster2}
+monitor=admin.key.com slave.admin.key.com
+keyserver={allcluster} * {monitor}
+
+=end pre
+
+上面的文件中我们定义了6个机器集合：I<cluster1>， I<cluster2>， I<wk_and_cl>， I<allcluster>， I<monitor>， I<keyserver>。
+
+B<+> 代表求并集；
+
+B<-> 代表从集合中减去一个子集或者某些元素；
+
+B<*> 代表求交集
+
+B<{}> 代表集合
+
+B<空格> 分隔集合中的元素
+
+我们来验证一下：
+
+=begin pre
+
+$ fornodes '{cluster1}'
+admin.key.com client1.foo.com client2.foo.com client3.foo.com client4.foo.com client5.foo.com worker1.foo.com worker2.foo.com worker3.foo.com
+
+$ fornodes '{cluster2}'
+admin.key.com client1.bar.com client2.bar.com client3.bar.com worker1.foo.com worker2.foo.com worker3.foo.com worker4.foo.com worker5.foo.com
+
+$ fornodes '{wk_and_cl}'
+client1.bar.com client1.foo.com client2.bar.com client2.foo.com client3.bar.com client3.foo.com client4.foo.com client5.foo.com worker1.foo.com worker2.foo.com worker3.foo.com worker4.foo.com worker5.foo.com
+
+$ fornodes '{allcluster}'
+admin.key.com client1.bar.com client1.foo.com client2.bar.com client2.foo.com client3.bar.com client3.foo.com client4.foo.com client5.foo.com worker1.foo.com worker2.foo.com worker3.foo.com worker4.foo.com worker5.foo.com
+
+$ fornodes '{keyserver}'
+admin.key.com
+
+=end pre
+
+没错吧:-)！B<atnodes>，B<tonodes> 都使用 B<fornodes> 来解析你指定的集合，所以你可以把你常用的机器集群都像之前提到的写到 B<~/.fornodesrc> 文件中去，然后用上面例子中的方法来使用他们。
+
+=head3 atnodes 命令
+
+比如我要取得所有机器的运行时间，当前负载信息：
+
+=begin pre
+
+$ atnodes -u cnhacktnt uptime '{allcluster}'
+
+=end pre
+
+于是， B<atnodes> 会默认起20个进程，以 cnhacktnt 的身份登录到你的机器们上去执行 uptime 命令，你就会得到类似这样的信息：
+
+=begin pre
+
+===================== worker1.foo.com =====================
+12:29AM  up 205 days, 11:58, 74 users, load averages: 0.00, 0.00, 0.00
+
+===================== worker2.foo.com =====================
+12:35AM  up 8 days,  9:08, 4 users, load averages: 0.13, 0.09, 0.10
+
+===================== client1.foo.com =====================
+12:34AM  up 847 days, 13:05, 0 users, load averages: 1.03, 0.75, 0.64
+
+===================== worker3.bar.com =====================
+12:35AM  up 534 days, 15:08, 1 user, load averages: 0.21, 0.89, 1.23
+
+===================== admin.key.com =====================
+12:35AM  up 210 days, 13:05, 20 users, load averages: 5.17, 4.30, 4.24
+
+... 省略结果 ...
+
+=end pre
+
+当然，你也可以在 B<atnodes> 的命令行上做集合加减，比如：
+
+=begin pre
+
+$ atnodes -u cnhacktnt uptime '{allcluster} - {wk_and_cl}'
+
+===================== admin.key.com =====================
+12:35AM  up 210 days, 13:05, 20 users, load averages: 5.17, 4.30, 4.24
+
+=end pre
+
+I<'{allcluster} - {wk_and_cl}'> 刚好就和 I<'{keyserver}'> 一样，所以上面的命令得到的结果和 I<atnodes -u cnhacktnt uptime '{keyserver}'> 也一样。
+
+=head3 tonodes 命令
+
+B<tonodes> 指定要操作的机器集合的方式和上面一样，只不过它的功能是通过 SSH 传文件到这些机器上去，具体使用方法你可以参看 I<tonodes -h> 命令。
+
+=head3 key2nodes 命令
+
+慢着！为啥你上面举的这些例子里面，都没见你输入用户密码阿？难道不需要？
+
+呵呵，你真细心，实际上我不需要输密码是因为我采用了A<http://www.ibm.com/developerworks/cn/linux/security/openssh/part1/index.html|密钥来登录 SSH> 的缘故。
+
+=begin pre
+
+$ ssh-keygen -t rsa    # 生成 RSA 加密的密钥一对，通常默认保存在 ~/.ssh 目录下
+
+$ ls ~/.ssh    # id_rsa 是私钥，保存在你本地；id_rsa.pub 是公钥
+id_rsa  id_rsa.pub
+
+=end pre
+
+然后你只要把公钥 I<id_rsa.pub> 里的内容追加到远端服务器你的家目录下 I<~/.ssh/authorized_keys> 文件中，下次你再登录的时候就不用输密码了（用户名还是要指定的，不指定的话默认是当前用户）。
+
+那我有那么多机器，我一个一个把公钥写到它们的 autorized_keys 文件中还不疯掉？
+
+当然不用，M<SSH::Batch> 还提供了 B<key2nodes> 命令来帮你生成和分发你的密钥，如果你在机器集群上的用户名和密码都一样（一般管理集群，都有中心认证服务器吧，不然你哭死），你就可使用这个命令来帮助你，比如说我想把公钥传到 I<'{allcluster}'> 这个集合中的机器上去，我只需要：
+
+=begin pre
+
+$ key2nodes -u cnhacktnt '{allcluster}'
+
+=end pre
+
+然后程序会问你一次密码，你输入就OK了。
+建议在执行这命令前，修改你的 /etc/ssh/ssh_config 配置文件，加上 I<StrictHostKeyChecking no> 配置项，不然的话，如果对方机器不在你的本地的 I<known_hosts> 里面，那么程序会运行不正常, 为安全起见，在成功把 I<key> 传过去后，可以把该配置项的 B<no> 改为 B<ask>。
+
+如果有任何问题，请来 A<http://groups.google.com/group/perlchina|Perlchina 的邮件列表>询问。（或发送任意邮件到 B<perlchina+subscribe@googlegroups.com> 申请加入列表）
+
+Ok! Enjoy! :-)

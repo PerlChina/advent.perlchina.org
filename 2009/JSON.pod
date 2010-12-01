@@ -1,0 +1,36 @@
+=for advent_year 2009
+
+=for advent_day 16
+
+=for advent_title JSON::XS
+
+=for advent_author Alexe
+
+各种程序之间的数据传递必须要有一个统一的格式。现在最常见的格式有：xml，json。你可以把任意程序中的一个数据结构转换成JSON格式的文本存储，然后另一个程序再读取这个JSON格式的文本就可以还原该数据结构。
+JSON::XS就是这样一个模块，方便你操纵JSON格式的数据，并且这个模块是XS接口的，意味着它比纯perl编写的Json模块运行的速度更快。
+
+这个模块最简单与常见的用法：
+
+=begin pre
+
+ use JSON::XS;
+
+ # exported functions, they croak on error
+ # and expect/generate UTF-8
+
+ $utf8_encoded_json_text = encode_json $perl_hash_or_arrayref;
+ $perl_hash_or_arrayref  = decode_json $utf8_encoded_json_text;
+
+
+=end pre
+
+Json这种数据交换方案在Javascript这几年兴起时，在数据传递格式方面占了很大的位置。Web开发中会时时用到，其实对于很多其他类型的程序也会用到。
+例如：在我编写Dns服务器端软件时，我需要把已经取得的DNS数据保存起来，当下次我再运行该DNS服务器端时，可以立即恢复这些数据。这时我就使用JSON保存并恢复数据，使用起来十分的方便。 
+
+一个简单的JSON数据的例子：
+
+=begin pre
+
+{"data.house.sina.com.cn":{"A":{"update_time":1253404194,"local_query":[],"value":[]},"CNAME":{"local_query":null,"value":["house.dpool.sina.com.cn"]}}}
+
+=end pre

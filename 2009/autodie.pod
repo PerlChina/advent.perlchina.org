@@ -1,0 +1,59 @@
+=for advent_year 2009
+
+=for advent_day 4
+
+=for advent_title autodie
+
+=for advent_author Fayland Lam
+
+在编写 Perl 脚本的时候，我们经常使用类似下面的代码来检查内置函数（如 open）是否成功。
+
+=begin code
+
+open(my $fh, '<', $filename) or die "Can't open $filename - $!";
+
+=end code
+
+我们经常发现有太多地方需要重复写，或者经常遗忘了这样写。想偷懒？找 A<autodie>.
+
+=begin codeNNN
+
+eval {
+    use autodie;
+    open(my $fh, '<', $some_file);
+    my @records = <$fh>;
+    # Do things with @records...
+    close($fh);
+};
+
+if ($@ and $@->isa('autodie::exception')) {
+    if ($@->matches('open')) { print "Error from open\n";   }
+    if ($@->matches(':io' )) { print "Non-open, IO error."; }
+} elsif ($@) {
+    # A non-autodie exception.
+}
+
+=end codeNNN
+
+autodie 不仅仅对系统函数起作用，还可以对自定义函数其作用。
+
+=begin code
+
+use File::Copy qw(move);
+use autodie qw(move);
+
+move('noexists.txt', 'another.txt');
+
+=end code
+
+当移动失败时会自动报错，如
+
+=begin pre
+
+Can't move('noexists.txt', 'another.txt'): Bad file descriptor at t.pl line 9
+
+=end pre
+
+更多的请参考 A<autodie> doc 和 A<http://perltraining.com.au/tips/2008-08-20.html|Perl Training Australia - autodie>
+
+谢谢。

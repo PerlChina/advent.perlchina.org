@@ -1,0 +1,104 @@
+=for advent_year 2009
+
+=for advent_day 2 
+
+=for advent_title Perl 开发环境建议
+
+=for advent_author cnhackTNT
+
+尽管几乎所有的 Linux/Unix 发行版都附带了 Perl 和相关的模块，但作为一个 Perl 开发者，在构建自己的开发环境时，有些很好的习惯可以遵循，这样不会因为安装和尝试各种模块的时候将你的系统搞脏，也不需要你动不动就祭出 root 大神往系统目录里写文件等等。
+
+P<2009-01|昨天> A<http://www.fayland.org|Fayland> 给我们介绍了非常方便的 M<local::lib> 模块，你当然可以按照他介绍的方法来管理需要自己额外安装的模块，但对于想搭建自己得心应手的 Perl 开发环境的同学，我这里有另一种比较好的建议。
+
+首先，大部分 Linux/Unix 发行版（我不是歧视温道士系统，只是我个人不用它作为开发环境）都是追求稳定的，A<http://www.ubuntu.com|Ubunut> 也才升到 perl5.10 不久，而我使用的 A<http://www.gentoo.org|Gentoo>, 其上的 perl5.10 至今都还被 Mask 着呢。对于 Perl 来说，新的版本不但有 bug 的修复，性能上的提升，还有很多新特性被加入进来，之前 A<http://agentzh.spaces.live.com|agentzh> 对 perl5.10 的某个版本有过测试，结果是存在比较明显的内存泄漏，而换用最新开发版中的 5.11 版本，这些问题就不存在了。而且生产环境证明，perl 最新的 devel 版本还是比较靠谱的，因此对于 perl 开发者，我强烈建议您自己编译一套 A<http://www.cpan.org/src/perl-5.11.2.tar.gz|perl5.11.2>， 这样做的好处主要有几点：
+
+1. 你可以享受到最新 perl 版本带来的一系列优势，包括 bug 的修复，新特性的支持，性能的提升等。
+
+2. 你可以根据需要调整你的 perl 编译参数，以达到关闭/开启某些特性和优化编译的目的。
+
+3. 你可以打造一个干净的 perl 版本，除了核心模块外，其他的模块你可以根据项目需要来安装，批量部署的时候（系统体系相同的情况下），大部分时候你只需要把自己指定的这个 perl 版本的目录整个 COPY 过去就OK了。
+
+4. 与系统自带的 perl 完全独立，你对自己编译的 perl 做的动作完全不会影响到系统自带的 perl，这样你的系统不会因为自带的 perl 或其模块被改动，而在升级的时候碰到问题。
+
+5. 你可以在系统自带的 perl 和自己编译的 perl 间自由切换 :-).
+
+那么，接下来让我们看看如何来打造一个自己的 Perl 开发环境吧!
+
+首先，我们需要下载最新的 Perl 源码，你可以选择同步 perl.org 上 A<http://perl5.git.perl.org/perl.git|git 仓库中的 Perl 源码>，也可以选择使用官方打包好的 A<http://www.cpan.org/src/perl-5.11.2.tar.gz|5.11.2 版本>。我们以后者为例：
+
+=begin pre
+
+$ wget http://www.cpan.org/src/perl-5.11.2.tar.gz
+$ tar xzvf perl-5.11.2.tar.gz
+$ cd perl-5.11.2
+
+=end pre
+
+你可以选择直接运行 Configure 脚本来交互式地完成这一过程，当然在你比较熟悉这一过程的情况下，也可以直接给出你的配置参数免得浪费时间：
+
+=begin pre
+
+$ Configure -Dusedevel -Dprefix=$HOME/perl -des
+
+=end pre
+
+以上参数的意思分别是：
+
+=begin pre
+
+-Dusedevel 使用开发版本的 perl，因为我们这个是 devel 版本，所以得加上这个
+-Dprefix=$HOME/perl 指定我们自己编译的这个 perl 将被安装到当前用户家目录下的 perl 目录中
+-des 指定其他配置参数采用 perl 默认配置
+
+=end pre
+
+当然就像之前所说的，你可以根据自己的需求来对编译的 perl 做一些优化和定制，比如要不要 thread, 要不要大文件支持...等等，具体可参看源码目录内的 INSTALL 和 README 文档，我自己是加上了 “-fomit-frame-pointer” 的 ccflags 参数。
+等配置完成后，就可以 make, make test, make install 了：
+
+=begin pre
+
+$ make
+$ make test
+$ make install
+
+=end pre
+
+一般来说，整个配置编译过程还是会比较顺利的。
+恭喜！至此，属于你的 perl 已经编译安装完成了，那下一步就让我们来实现它和系统自带 perl 的自由切换吧！
+
+实现非常简单，请编辑你的 B<~/.bashrc> 文件, 加入：
+
+=begin pre
+
+# 如果你之前编译 perl 时采用了不同的 prefix，请根据自己的环境做相应修改
+alias devperl='PATH=${PATH_NORMAL:-$PATH};export PATH_NORMAL=$PATH;export PATH=$HOME/perl/bin:$PATH;echo -e "\nPATH=$PATH\nPATH_NORMAL=$PATH_NORMAL\nDevperl!\n"'
+alias sysperl='PATH=${PATH_NORMAL:-$PATH};export PATH=$PATH;unset PATH_NORMAL;echo -e "\nPATH=$PATH\nSysperl!\n"'
+
+# 你可能还需要改一下编译完成后 $HOME/perl/bin 目录下可执行文件的名字
+$ cd $HOME/perl/bin
+$ ls | perl -ne 'chomp; ($n)=$_=~ /(.+?)5\.11\.2/g; `ln -s $_ $n` if $n'
+
+=end pre
+
+这样，在默认情况下，你使用的都会是系统的 perl, 而一旦你想开始做些 perl 开发，或者通过 cpan 安装新模块，便可以在命令行敲入 B<devperl> 命令然后回车，立马就切换过去了。此时你无论运行 cpan, perl 或是 perldoc, 调用的都是你自己编译的 perl 中的相应程序，而且这时通过 cpan 安装的模块也通通会保存到 B<~/perl> 下的相应目录里，不会弄乱你的系统。
+
+想回到系统的 perl 怎么办？敲入 B<sysperl> 就OK了。
+
+一般编译安装完 perl 后，通常我第一件事就是升级 M<CPAN> 模块，并安装一些常用的其他模块。
+
+=begin pre
+
+$ devperl
+$ cpan Bundle::CPAN
+
+=end pre
+
+在你编译的 perl 中，用 CPAN 来安装模块是我们强烈建议的方式，大多数情况下，CPAN 会工作得很顺利，偶尔会碰到一些类似依赖顺序，外部库和 make test 失败的问题，但是只要仔细查看出错信息,解决起来还是很顺手的。
+
+A<http://www.enlightenedperl.org|Enlightened Perl> 的项目之一 M<Task::Kensho> 帮你打包好了目前 CPAN TOP100 模块中最常用的一些模块，也包括了昨天 Fayland 所说到的 M<local::lib>， 强烈建议 perl 开发者通过安装 M<Task::Kensho> 来获得这些模块，当然由于它包含的模块比较多，可能需要花一些时间，如果不想全部安装它们，你可以看看 M<Task::Kensho> 的 pod 文档，选择自己感兴趣的模块加到你的 perl 中。
+
+在完成这些之后，你可能需要挑一个顺手的编辑器，VIM/Emacs 可能会是大部分 linux 开发的首选，但我想提到的是基于 Eclipse 的 A<http://www.epic-ide.org|E-P-I-C> 这个 Perl IDE 也是非常不错的。此外，我们还有目前很热的 A<http://padre.perlide.org|Padre>, 一款用 Perl 开发的 IDE，功能和可用性也非常不错，相信之后 Fayland 会做介绍。
+
+关于 VIM 上做 Perl 开发，来自台湾的 A<http://c9s.blogspot.com/search/label/Vim|c9s> 有很多不错的技巧分享（需翻墙）。
+
+

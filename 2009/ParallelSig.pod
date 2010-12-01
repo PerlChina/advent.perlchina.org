@@ -1,0 +1,105 @@
+=for advent_year 2009
+
+=for advent_day 18
+
+=for advent_title Parallel::Prefork 和 SIG
+
+=for advent_author Fayland Lam
+
+如果一个 daemon 处理队列太慢（或其他情况），M<Parallel::ForkManager> 和 M<Parallel::Prefork> 都是很不错的选择。
+
+下面的代码来自我们实际运行中的一个 M<TheSchwartz> worker 的 daemon, 实际上很大一部分都是拷贝自 A<http://d.hatena.ne.jp/tokuhirom/20081110/1226291955>
+
+=begin codeNNN
+
+use strict;
+use warnings;
+
+my $has_proc_pid_file
+    = eval 'use Proc::PID::File; 1;';    ## no critic (ProhibitStringyEval)
+my $has_home_dir
+    = eval 'use File::HomeDir; 1;';      ## no critic (ProhibitStringyEval)
+if ( $has_proc_pid_file and $has_home_dir ) {
+    # If already running, then exit
+    if ( Proc::PID::File->running( { dir => File::HomeDir->my_home } ) ) {
+        exit(0);
+    }
+}
+
+use UNIVERSAL::require;
+use Parallel::Prefork;
+
+my @workers = qw/
+    TheSchwartz::JobA
+    TheSchwartz::JobB
+    TheSchwartz::JobC
+/;
+foreach my $worker (@workers) {
+    print "setup $worker\n";
+    $worker->use or die $@;
+}
+
+sub MaxRequestsPerChild () { 2 }
+
+print "start prefork\n";
+my $pm = Parallel::Prefork->new({
+    max_workers  => 3,
+    fork_delay   => 1,
+    trap_signals => {
+        TERM => 'TERM',
+        HUP  => 'TERM',
+    },
+});
+
+while ($pm->signal_received ne 'TERM') {
+    $pm->start and next;
+    print "spawn $$\n";
+
+    my $client = TheSchwartz::Moosified->new( databases => [$dbh] );
+    $client->can_do($_) foreach @wokers;
+    
+    my $reqs_before_exit = MaxRequestsPerChild;
+    $SIG{TERM} = sub { $reqs_before_exit = 0 };
+    while ($reqs_before_exit > 0) {
+        if ($client->work_once) {
+            print "work $$\n";
+            --$reqs_before_exit;
+        } else {
+            sleep 10;
+        }
+    }
+
+    print "FINISHED $$\n";
+    $pm->finish;
+}
+
+$pm->wait_all_children;
+
+die "HMM????";
+
+=end codeNNN
+
+代码是自解释的。:)
+
+但是有时候我们需要停止它的时候（它由 crontab 启动），根据代码我们需要发送 TERM 给脚本，然后脚本才会优雅地退出。这时候 M<Proc::ProcessTable> 就派上大用场了。
+
+=begin codeNNN
+
+use Proc::ProcessTable;
+
+my $p = new Proc::ProcessTable( 'cache_ttys' => 1 );
+my $all = $p->table;
+foreach my $one (@$all) {
+    if ($one->cmndline =~ /TheSchwartz/) {
+        next if ( $one->cmndline =~ /TheSchwartz_restart/ ); # itself
+        my $pid = $one->pid;
+        print "kill -15 $pid\n";
+        `kill -15 $pid`; # send TERM
+    }
+}
+
+=end codeNNN
+
+Proc::ProcessTable 类似于 ps, 我们找到 pid 后，发送 TERM 过去就大功告成了。
+
+谢谢。

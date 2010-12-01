@@ -1,0 +1,35 @@
+=for advent_year 2009
+
+=for advent_day 23
+
+=for advent_title CPANDB
+
+=for advent_author Fayland Lam
+
+CPAN 数据是笔财富，而 M<CPANDB> 是这笔财富的一个入口。
+
+对 CPANDB 的一个直接应用是 M<CPAN::WWW::Top100::Generator> 而对应的网站是 A<http://ali.as/top100/>。这个网站包括了一些 CPAN 上依赖最重，被依赖最重或失败最多的一批模块列表。
+
+下面的代码可以得到类似 A<http://cpants.perl.org/dist/used_by/Moose> 的结果
+
+=begin code
+
+use CPANDB;
+
+my $moose_prereq = CPANDB::Requires->select(
+    'where module=?',
+    'Moose'
+);
+
+foreach my $prereq ( @$moose_prereq ) {
+    my $dist_name = $prereq->distribution;
+    print "$dist_name\n";
+}
+
+=end code
+
+如上只是个简单的应用，找到所有依赖 Moose 的模块。在 M<Task::Padre::Plugins> 里，我们就是用类似的方法找出所有应该 Padre 的 Plugins. 脚本请参考 A<http://svn.perlide.org/padre/trunk/Task-Padre-Plugins/auto_generate.pl>
+
+更多的应用可以参考 CPANDB 的文档，查看该 SQLite 的数据结构。
+
+谢谢。

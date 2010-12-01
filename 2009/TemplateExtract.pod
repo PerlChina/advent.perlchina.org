@@ -1,0 +1,78 @@
+=for advent_year 2009
+
+=for advent_day 21
+
+=for advent_title Template::Extract
+
+=for advent_author Fayland Lam
+
+M<Template::Extract> 由☻ 唐鳳 ☺ 所编写，可以使用 TT2 表达式从某个数据里提取东西，而无须使用正则表达式。
+
+一般来说，得到一个 HTML 内容之后，可以使用正则，或者类如 M<HTML::TreeBuilder> 之类的模块来提取数据。本文介绍的模块能同样使 job 完成，并且更加优雅。
+
+以我们当前的 A<http://perlchina.org/advent/> 举例，得到所有的 link 和对应的编号。
+
+=begin codeNNN
+
+use strict;
+use warnings;
+use LWP::Simple 'get';
+use Template::Extract;
+use Data::Dumper::Perltidy; # or just Data::Dumper
+
+my $html = get('http://perlchina.org/advent/');
+my $rule = <<RULE;
+[% FOREACH link IN links %]
+<br><div class="[% ... %]"><a href="[% link.url %]" style="[% ... %]">[% link.num %]</a></div>
+[% END %]
+RULE
+
+my $extract = Template::Extract->new();
+my $data = $extract->extract($rule, $html);
+print Dumper(\$data);
+
+=end codeNNN
+
+运行一下：
+
+=begin pre
+
+$VAR1 = \{
+    'links' => [
+        {
+            'link' => {
+                'num' => '1',
+                'url' => '2009/local_lib.html'
+            }
+        },
+        {
+            'link' => {
+                'num' => '2',
+                'url' => '2009/PerlDevENV.html'
+            }
+        },
+        {
+            'link' => {
+                'num' => '3',
+                'url' => '2009/EndScope.html'
+            }
+        },
+        {
+            'link' => {
+                'num' => '4',
+                'url' => '2009/autodie.html'
+            }
+        },
+        {
+            'link' => {
+                'num' => '5',
+                'url' => '2009/SSHBatch.html'
+            }
+        },
+...
+
+=end pre
+
+代码简单可靠。:) Enjoy
+
+谢谢。

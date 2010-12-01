@@ -1,0 +1,89 @@
+=for advent_year 2009
+
+=for advent_day 22
+
+=for advent_title LWP::UserAgent
+
+=for advent_author Fayland Lam
+
+M<LWP::UserAgent> 应该是个大家都很熟悉的模块，做 scraper 所不可缺少的。
+
+如下的 tip 可能对您所有帮助。因为 M<WWW::Mechanize> 是其子类，所以下面的东西 WWW::Mechanize 也是可以使用的。
+
+agent 是浏览器的一个代号，默认 LWP::UserAgent 会把 "libwww-perl/$LWP::VERSION" 当作自己的 agent。而如果某些网站需要一些流行的浏览器版本时（如 Facebook），那我们可以传递浏览器的代号进去。
+
+=begin code
+
+my $ua = LWP::UserAgent->new(
+    agent       => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6',
+);
+
+=end code 
+
+如果有些网站是 Mobile 类型的，可以传递 iPhone 或其他的 agent 进去
+
+=begin code
+
+my $ua = LWP::UserAgent->new(
+    agent       => 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16', # iPhone 3.0
+);
+
+=end code
+
+更多的类型可以参考 M<HTTP::BrowserDetect>
+
+默认的 LWP::UserAgent 不开启 cookie, 一般需要登录的网站都需要 cookies，最常见的做法是传递一个 {} 给  cookie_jar
+
+=begin code
+
+my $ua = LWP::UserAgent->new(
+    agent       => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6',
+    cookie_jar  => {},
+);
+
+=end code
+
+这样会自动创建一个基于内存的 M<HTTP::Cookies>, 如果你知道您的 cookie 所在（比如通过验证码后的 Cookies 文件），可以传递一个 hash 或者 M<HTTP::Cookies> 的实例
+
+=begin code
+
+my $ua = LWP::UserAgent->new(
+    agent       => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6',
+    cookie_jar  => { file => "$ENV{HOME}/.cookies.txt" },
+    # or
+    # use HTTP::Cookies;
+    # cookie_jar => HTTP::Cookies->new( file => "$ENV{HOME}/.cookies.txt" ),
+);
+
+=end code
+
+我们一般通过 M<Crypt::SSLeay> 来访问 https 网站，所以一般都需要安装此模块（Win32 下建议 ppm install Crypt::SSLeay）。
+
+最后我们讲讲 Proxy.
+
+Proxy 的使用有两种，一种是代码里直接设置，另一种是通过 ENV 设置。
+
+=begin code
+
+$ua->proxy('http', 'http://user:pass@example.com:9090');
+$ua->proxy( ['http', 'https'], 'https://user:pass@127.0.0.1/' );
+
+$ua->env_proxy;
+
+=end code
+
+env_proxy 的使用请参见 M<LWP::UserAgent> 文档。
+
+有时候可能有 socks5 proxy，这时候需要额外安装 M<LWP::Protocol::http::socks>, socks 的 proxy URL 写法如同 http:// 例子如 socks://127.0.0.1:7070/
+
+如果在 proxy 失败之后想去掉 proxy, $ua->no_proxy($domain) 是一种写法，另一种更简单的 hack 方法是
+
+=begin code
+
+$ua->{proxy} = {};
+
+=end code
+
+如果有任何问题，请来 A<http://groups.google.com/group/perlchina|Perlchina 的邮件列表>询问。（或发送任意邮件到 B<perlchina+subscribe@googlegroups.com> 申请加入列表）
+
+谢谢。

@@ -1,0 +1,43 @@
+=for advent_year 2009
+
+=for advent_day 14
+
+=for advent_title pip
+
+=for advent_author Fayland Lam
+
+M<pip> 是 M<CPAN> 的一个扩展。
+
+安装最新版本的 CPAN 模块很容易，使用 cpan ModuleName 即可。
+
+安装旧一点的 CPAN 版本，比如你想在 Perl 5.8 上安装 M<Date::Manip>（新版本的 Date::Manip 需要 Perl 5.10），虽然不容易，但是也是可以用 CPAN 做到的。
+
+=begin pre
+
+$ cpan SBECK/Date-Manip-5.54.tar.gz
+
+=end pre
+
+但是如果你想安装 backpan 上的模块呢，或者你想安装一个根本不在 CPAN 上的模块呢？通过 cpan 命令就无法解决了。一般的做法是找到这个 URL 然后下载过来，然后解压缩，运行 perl Makefile.PL 然后 make, make test, make install，有点啰嗦。
+
+M<pip> 由 Adam Kennedy 编写，通过 M<CPAN::Inject> 来 inject cpan 命令，最后通过 cpan 来方便安装本地或者远程模块。
+
+简单的例子如
+
+=begin pre
+
+$ pip A-Local-Module-1.00.tar.gz
+$ pip http://svn.ali.as/cpan/release/Process-0.17.tar.gz
+$ pip http://foo.com/DBI-1.37-MSWin32-5.8.0.par
+
+=end pre
+
+另外您还可以创建自己的 p5i 文件，来简化模块安装和系统维护。
+
+趁着篇幅还短，这里再介绍一下 CPAN::Inject 的另一个应用 M<cpanf>
+
+如果您跟我一样订阅了 CPAN 的 A<http://search.cpan.org/uploads.rdf|RSS> 的话，可能看见一个新模块或者模块的新版本时，会忍不住想试试。但是如果这个模块还没有到达您的镜像时，您无法使用 cpan 来安装（即使 reload index 也没用）。这个时候，您可以尝试下用 cpanf 来安装这个模块。
+
+这个模块使用了 FriendFeed CPAN relatime bot (http://friendfeed.com/cpan) 和最快的镜像 A<http://cpan.cpantesters.org/>，可以让您可以在第一时间尝鲜。
+
+Enjoy! 谢谢。

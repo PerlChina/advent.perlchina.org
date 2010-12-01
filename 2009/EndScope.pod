@@ -1,0 +1,63 @@
+=for advent_year 2009
+
+=for advent_day 3
+
+=for advent_title End Scope
+
+=for advent_author Fayland Lam
+
+CPAN 上有很多支持在 scope 结束后运行某些代码，其中最常用的是 M<Scope::Guard> 和 M<B::Hooks::EndOfScope>
+
+M<Scope::Guard> 采用最常见的 B<DESTROY> 方法。Scope::Guard 可以通过 dismiss 来取消。
+
+=begin codeNNN
+
+use Net::FTP;
+use Scope::Guard;
+
+{
+    my $err;
+    my $sg = Scope::Guard->new(
+        sub { email_error($err); die $err; }
+    );
+    my $ftp = Net::FTP->new($host, Debug => 0)
+      or do { return $err = "Cannot connect to $host: $@"; };
+    $ftp->login($user, $pass)
+      or do { return $err = "Cannot login " . $ftp->message; };
+    
+    $sg->dismiss();
+}
+
+=end codeNNN
+
+M<B::Hooks::EndOfScope> 使用 M<Variable::Magic> 中的魔术 B<$^H>. EndOfScope 的强悍之处在于支持 Moose 的方法修改，并且支持多个 on_scope_end 加载。
+
+=begin codeNNN
+
+    # Make sure that the application class becomes immutable at this point,
+    # which ensures that it gets an inlined constructor. This means that it
+    # works even if the user has added a plugin which contains a new method.
+    # Note however that we have to do the work on scope end, so that method
+    # modifiers work correctly in MyApp (as you have to call setup _before_
+    # applying modifiers).
+    B::Hooks::EndOfScope::on_scope_end {
+        return if $@;
+        my $meta = Class::MOP::get_metaclass_by_name($class);
+        if ( $meta->is_immutable && ! { $meta->immutable_options }->{inline_constructor} ) {
+            warn "You made your application class ($class) immutable, "
+                . "but did not inline the constructor.\n"
+                . "This will break catalyst, please pass "
+                . "(replace_constructor => 1) when making your class immutable.\n";
+        }
+        $meta->make_immutable(replace_constructor => 1) unless $meta->is_immutable;
+    };
+
+    $class->setup_finalize;
+
+=end codeNNN
+
+上述代码来自 A<Catalyst>
+
+我们一般在多处 return, next 或复杂子程序调用的时候，为了使代码更简洁而采用上述模块。
+
+谢谢。

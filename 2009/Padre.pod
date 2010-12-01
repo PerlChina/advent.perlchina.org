@@ -1,0 +1,47 @@
+=for advent_year 2009
+
+=for advent_day 10
+
+=for advent_title Padre
+
+=for advent_author Fayland Lam
+
+如果您在寻找一个免费的，高度可扩展的，对 Perl 拥有良好支持的 IDE, 那么 M<Padre> 是个很不错的选择。
+
+Padre 由 Gábor Szabó 发起，使用 Perl 编写，主要目标是给 Perl 开发者一个良好的开发环境。主页在 A<http://padre.perlide.org/>
+
+以下是使用 Padre 的几大理由：
+
+一，它由 Perl 所编写。
+
+由 Perl 编写意味着高度可扩展，您可以使用您最熟悉和喜欢的 Perl 来编写插件，满足自己的需求。
+
+二，初学者模式。
+
+它能自动识别指出一些初学者常见的错误。
+
+还有一些初学者常用的功能如变量替换，查找变量申明，括号对齐和补齐等。
+
+三，丰富的功能。
+
+通过一些插件扩展，您能 Tidy A<http://search.cpan.org/dist/Padre-Plugin-HTML/|HTML>/A<http://search.cpan.org/dist/Padre-Plugin-XML/|XML>/A<http://search.cpan.org/dist/Padre-Plugin-JavaScript/|JavaScript>/Perl, 验证 HTML/XML/CSS 错误，检查拼写语法等。
+
+针对 Perl, 拥有 A<http://search.cpan.org/dist/Padre-Plugin-Ecliptic/|Ecliptic>, A<http://search.cpan.org/dist/Padre-Plugin-Debugger/|调试器>，A<http://search.cpan.org/dist/Padre-Plugin-PerlCritic/|Critic>, A<http://search.cpan.org/dist/Padre-Plugin-ClassSniff/|ClassSniff>, A<http://search.cpan.org/dist/Padre-Plugin-DataWalker/|DataWalker>, A<http://search.cpan.org/dist/Padre-Plugin-REPL/|REPL>, A<http://search.cpan.org/dist/Padre-Plugin-PAR/|PAR> 等丰富插件。
+
+常见的框架支持 A<http://search.cpan.org/dist/Padre-Plugin-Catalyst/|Catalyst>, A<http://search.cpan.org/dist/Padre-Plugin-Mojolicious/|Mojolicious> 等。
+
+四，Perl 6
+
+虽然 Perl 6 不会在今年的圣诞发布，但是这并不妨碍我们去尝试她。
+
+Padre 拥有 A<http://search.cpan.org/dist/Padre-Plugin-Perl6/|Perl 6> 高亮语法支持，Parrot 和 Rakudo 支持。Win32 用户可以直接下载 A<http://padre.perlide.org/download.html|Padre Standalone Plus Six> 来同时拥有 Strawberry Perl + Padre + Rakudo.
+
+M<Padre> 的下载安装可以参考 A<http://padre.perlide.org/download.html>, 大部分的操作系统都有直接安装文件。
+
+截屏参考 A<http://padre.perlide.org/screenshots.html>，如
+
+<img src='http://padre.perlide.org/trac/raw-attachment/wiki/Screenshots/Padre_0.47_Win7_autocomplete.jpg' />
+
+今年的 Catalyst Advent Calendar 有一篇 A<http://www.catalystframework.org/calendar/2009/9|Developing Catalyst Applications with Padre>，可以阅读一下。
+
+谢谢。

@@ -1,0 +1,62 @@
+=for advent_year 2009
+
+=for advent_day 15
+
+=for advent_title POE
+
+=for advent_author Joe Jiang
+
+做维护的人每天都需要和 ssh 打交道，可是往往会面对 ssh 断线的苦恼。在发现了 A<http://www.harding.motd.ca/autossh|autossh> 这个很酷的 ssh 断线自动重连工具之后，一个问题随之浮现出来，那就是如何才能找到它需要的 echo 服务（如果不希望在所有机器上启动 inetd 的 echo 服务）。想找个 A<http://search.cpan.org/dist/AnyEvent|AnyEvent> 框架的实现未果，不由得想起多年前用过的一个模块 A<http://search.cpan.org/dist/POE|POE>。
+
+POE 虽然名叫 Perl Object Environment，但是和 OO 并无显著的关系，而是一个面向 Perl Event Driven Programming 的框架。在众多的事件驱动框架中，这是一个比较成熟的选择。
+
+用 POE 实现 echo 服务的单行 perl 程序如下：
+
+=begin pre
+
+% echo install POE can be done with cpan or your favorate module package manager
+
+% perl -MPOE=Component::Server::TCP -e 'POE::Component::Server::TCP->new(Port=>3240, ClientInput=>sub {$_[HEAP]{client}->put($_[ARG0])});POE::Kernel->run'
+
+=end pre
+
+然后你就可以在另外的 shell 中尝试 telnet localhost 3240，验证此 echo 脚本的工作（多个 client 应该也没有问题）。POE::Component::Server::TCP 这个模块确实是为此任务而设计的最佳解决方案，它通过 use POE qw(Component::Server::TCP) 来引入主程序（也就是这个单行脚本），因此成为命令行的第一个参数 -MPOE=...。
+
+现在问题是如何部署这个脚本到所有需要监管的 Server，当然逐个机器安装 POE 模块不会是最佳的解决方案，否则还不如逐个打开 echo 服务。所以这时候就可以考虑使用 perl packer 工具 PAR::Packer，具体说就是 pp 这个命令行工具。
+
+在经过一番尝试以后，这个 echo_server 在我的机器上生成了：
+
+=begin pre
+
+% echo install PAR::Packer can be done with cpan or your favorate module package manager
+
+% pp -M POE -e 'require POE::Filter; require POE::Component::Server::TCP; POE::Component::Server::TCP->new(Port=>3240, ClientInput=>sub {$_[HEAP]{client}->put($_[ARG0])});POE::Kernel->run;' -o /tmp/echod
+
+% /tmp/echod & sleep 1; lsof -i :3240
+COMMAND   PID USER   FD   TYPE DEVICE SIZE NODE NAME
+echod   14299  joe    6u  IPv4 137293       TCP *:3240 (LISTEN)
+
+=end pre
+
+在 /tmp 目录下生成了一个 echod 服务器程序，在后台启动它之后可以用 telnet 再次验证。这时程序已经成为自包含的，不再依赖于生养它的 Perl 母环境。可以用 unzip 来了解它的结构。
+
+另外值得一提的是，由于 POE 模块自己用了一些算法来决定它载入的子模块，所以 pp 工具无法完全猜对，所以在命令行中出现了 require 语句，用来告知需要补充加载（到可执行 zip 中）的两个模块。
+
+=begin pre
+
+$ unzip -l /tmp/echod | head
+Archive:  /tmp/echod
+  Length     Date   Time    Name
+ --------    ----   ----    ----
+        0  12-15-09 11:10   lib/
+        0  12-15-09 11:10   script/
+    27145  12-15-09 11:10   MANIFEST
+      217  12-15-09 11:10   META.yml
+     5438  12-15-09 11:10   lib/AutoLoader.pm
+     7922  12-15-09 11:10   lib/B.pm
+   128602  12-15-09 11:10   lib/B/Deparse.pm
+...
+
+=end pre
+
+这样的程序只要 copy 到所有需要运行的机器并且启动就可以，完成这个工作的工具是P<2009-05|第五天>介绍的 SSH::Batch。
