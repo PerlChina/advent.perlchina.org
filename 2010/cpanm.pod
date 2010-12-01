@@ -53,3 +53,15 @@ Successfully installed App-cpanminus-1.1004
 =end pre
 
 Tatsuhiko Miyagawa 出品必属精品。我吹的再多都不及大家去试试。:)
+
+PS, 附上今年的其他 advent 链接：
+
+* A<http://perladvent.pm.org/2010/>
+
+* A<http://www.catalystframework.org/calendar/2010/>
+
+* A<http://advent.rjbs.manxome.org/2010/>
+
+* A<http://advent.perldancer.org/2010>
+
+* A<http://perl-users.jp/articles/advent-calendar/2010/>
