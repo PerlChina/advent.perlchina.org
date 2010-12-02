@@ -14,18 +14,18 @@
 
 如果你能自己初始化 ua (M<LWP::UserAgent> 或 M<WWW::Mechanize>) ，我们可以通过 M<LWP::Protocol::socks> 来设置
 
-=pre
+=begin pre
 
     $ua->proxy(['http', 'https'], 'socks://127.0.0.1:7070'); # SSH Tunnel
     $ua->proxy(['http', 'https'], 'socks://127.0.0.1:9050'); # Tor port
 
     $ua->{proxy} = {}; # remove proxy
 
-=end
+=end pre
 
 但是如果我们无法得到某些模块的 ua 时，比如 M<Facebook::Graph> 或者 M<Net::Twitter>，我们可以通过 M<LWP::Protocol::http::SocksChain> 和 L<LWP::Protocol::https::SocksChain> 直接更改最底层的 LWP protocol
 
-=pre
+=begin pre
 
     use LWP::Protocol::http::SocksChain;
     use LWP::Protocol::https::SocksChain;
@@ -55,6 +55,6 @@
     LWP::Protocol::implementor( http => 'LWP::Protocol::http' );
     LWP::Protocol::implementor( https => 'LWP::Protocol::https' );
 
-=end
+=end pre
 
 OK, 写出来都是很简单的代码。祝各位用套愉快。:)
