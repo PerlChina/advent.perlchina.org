@@ -71,3 +71,5 @@ PS, 附上今年的其他 advent 链接：
 * A<http://sysadvent.blogspot.com/>
 
 * A<http://www.perl-uwe.com/search/label/Advent%20calendar>
+
+* A<http://advent.perl.kr/>
