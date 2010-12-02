@@ -1,0 +1,60 @@
+=for advent_year 2010
+
+=for advent_day 2
+
+=for advent_title Tor
+
+=for advent_author Fayland Lam
+
+在国内混，爬墙是必备技能。爬墙有很多种，SSH Tunnel, VPN, Tor 等。如果仅仅是个人使用的话，SSH Tunnel 或者 VPN 都是不错的选择，速度够快，但是可能不免费。Tor 是一个免费的选择，虽然有时候可能有点慢。
+
+如果要做爬虫工具的话，Tor 将是一个必备选择。虽然有时候它不稳定或者某些网站不欢迎它，但是大部分情况下，它都可以很好的工作。
+
+本篇并非爬墙介绍篇或者下载安装篇，而是给某些有了套（Tor）但不知道咋用的童鞋一点提示。:)
+
+如果你能自己初始化 ua (M<LWP::UserAgent> 或 M<WWW::Mechanize>) ，我们可以通过 M<LWP::Protocol::socks> 来设置
+
+=pre
+
+    $ua->proxy(['http', 'https'], 'socks://127.0.0.1:7070'); # SSH Tunnel
+    $ua->proxy(['http', 'https'], 'socks://127.0.0.1:9050'); # Tor port
+
+    $ua->{proxy} = {}; # remove proxy
+
+=end
+
+但是如果我们无法得到某些模块的 ua 时，比如 M<Facebook::Graph> 或者 M<Net::Twitter>，我们可以通过 M<LWP::Protocol::http::SocksChain> 和 L<LWP::Protocol::https::SocksChain> 直接更改最底层的 LWP protocol
+
+=pre
+
+    use LWP::Protocol::http::SocksChain;
+    use LWP::Protocol::https::SocksChain;
+
+    # set proxy
+    LWP::Protocol::implementor( http => 'LWP::Protocol::http::SocksChain' );
+    @LWP::Protocol::http::SocksChain::EXTRA_SOCK_OPTS = (
+        Chain_Len    => 1,
+        Debug        => 0,
+        Random_Chain => 1,
+        Chain_File_Data => [ '127.0.0.1:9050:::4' ], # or [ '127.0.0.1:7070' ],
+        Auto_Save    => 0,
+        Restore_Type => 0
+    );
+
+    LWP::Protocol::implementor( https => 'LWP::Protocol::https::SocksChain' );
+    @LWP::Protocol::https::SocksChain::EXTRA_SOCK_OPTS = (
+        Chain_Len    => 1,
+        Debug        => 0,
+        Random_Chain => 1,
+        Chain_File_Data => [ '127.0.0.1:9050:::4' ], # or [ '127.0.0.1:7070' ],
+        Auto_Save    => 0,
+        Restore_Type => 0
+    );
+
+    # clear proxy
+    LWP::Protocol::implementor( http => 'LWP::Protocol::http' );
+    LWP::Protocol::implementor( https => 'LWP::Protocol::https' );
+
+=end
+
+OK, 写出来都是很简单的代码。祝各位用套愉快。:)
