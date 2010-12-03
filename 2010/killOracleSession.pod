@@ -31,6 +31,7 @@ $ echo "alter system kill session ?"|do-adm \'59,36463\'
 DBD::Oracle::st execute failed: ORA-01036: illegal variable name/number (DBD ERROR: OCIBindByName) [for Statement "alter system kill session ?" with ParamValues: :p1=''59,36463''] at -e line 1, <STDIN> line 1.
 
 =end pre
+
 这里看到，即使把单引号一起作为参数传递进去，也还是有问题的。
 
 =begin pre
@@ -57,6 +58,7 @@ $ do-bofcadm <kill-session2.sql 59 36463
 这里使用了 Oracle PL/SQL 来执行动态拼接的 SQL，其中的 chr(39) 就是单引号。要是高兴的话，还可以在 select 部分加入一些和其他系统表的连接查询，判断 SID 和序列号是否真实存在。下面看看受到惩罚的测试会话：
  
 =begin pre
+
 SQL> select distinct SID, serial# from v$mystat join v$session using (SID);
  
        SID    SERIAL#
@@ -68,6 +70,7 @@ select distinct SID, serial# from v$mystat join v$session using (SID)
 *
 ERROR at line 1:
 ORA-00028: your session has been killed
+
 =end pre
  
 最后，也要分享 do-adm 这个程序：
