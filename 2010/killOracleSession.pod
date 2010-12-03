@@ -1,0 +1,83 @@
+=for advent_year 2010
+
+=for advent_day 3
+
+=for advent_title Kill oracle session easily with perl
+
+=for advent_author Joe Jiang
+
+进行数据库管理的时候，往往需要快速识别系统压力的来源（有罪的 Session），然后快速杀除。但是有时候真的会有意外的麻烦。
+
+=begin pre
+
+SQL> alter system kill session '379, 4583';
+
+=end pre
+
+这是最标准的办法，第一个参数 379 就是会话编号，第二个参数是序列号（Serial#，和软件版权无关，纯粹用来避免 SID 复用带来的问题）。用足够权限的用户连接，然后输入这条命令。可是如果需要更加灵活的杀除，就很麻烦。即使 SQL 本身如此简单，能否脚本化呢？最简单的想法是这样的：
+
+=begin pre
+
+$ echo "alter system kill session '?'"|do-adm 59,36463
+DBD::Oracle::st execute failed: called with 1 bind variables when 0 are needed [for Statement "alter system kill session '?'
+
+=end pre
+
+单引号内的问号显然是无法成为绑定变量的，所以必须另寻他方。
+ 
+=begin pre
+
+$ echo "alter system kill session ?"|do-adm \'59,36463\'
+DBD::Oracle::st execute failed: ORA-01036: illegal variable name/number (DBD ERROR: OCIBindByName) [for Statement "alter system kill session ?" with ParamValues: :p1=''59,36463''] at -e line 1, <STDIN> line 1.
+
+=end pre
+
+这里看到，即使把单引号一起作为参数传递进去，也还是有问题的。
+
+=begin pre
+
+$ sed s/?/333,25308/ kill-session.sql | do-adm
+
+=end pre
+
+这个方案可行，其中 kill-session.sql 的内容就是第一条命令中 echo 的 SQL 代码。不过这么做还是有些小小的丑陋。问题在于，这样的做法中，真正的参数在命令的前方，而不是大家习惯的击键序列：上一行、退格...、输入参数、回车。于是，现在有了第三版的参数化做法：
+ 
+=begin pre
+
+$ cat kill-session2.sql
+begin
+  for i in (select 'alter system kill session '||chr(39)||?||','||?||chr(39) cmd from dual) loop
+    execute immediate i.cmd;
+  end loop;
+end;
+ 
+$ do-bofcadm <kill-session2.sql 59 36463
+
+=end pre
+
+这里使用了 Oracle PL/SQL 来执行动态拼接的 SQL，其中的 chr(39) 就是单引号。要是高兴的话，还可以在 select 部分加入一些和其他系统表的连接查询，判断 SID 和序列号是否真实存在。下面看看受到惩罚的测试会话：
+ 
+=begin pre
+
+SQL> select distinct SID, serial# from v$mystat join v$session using (SID);
+ 
+       SID    SERIAL#
+---------- ----------
+        59      36463
+ 
+SQL> select distinct SID, serial# from v$mystat join v$session using (SID);
+select distinct SID, serial# from v$mystat join v$session using (SID)
+*
+ERROR at line 1:
+ORA-00028: your session has been killed
+
+=end pre
+ 
+最后，也要分享 do-adm 这个程序：
+ 
+=begin pre
+ 
+$ cat bin/do-adm
+perl -MDBI -le '($s=($d=DBI->connect(q(dbi:Oracle:host=localhost;port=9999;sid=ORCL),q(user),q(pass)))->prepare_cached(join q(),<STDIN>))->execute(@ARGV); $d->disconnect' $*
+ 
+=end pre
