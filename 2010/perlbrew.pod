@@ -1,0 +1,58 @@
+=for advent_year 2010
+
+=for advent_day 4
+
+=for advent_title perlbrew
+
+=for advent_author Fayland Lam
+
+安装新版 perl 需要理由吗？需要吗？需要吗？
+
+不管是想尝鲜，尝试新功能，还是想测试不同版本性能或者其它，你可能真的需要安装一个新版 perl。去年 cnhackTNT 介绍了 A<http://www.perlchina.org/advent/2009/PerlDevENV.html|Perl 开发环境建议>，如果你需要一个自定义的 perl 编译器的话，那是一个很不错的指导。但是如果你仅仅需要一个不同版本的 perl，我们现在有更好的全自动化的选择。那就是 M<App::perlbrew>.
+
+安装该模块应该无需更多介绍，无论是使用 M<cpan> 或者 M<cpanm> 都可以很顺利的将它安装到你的系统。或者你可以用
+
+=begin pre
+
+$ curl -LO http://xrl.us/perlbrew
+$ perl perlbrew install
+$ rm perlbrew
+
+=end pre
+
+安装完毕后，所有的东西都将非常的简单。
+
+=begin pre
+
+$ perlbrew init
+$ echo 'source ~/perl5/perlbrew/etc/bashrc' >> ~/.bashrc
+$ source ~/.bashrc
+
+=end pre
+
+接下来就是你想安装 perl 5.12 就安装 5.12，想安装 5.13 就安装 5.13 的时间了。
+安装完了就是想用 5.12 就用 5.12，想用 5.13 就 5.13。
+
+=begin pre
+
+$ perlbrew install perl-5.12.2
+$ perlbrew install perl-5.13.7
+$ perlbrew list
+$ perlbrew switch perl-5.12.2
+$ perlbrew switch perl-5.13.7
+
+=end pre
+
+所有的安装都在你的 $HOME 目录里，你可以随时 rm 掉它，然后回到系统的 perl
+
+安装的整个过程记录都在 ~/perl5/perlbrew/build.log，你可以在安装的时候 tail -f 来跟踪整个过程。
+
+=begin pre
+
+$ perlbrew off
+
+=end pre
+
+OK。非常简单和方便。感谢劉康民。
+
+Enjoy.
