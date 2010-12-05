@@ -1,0 +1,56 @@
+=for advent_year 2010
+
+=for advent_day 5
+
+=for advent_title mytop 和 MySQL::Sandbox
+
+=for advent_author Fayland Lam
+
+我想大部分用 MySQL 的人都使用过 A<mytop|http://jeremy.zawodny.com/mysql/mytop/>, mytop 类似 top, 可以显示 mysql 正在运行的 sql。
+
+如果你想监视某个 mysql host 的运行情况，或者你想 kill 掉某个运行太长时间的 SQL，mytop 都是一个很不错的 tool。
+
+mytop 的原理比较简单。通过 I<SHOW PROCESSLIST> 和 I<SHOW STATUS> 来显示所需的信息。用法也超级简单。将 mysql 替换成 mytop 就可以了。
+
+=begin pre
+
+$ mysql -hlocalhost -uroot -pmy_pwd
+
+=end pre
+
+进入后一些有用的输入可能是：
+
+* h 显示帮助
+* f 显示完整的 sql
+* k 杀死一个 sql
+* p 暂停刷新
+* q 退出
+
+更多的请参阅 A<http://jeremy.zawodny.com/mysql/mytop/mytop.html> (CPAN 上有点 outdated)
+
+同时，另一个比较有用的 MySQL 工具就是 M<MySQL::Sandbox>
+
+前几天我们介绍了随心所欲安装不同的 perl 版本，这次我们可以随心所欲地在一台服务器上安装不同的 mysql 版本。
+
+Sandbox 意味着这仅仅是个沙盒，它很安全，它不会对系统的 mysql 造成任何影响。使用该 tool，我们不仅仅可以创建单点 mysql，还可以创建 replication，circular replication 甚至多个 sandbox
+
+下面只是简单的介绍，无论任何时候，想摸透一个东西，您都需要自己动手尝试。
+
+=begin pre
+
+$ cpanm MySQL::Sandbox
+$ # 从 MySQL 网站下载编译好的文件或者源码文件 A<http://dev.mysql.com/downloads/mysql/>
+$ # 编译好的文件我们可以简单的用
+$ make_sandbox /path/to/mysql-X.X.XX-osinfo.tar.gz
+$ # 从源码开始，注意别 make install 了
+$ cd mysql-5.1.53
+$ ./configure && make
+$ make_sandbox_from_source /path/to/mysql-5.1.53 single
+
+=end pre
+
+这样我们就有了一个简单的单点 mysql,可以随时开始我们的测试。
+
+安装完毕后，进去安装完成的目录。里面有一个 my.sandbox.cnf 是配置文件，包含 username/password/port 等。其它的都是 sh 文件，使用特定的运行文件，配置文件和目录。
+
+使用它们，你就会对 MySQL 有更多的了解。谢谢。
