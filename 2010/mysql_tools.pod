@@ -6,7 +6,7 @@
 
 =for advent_author Fayland Lam
 
-我想大部分用 MySQL 的人都使用过 A<mytop|http://jeremy.zawodny.com/mysql/mytop/>, mytop 类似 top, 可以显示 mysql 正在运行的 sql。
+我想大部分用 MySQL 的人都使用过 A<http://jeremy.zawodny.com/mysql/mytop/|mytop>, mytop 类似 top, 可以显示 mysql 正在运行的 sql。
 
 如果你想监视某个 mysql host 的运行情况，或者你想 kill 掉某个运行太长时间的 SQL，mytop 都是一个很不错的 tool。
 

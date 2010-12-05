@@ -12,7 +12,7 @@
 <h1><a href="../">Perl Advent Calendar 2010-12</a>-05</h1>
 <h2 align="center">mytop 和 MySQL::Sandbox</h2>
 <h3 align="center">by Fayland Lam</h3>
-<p>我想大部分用 MySQL 的人都使用过 <a href="mytop">http://jeremy.zawodny.com/mysql/mytop/</a>, mytop 类似 top, 可以显示 mysql 正在运行的 sql。</p>
+<p>我想大部分用 MySQL 的人都使用过 <a href="http://jeremy.zawodny.com/mysql/mytop/">mytop</a>, mytop 类似 top, 可以显示 mysql 正在运行的 sql。</p>
 <p>如果你想监视某个 mysql host 的运行情况，或者你想 kill 掉某个运行太长时间的 SQL，mytop 都是一个很不错的 tool。</p>
 <p>mytop 的原理比较简单。通过 <span style="font-style: italic">SHOW PROCESSLIST</span> 和 <span style="font-style: italic">SHOW STATUS</span> 来显示所需的信息。用法也超级简单。将 mysql 替换成 mytop 就可以了。</p>
 <pre><span class="c">$ mysql -hlocalhost -uroot -pmy_pwd</span></pre>
