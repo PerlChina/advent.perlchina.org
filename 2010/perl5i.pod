@@ -50,7 +50,7 @@ perl5i 的功能很强悍，而且能修复一些你及其容易出错的代码�
 
 2。M<Try::Tiny>，再也不用说 Perl 没有 try { } catch {} 了。
 
-3。我去年介绍的 <http://perlchina.org/advent/2009/autodie.html|autodie>
+3。我去年介绍的 A<http://perlchina.org/advent/2009/autodie.html|autodie>
 
 4。M<autovivification>, 下面是段很容易出问题的代码
 
