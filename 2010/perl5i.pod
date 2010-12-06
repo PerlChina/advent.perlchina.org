@@ -1,0 +1,121 @@
+=for advent_year 2010
+
+=for advent_day 6
+
+=for advent_title perl5i
+
+=for advent_author Fayland Lam
+
+M<perl5i> 的缩写是 Perl 5 Improved. perl5i 由 Michael G Schwern 所写，使用了一大批优秀的 Perl 模块，让 perl5 的编码变得更简单，更少错误和更实用。
+
+perl5i 的安装如其他的普通模块，请不要担心它的依赖模块，它只在需要的时候才载入它们。
+
+使用 perl5i 有很多种方法。
+
+1。你可以当成一个模块来使用，
+
+=begin code
+
+use perl5i::2;
+# or
+use perl5i::latest;
+
+=end code
+
+perl5i 为了使代码更简洁，使用了版本号来不向下兼容代码。所以通常你要在 perl5i 后面加 ::2 或者 ::1，当然你也可以使用 ::latest, 始终使用最近的版本号。
+
+2。你可以当成 perl 来使用。您所有需要 perl 的地方都可以使用 perl5i 来替换。比如
+
+=begin pre
+
+$ perl5i hello.pl
+
+=end pre
+
+或者在你的脚本里用
+
+=begin pre
+
+#!/usr/bin/perl5i
+
+=end pre
+
+这是一样的效果。
+
+perl5i 的功能很强悍，而且能修复一些你及其容易出错的代码。下面仅仅是其中的部分功能。
+
+1。首先载入 M<Modern::Perl> 的东西。默认开始 strict; warnings; 5.10 的 features 和 c3
+
+在此再次推荐一下 chromatic 写的免费发布的 Perl 书 A<http://www.onyxneon.com/books/modern_perl/|Modern Perl>
+
+2。M<Try::Tiny>，再也不用说 Perl 没有 try { } catch {} 了。
+
+3。我去年介绍的 <http://perlchina.org/advent/2009/autodie.html|autodie>
+
+4。M<autovivification>, 下面是段很容易出问题的代码
+
+=begin code
+
+my %hash = from_somewhere();
+if (exists $hash{key1}{key2}) {
+    # do something if it's true
+};
+unless (keys %hash) {
+    # when hash is empty
+}
+    
+=end code
+
+即使 from_somewhere() 给你 return 了一个空的 hash 或者 undef，你 debug 半天会发现 unless (keys %hash) 怎么也运行不了。因为 exists $hash{key1}{key2} 会给你创建一个 key1 给 %hash, 然后 keys 就成立了。perl5i 或者说 autovivification 会自动 fix 这个问题。
+
+5。M<true>，再也无需在 Perl 模块的最后一行写上
+
+=begin code
+
+1; # make mummy happy
+
+=end code
+
+6。autobox 的一些有用的例子
+
+=begin pre
+
+    say "Hello"->center(10, '-');   # "---Hello--";
+    2.45->round_up;   # 3
+    2.45->round_down;  # 2
+    "12.34"->is_number;         # also true
+    $is_even = $thing->is_even;
+    
+    $module->require->import(qw(foo bar));
+    
+    my $string = '    testme'->ltrim;        # 'testme'
+    my $string = 'testme    '->rtrim;        # 'testme'
+    my $string = '    testme    '->trim;     # 'testme'
+    
+    "Foo/Bar.pm"->path2module;  # "Foo::Bar"
+    "Foo::Bar"->module2path;  # "Foo/Bar.pm"
+    
+    @array->foreach( func($item) { say $item } );  # print each item
+    
+    my @a = ( 1, 2, 3 );
+    my @b = ( 3, 4, 5 );
+    my @diff_a = @a->diff(\@b) # [ 1, 2 ]
+    my @diff_b = @b->diff(\@a) # [ 4, 5 ]
+    
+    my @a = (1 .. 10);
+    my @b = (5 .. 15);
+    my @intersection = @a->intersect(\@b) # [ 5 .. 10 ];
+    
+    my %things = ( foo => 1, bar => 2, baz => 5 );
+    my %flipped = %things->flip; # { 1 => foo, 2 => bar, 5 => baz }
+    
+    my $a = { a => 1 };
+    my $b = { a => 100, b => 2};
+    $a->merge($b); # { a => 100, b => 2 }
+    $b->merge($a); # { a => 1,   b => 2 }
+
+=end pre
+
+7。其它更多的如 signature alias indirect 等等，就等待诸位去发现和使用了。:)
+
+Enjoy!
