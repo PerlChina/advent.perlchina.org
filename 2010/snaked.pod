@@ -8,7 +8,9 @@
 
 我们经常会碰到需要定时执行某些程序的需求，这种时候一般脑中最先闪现的便是 A<http://en.wikipedia.org/wiki/Cron|cron> 或是 A<http://en.wikipedia.org/wiki/At_(Windows)|Windows 计划任务>, 很少有人知道 M<snaked> 这个模块或着说工具。
 
-M<snaked> 是A<http://search.cpan.org/~kohts/|Petya Kohts> 用 Perl 开发的一个任务调度程序，它能完成和 cron 一样的功能，也就是定时执行程序。但它还有一些 cron 所没有的特性，如： 
+M<snaked> 是A<http://search.cpan.org/~kohts/|Petya Kohts> 用 Perl 开发的一个任务调度程序，在 Linux 和 FreeBSD 上都经过了大量的测试，貌似俄罗斯第一的 Yandex.ru 内部也有在使用它。
+
+它能完成和 cron 一样的功能，也就是定时执行程序。但它还有一些 cron 所没有的特性，如： 
 
 1. 可以限制任务运行所耗费的时间（包括单个任务或总任务耗时）
 
