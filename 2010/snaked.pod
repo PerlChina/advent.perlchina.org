@@ -1,0 +1,248 @@
+=for advent_year 2010
+
+=for advent_day 7
+
+=for advent_title snaked 任务调度器
+
+=for advent_author cnhackTNT 
+
+我们经常会碰到需要定时执行某些程序的需求，这种时候一般脑中最先闪现的便是 A<http://en.wikipedia.org/wiki/Cron|cron> 或是 A<http://en.wikipedia.org/wiki/At_(Windows)|Windows 计划任务>, 很少有人知道 M<snaked> 这个模块或着说工具。
+
+M<snaked> 是A<http://search.cpan.org/~kohts/|Petya Kohts> 用 Perl 开发的一个任务调度程序，在 Linux 和 FreeBSD 上都经过了大量的测试，貌似俄罗斯第一的 Yandex.ru 内部也有在使用它。
+
+它能完成和 cron 一样的功能，也就是定时执行程序。但它还有一些 cron 所没有的特性，如： 
+
+1. 可以限制任务运行所耗费的时间（包括单个任务或总任务耗时）
+
+2. 能处理任务间的依赖关系
+
+3. cron 最小计时单位为分钟，而 M<snaked> 最小单位为秒
+
+4. 任务启动时随机延时功能
+
+更重要的一点，它是由 Perl 编写的，几乎在兼容 POSIX 标准的系统上均可以运行。
+
+下面让我们来安装它吧。
+
+=head3 安装 M<snaked>
+
+我们可以用前面提到过的 M<cpanm> 来安装该模块，非常简单：
+
+=begin pre
+
+$ cpanm snaked Proc::ProcessTable
+
+=end pre
+
+M<Proc::ProcessTable> 是它所依赖的模块之一。
+
+安装完成后，一般会在 I<perl> 所在的 I<bin/> 目录下生成 I<snaked> 可执行程序，通常这个 I<bin/> 目录应该已经在你当前的 I<PATH> 环境变量里了，所以直接运行 I<snaked> 就可以看到它输出的帮助信息。
+
+
+=head3 M<snaked> 配置目录结构
+
+如果不指定，M<snaked> 的默认配置目录指向 I</etc/snaked>，一般来说我们会自定义配置目录的位置。举例来说，其结构为：
+
+=begin pre
+
+$ tree demo_snaked/
+
+demo_snaked/
+├── admin_email
+├── jobs
+│   ├── job_5min
+│   │   ├── cmd
+│   │   ├── conflicts
+│   │   └── execution_interval
+│   └── job_1min
+│       ├── cmd
+│       └── execution_interval
+├── log
+└── pidfile
+
+=end pre
+
+上面的 I<demo_snaked> 是一个 snaked 配置目录，I<admin_email>, I<log>, I<pidfile> 各自都是文本文件，其内容都是一行，分别代表这几个配置项：管理员的电子邮件地址，日志文件路径，pid 文件路径。
+
+分别打开看一下：
+
+=begin pre
+
+$ cd demo_snaked/
+
+$ cat admin_email
+webmaster@someweb.com
+
+$ cat log
+/home/cnhacktnt/demo_snaked/snaked.log
+
+$ cat pidfile
+/home/cnhacktnt/demo_snaked/snaked.pid
+
+=end pre
+
+当然还有一些其他的配置项，有些配置项也有默认的值，这个我们可以参看 A<http://search.cpan.org/perldoc?snaked|snaked 的文档>。
+
+=head4 I<jobs> 任务目录
+
+I<jobs> 目录是重点，它的名字是固定的，它里面存放有一个或多个目录，每个目录都代表一个单独的任务，目录的名字既为任务的唯一 id，比如说上面的例子中就包含两个任务：I<job_5min> 和 I<job_1min>，这个名字你可以随意取，不重复即可（一般文件系统也不会允许同一级有目录重名）。
+
+每个任务所在的目录，其结构是类似的。
+
+=head4 I<cmd> 文件
+
+I<cmd> 文件即该任务所需要执行的程序，它可以是 Shell 脚本或其他可执行应用程序，注意权限。
+
+=head4 I<execution_interval> 文件
+
+I<execution_interval> 文件指定了任务的执行间隔，以秒为单位，不妨看看例子中该文件的内容：
+
+=begin pre
+
+$ cd job_5min/
+
+$ cat execution_interval
+300
+
+=end pre
+
+这里的 I<300> 代表该任务每300秒执行一次（即每300秒执行该目录中的 I<cmd> 文件一次）。
+
+当然我们还可以不用 I<execution_interval>，换用 I<execution_schedule> 文件来以 crontab 的格式指定任务运行计划：
+
+=begin pre
+
+$ ls job_5min/
+cmd  execution_schedule  conflicts
+
+$ cat execution_schedule
+30 2 * * *
+
+=end pre
+
+以上代表 I<job_5min> 中的 I<cmd> 会在每天的 2:30 分运行。
+
+=head4 conflicts 文件
+
+I<conflicts> 文件用来指定依赖关系，它的内容是以空格或换行分隔的任务id，意思是直到这些依赖任务执行完毕，本任务才执行。如果没有这个 I<conflicts> 文件，那么一到计划时间，本任务就执行。
+
+这个可以用来做一些简单的依赖管理。
+
+看看上面例子中该文件的内容：
+
+=begin pre
+
+$ cat job_5min/conflicts
+job_1min
+
+$ cat job_1min/conflicts
+job_5min
+
+=end pre
+
+这代表本任务 I<job_5min> 会等 I<job_1min> 任务运行完，它再运行。
+
+而轮到任务 I<job_1min> 运行时，它也会检查看看 I<job_5min> 是否在运行，如果 I<job_5min> 当前不在运行，则 I<job_1min> 运行。
+
+=head4 其他配置文件
+
+我们还可以在指定任务的目录下写其他一些配置文件，如：
+
+- execution_timeout 文件用来指定任务超时时间，以秒为单位
+
+- start_random_sleep 文件用来指定任务启动时随机延迟的时间，以秒为单位。当我们有很多任务在时间点上有重合时，可以指定随机启动延时，以避免大量任务同时启动造成系统负载增高。
+
+- notification_interval 文件用来指定当任务运行出错时，在多少秒时间内不重复发送任务出错报告邮件。这个在频繁运行的程序出错时，可以让管理员的邮箱不被错误报告塞满。
+
+关于其他配置文件和选项，请参看 A<http://search.cpan.org/perldoc?snaked|snaked 的文档>。
+
+=head3 运行 I<snaked> 守护进程
+
+当我们准备好了任务配置文件后，需要运行 I<snaked> 来使任务生效：
+
+下面是以守护进程模式运行：
+
+=begin pre
+
+$ pwd
+/home/cnhacktnt/demo_snaked
+
+$ snaked --daemon --cfg /home/cnhacktnt/demo_snaked
+
+=end pre
+
+检查一下当前状态：
+
+=begin pre
+
+$ snaked --status --cfg /home/cnhacktnt/demo_snaked
+snaked is running as pid 19326. command line [/home/cnhacktnt/perl512/bin/perl5.12.1 /home/cnhacktnt/perl512/bin/snaked --daemon --cfg /home/cnhacktnt/demo_snaked/ ]
+
+$ snaked --show-jobs --cfg /home/cnhacktnt/demo_snaked
+    global options
+      admin_email: webmaster@someweb.com
+      log: /home/cnhacktnt/demo_snaked/snaked.log
+      pidfile: /home/cnhacktnt/demo_snaked/snaked.pid
+    configured jobs:
+      job_5min
+        cmd: /home/cnhacktnt/demo_snaked/jobs/job_5min/cmd
+        conflicts: job_1min
+        execution_interval: 300
+        execution_timeout: 0
+        kill_timeout: 60
+        mtime: 1291645265
+      job_1min
+        cmd: /home/cnhacktnt/demo_snaked/jobs/job_1min/cmd
+        conflicts: job_5min
+        execution_interval: 60
+        execution_timeout: 0
+        kill_timeout: 60
+        mtime: 1291644889
+
+=end pre
+
+我们还可以以调试模式运行 I<snaked>：
+
+=begin pre
+
+$ snaked --debug --cfg /home/cnhacktnt/demo_snaked
+
+=end pre
+
+当我们修改了单个任务目录中的配置文件时，不需要重启 I<snaked>，它会检测到改动，重新加载任务。
+
+如果我们改动的是 I<snaked> 的配置文件，如：I<admin_email>, I<log> 等时，需要告诉 I<snaked> 重新加载配置：
+
+=begin pre
+
+$ snaked  --configure --cfg /home/cnhacktnt/demo_snaked
+
+=end pre
+
+针对多个不同的 I<snaked> 配置目录，我们可以通过 I<--cfg> 参数来灵活运行多个 I<snaked> 守护进程。
+
+
+=head3 应用举例
+
+假设目前有这么个需求（先不管它合理性和最优方案什么的）：
+
+任务A：每隔1分钟去 A<http://www.flickr.com/photos/|Flickr> 抓取最新照片缩略图（100x67 像素大小的）及相关页面连接和图片说明，并存储到本地 I<data> 目录中。
+
+任务B：每隔5分钟查看本地 I<data> 目录，如果目录中有超过30张缩略图则生成一个图片列表网页，并将这些图片及网页通过 I<scp> 复制到远程的多台服务器中，在传输前先清空远程服务器上目录中的旧文件。
+
+要求：
+
+1. 任务B必须在任务A完成后才能运行，任务B完成后清空 I<data> 目录。
+
+2. 任务A必须等待任务B运行完毕后才可以运行，以免和任务B清空 I<data> 目录的过程发生冲突。
+
+这样的任务有点类似简单 A<http://en.wikipedia.org/wiki/Content_delivery_network|CDN> 发布的流程，任务本身不复杂，用 I<snaked> 来做任务调度和依赖管理，用 Perl 写具体任务的 I<cmd> 脚本很容易搞定。
+
+其中将抓取的图片和生成的网页通过 I<scp> 传输到多台远程服务器的过程，可以用去年提到过的 A<http://perlchina.org/advent/2009/SSHBatch.html|SSH::Batch> 模块所带的 I<tonodes> 命令来完成。
+
+完整的代码请参看A<http://github.com/cnhacktnt/demo_snaked_flickr|我的Github仓库>，生成的页面效果参看 I<knocks.me/demo_snaked/> 。 
+
+有问题可以 B<@cnhacktnt> 联系我（你懂的）
+
+谢谢！
+
