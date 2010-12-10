@@ -1,0 +1,54 @@
+=for advent_year 2010
+
+=for advent_day 10
+
+=for advent_title Furl
+
+=for advent_author Fayland Lam
+
+M<LWP::UserAgent> 是最基础的 Perl 抓取工具。M<WWW::Mechanize> 在此基础上通过 M<HTML::Form> 来提供提交表单和其他一些功能。
+
+今天要介绍的是 M<Furl>，一个更快速的解决方案。
+
+Furl 提供了一个大致兼容的方案：
+
+=begin code
+
+    use Furl;
+
+    my $furl = Furl->new(
+        agent   => 'MyGreatUA/2.0',
+        timeout => 10,
+    );
+
+    my $res = $furl->get('http://example.com/');
+    die $res->status_line unless $res->is_success;
+    print $res->content;
+
+=end code
+
+该方案无需太多修改而获得加速。如果上述方案还无法满足需求的话，可以试试更底层的 M<Furl::HTTP>，该模块通过不构建 Response 来获得加速。
+
+=begin code
+
+    use Furl;
+
+    my $furl = Furl::HTTP->new(
+        agent   => 'MyGreatUA/2.0',
+        timeout => 10,
+    );
+
+    my ($minor_version, $code, $msg, $headers, $body) = $furl->request(
+        method => 'GET',
+        host   => 'example.com',
+        port   => 80,
+        path   => '/'
+    );
+
+=end code
+
+当然 Furl 在获得加速的同时，可能放弃了对某些所需的直接支持。比如 Cookie 和 gzip 等。
+
+工具只是工具，高手和新手的最大区别只是在于正确的时间选择正确的工具。:)
+
+Enjoy.
