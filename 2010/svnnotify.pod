@@ -1,0 +1,29 @@
+=for advent_year 2010
+
+=for advent_day 11
+
+=for advent_title svnnotify
+
+=for advent_author Fayland Lam
+
+有人喜欢 git，也有人喜欢 svn。口味不同而已。虽然 git 很棒，但是 svn 也是很不错的。
+
+我个人有个特殊的喜好，喜欢跟踪每个 commit 的变化。看看 code 最近加了啥，是不是有些变动我可以借鉴一下。这在跟踪某个项目的进程时非常管用。比如你是项目的主管，比如你想将所有的变动发送到一个 mailing list 中，我们都可以用 M<svnnotify> 来满足这些需求。
+
+首先你需要找到您的 svn 的 hooks 目录位置，请参阅免费的 A<http://svnbook.red-bean.com/index.zh.html|svn book>
+
+svn 的 hooks 是个很不错的功能。这里我们可以通过在 B<post-commit> 里简单的增加一行来达到我们的目的。
+
+=begin pre
+
+/usr/bin/svnnotify --repos-path "$REPOS" --revision "$REV" --to fayland@gmail.com -f svn@example.com -P "[code-commit] rev %d - " -s /usr/sbin/sendmail -l /usr/bin/svnlook -d
+
+=end pre
+
+当然在此之前您需要安装 M<SVN::Notify> 模块。更多的参数请参阅 A<http://search.cpan.org/dist/SVN-Notify/bin/svnnotify>
+
+另外一个不错的扩展功能是 M<SVN::Notify::Mirror>, 可以通过该模块来做一个 svn 镜像（比如您需要有人 ci 的同时来 update 某个本地目录等）。
+
+更多的可以通过搜索 CPAN 来找到：A<http://search.cpan.org/search?query=SVN%3A%3ANotify&mode=all>
+
+Enjoy.
