@@ -1,0 +1,65 @@
+=for advent_year 2010
+
+=for advent_day 9
+
+=for advent_title Regexp::Common
+
+=for advent_author Fayland Lam
+
+正则表达式应该算是 Perl 的强项之一。CPAN 提供了一些常见的 Regex 来匹配常用功能。
+
+比如 URL, 我们就可以用 M<Regexp::Common>
+
+=begin code
+
+use Regexp::Common qw /URI/;
+
+$url =~ /$RE{URI}{HTTP}/ and  print "Contains an HTTP URI.\n";
+
+=end code
+
+比如 email, 我们可以用 M<Email::Valid> 或 M<Email::Valid::Loose>
+
+=begin code
+
+use Email::Valid;
+Email::Valid->address('maurice@hevanet.com') and print "that's an email\n";
+
+=end code
+
+下面重点介绍一下 M<Regexp::Common::balanced>, 这是个很有用的模块，可以匹配括号甚至更多东西。有时候我们需要在一段文字里随机生成另一段文字的话，可以尝试下这个模块。
+
+=begin code
+
+use Regexp::Common qw /balanced/;
+
+my $text = <<'TEXT';
+Hello {Perl|World|PerlChina}!
+Welcome to (earth|mars|heaven).
+TEXT
+
+$text =~ s/$RE{balanced}{-parens=>'{}'}{-keep}/&randpick($1)/seg;
+$text =~ s/$RE{balanced}{-parens=>'()'}{-keep}/&randpick($1, 'ucfirst')/seg;
+sub randpick {
+    my ($t, $more) = @_;
+    $t =~ s/(^[\{\(]|[\}\)]$)//g;
+    my @a = split(/\|/, $t);
+    @a = grep { length($_) } @a;
+    my $a = $a[rand(scalar(@a))];
+    return $more eq 'ucfirst' ? ucfirst($a) : $a;
+}
+
+print $text;
+
+=end code
+
+运行一下，每次的输出应该是不一样的。
+
+=begin pre
+
+Hello PerlChina!
+Welcome to Mars.
+
+=end pre
+
+Enjoy!

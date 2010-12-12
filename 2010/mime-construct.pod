@@ -1,0 +1,75 @@
+=for advent_year 2010
+
+=for advent_day 8
+
+=for mime-construct and MIME::Lite::HTML
+
+=for advent_author Joe Jiang
+
+处理中文邮件，有时候挺麻烦的，要面对一堆的编码问题。如何能快速构造一封合乎MIME标准的测试邮件呢？如果你是幸运的 Linux 用户，那么你可以安装 mime-construct 软件包；如果你是更加幸运的 Debian/Ubuntu 用户，那么就这样做：
+
+=begin pre
+
+$ apt-cache rdepends mime-construct
+mime-construct
+Reverse Depends:
+  logcheck
+  logcheck
+
+$ apt-cache depends mime-construct
+mime-construct
+  Depends: perl
+  Depends: <libmime-base64-perl>
+    perl
+  Depends: libmime-types-perl
+  Depends: libproc-waitstat-perl
+
+$ sudo apt-get install mime-construct
+
+=end pre
+
+然后，用让人兴奋的单行脚本，调用这个测试软件包的脚本 mime-construct（假定用户使用的是 utf8 终端）：
+
+=begin pre
+
+$ mime-construct --to larry@wall.org --subject $(perl -MEncode=encode,decode -le 'print encode(q(MIME-Header),decode(q(utf8),q(Hi，拉里)))') --string 谢谢！
+
+=end pre
+
+这样一封邮件就发出去了，其中的 Perl 单行程序（perl -MEncode=encode,decode -le 'print encode(q(MIME-Header),decode(q(utf8),q(Hi，拉里)))'）输出的就是邮件的base64编码加上UTF-8编码的标题。如果你想知道到底发送了什么内容，可以使用 --output 选项：
+
+=begin pre
+
+$ mime-construct --to larry@wall.org --subject $(perl -MEncode=encode,decode -le 'print encode(q(MIME-Header),decode(q(utf8),q(Hi，拉里)))') --string 谢谢！--output
+To: larry@wall.org
+Subject: =?UTF-8?B?SGnvvIzmi4nph4w=?=
+MIME-Version: 1.0 (mime-construct 1.10)
+Content-Transfer-Encoding: base64
+
+6LCi6LCi77yB
+
+=end pre
+
+以上就是实际发送给 mail 命令的原始字符。这里没有对正文做同样的转换，因为至少从实现上来说对 Gmail 来说不是必须的。
+
+另外一个想介绍的中文邮件模块是 MIME::Lite::HTML，它显然依赖于著名的 MIME::Lite 模块，当然另外还有几个著名的模块。当然它也可以通过 APT 安装，实际的应用如下：
+
+=begin pre
+
+$ apt-cache depends libmime-lite-html-perl
+libmime-lite-html-perl
+  Depends: perl
+  Depends: perl-modules
+  Depends: libwww-perl
+  Depends: libhtml-parser-perl
+  Depends: liburi-perl
+  Depends: libmime-lite-perl
+
+$ apt-get install libmime-lite-html-perl
+...
+
+$ perl -MMIME::Lite::HTML -e 'MIME::Lite::HTML->new(To=>q(you@mail.com), Url=>q(http://m.youversion.com/bible/cuv/mark/10), HTMLCharset=>q(utf8), Subject=>q(Daily Feeds))'
+
+=end pre
+
+然后就可以去看看邮箱里面有什么内容了。谢谢！
