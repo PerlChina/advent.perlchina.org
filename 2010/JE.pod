@@ -24,7 +24,7 @@ print $rot13->rot13() . "\n";
 
 然后我们把它放到 html 里。
 
-=begin pre
+=begin code
 
 <script type="text/javascript">
 Rot13 = {
@@ -65,9 +65,9 @@ Rot13.write('<n uers="znvygb:grfg@rknzcyr.pbz">grfg</n>');
 
 </script>
 
-=end pre
+=end code
 
-你会简单的发现，html 里显示的是跟 <a href="mailto:test@example.com">test</a> 一样的东西，但是从源代码来看是加密过的。
+你会简单的发现，html 里显示的是跟 &lt;a href="mailto:test@example.com">test&lt;/a> 一样的东西，但是从源代码来看是加密过的。
 
 上面只是一个很简单的例子。很多网页上可能不是 ROT 13 加密，但是我们无需理会，强大的 M<JE> 会解决一切。
 
