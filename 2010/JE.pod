@@ -1,0 +1,127 @@
+=for advent_year 2010
+
+=for advent_day 13
+
+=for advent_title JE
+
+=for advent_author Fayland Lam
+
+JavaScript 是个很不错的语言。网上有一个简单的叫 ROT 13 的加密来保护 email，今天我们做一点邪恶的事，就是简单破解该加密。
+
+ROT 13 的版本有很多，不过原理是一样的。下面是一个简单的例子。
+
+php 有内置的 str_rot13，Perl 我们需要安装 M<Crypt::Rot13>
+
+=begin code
+
+use Crypt::Rot13;
+
+my $rot13 = new Crypt::Rot13;
+$rot13->charge('<a href="mailto:test@example.com">test</a>');
+print $rot13->rot13() . "\n";
+
+=end code
+
+然后我们把它放到 html 里。
+
+=begin pre
+
+<script type="text/javascript">
+Rot13 = {
+    map: null,
+
+    convert: function(a) {
+        Rot13.init();
+
+        var s = "";
+        for (i=0; i < a.length; i++) {
+            var b = a.charAt(i);
+            s += ((b>='A' && b<='Z') || (b>='a' && b<='z') ? Rot13.map[b] : b);
+        }
+        return s;
+    },
+
+    init: function() {
+        if (Rot13.map != null)
+            return;
+              
+        var map = new Array();
+        var s   = "abcdefghijklmnopqrstuvwxyz";
+
+        for (i=0; i<s.length; i++)
+            map[s.charAt(i)] = s.charAt((i+13)%26);
+        for (i=0; i<s.length; i++)
+            map[s.charAt(i).toUpperCase()] = s.charAt((i+13)%26).toUpperCase();
+
+        Rot13.map = map;
+    },
+
+    write: function(a) {
+        document.write(Rot13.convert(a));
+    }
+}
+
+Rot13.write('<n uers="znvygb:grfg@rknzcyr.pbz">grfg</n>');
+
+</script>
+
+=end pre
+
+你会简单的发现，html 里显示的是跟 <a href="mailto:test@example.com">test</a> 一样的东西，但是从源代码来看是加密过的。
+
+上面只是一个很简单的例子。很多网页上可能不是 ROT 13 加密，但是我们无需理会，强大的 M<JE> 会解决一切。
+
+JE 是由 Perl 编写的 ECMAScript 引擎。虽然非 100% 兼容，但是大部分情况下都是很好用的。
+
+=begin code
+
+use JE;
+
+my $j = JE->new;
+my $v = $j->eval(<<'JS');
+Rot13 = {
+    map: null,
+
+    convert: function(a) {
+        Rot13.init();
+
+        var s = "";
+        for (i=0; i < a.length; i++) {
+            var b = a.charAt(i);
+            s += ((b>='A' && b<='Z') || (b>='a' && b<='z') ? Rot13.map[b] : b);
+        }
+        return s;
+    },
+
+    init: function() {
+        if (Rot13.map != null)
+            return;
+              
+        var map = new Array();
+        var s   = "abcdefghijklmnopqrstuvwxyz";
+
+        for (i=0; i<s.length; i++)
+            map[s.charAt(i)] = s.charAt((i+13)%26);
+        for (i=0; i<s.length; i++)
+            map[s.charAt(i).toUpperCase()] = s.charAt((i+13)%26).toUpperCase();
+
+        Rot13.map = map;
+    },
+
+    write: function(a) {
+        return(Rot13.convert(a));
+    }
+}
+
+Rot13.write('<n uers="znvygb:grfg@rknzcyr.pbz">grfg</n>');
+JS
+
+print $v->value;
+
+=end code
+
+上面的代码我们使用了一点点小技巧，我们将 document.write 转成了 return, 这样我们会得到一个 M<JE::String> 然后通过输出 -> value 来得到真正的 <a href="mailto:test@example.com">test</a>
+
+上面的东西看上去有点小无聊，自己破解自己加密的东西，但是您可以使用它来解密或者运行其他的 js 代码，这都将变得非常有趣。
+
+Enjoy!
