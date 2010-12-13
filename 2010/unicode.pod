@@ -1,0 +1,86 @@
+﻿=for advent_year 2010
+
+=for advent_day 12
+
+=for advent_title Unicode commands
+
+=for advent_author Joe Jiang
+
+Unicode 的广泛使用，带来许多有趣的新问题，比如发现汉字之间的联系。孔乙己曾经研究过茴字的四种写法，那么现在我们可以看看国字的三种写法：简体、繁体、还有变体。
+
+如果你安装了 Encode::HanConvert，那么可以很容易找到国字的繁体写法：
+
+=begin pre
+
+$ echo 国 | g2b.pl -u
+國
+
+=end pre
+
+这里的 g2b.pl 就是在安装这个模块时候产生的自带脚本，它的 -u 参数用来完成 UTF8 编码内的繁简转化。有了繁体字以后，可以找到它的编码，应该是 U+570B：
+
+=begin pre
+
+$ echo 國|iconv -f utf8 -t utf16|od -x
+0000000 feff 570b 000a
+0000006
+
+$ perl -MUnicode::String=uhex -le 'print uhex q(U+570B)'
+國
+
+=end pre
+
+这里使用了另外一个名叫 Unicode::String 的模块，其中输出了 uhex 子程序，可以用来找出 16 进制代码对应的 UTF8 字符。
+
+下一步就是找出繁体國字对应的变体字（简体字基本上很难直接找到变体，通过繁体比较容易），这个是靠另一个叫做 Unicode::Unihan 的模块来实现的：
+
+=begin pre
+
+$ echo 國 | PERL_UNICODE=S perl -MUnicode::Unihan -lne 'print Unicode::Unihan->new()->ZVariant($_)'
+U+5700
+
+$ perl -MUnicode::String=uhex -le 'print uhex(U+5700)'
+圀
+
+=end pre
+
+这里通过 Unicode::Unihan 模块的 ZVariant 方法来查找这个字对应的变体字，但是输出的是 U+FFFF 格式的，所以仍然使用 uhex 子程序来翻译。注意其中的 PERL_UNICODE=S 代表了对标准输入、标准输出、标准出错进行 UTF8 自动编码解码，类似于 perl -C7 参数的效果（具体参考 perldoc perlrun） 。还可以用下面的命令行来替代刚才的第一个命令：
+
+=begin pre
+
+$ perl -MUnicode::Unihan -le 'print Unicode::Unihan->new()->ZVariant(qq(\x{570B}))'
+U+5700
+
+=end pre
+
+要知道，并非所有的繁体字都有变体，所以这个模块是通过一个查表算法来实现的，具体的码表存应该是放在一个数据库中的。
+
+=begin pre
+
+$ strace perl -MUnicode::Unihan -le 'print Unicode::Unihan->new()->ZVariant(qq(\x{570B}))' 2>&1 | grep ^open | tail -1
+open("/home/jjiang/perl5/lib/perl5/Unicode/Unihan/ZVariant.db", O_RDONLY|O_LARGEFILE) = 3
+
+$ file /home/jjiang/perl5/lib/perl5/Unicode/Unihan/ZVariant.db
+/home/jjiang/perl5/lib/perl5/Unicode/Unihan/ZVariant.db: Berkeley DB (Hash, version 9, native byte-order)
+
+$ perl -MDB_File -le '$db=tie(%db,q(DB_File),q(/home/jjiang/perl5/lib/perl5/Unicode/Unihan/ZVariant.db),O_RDONLY,0644,$DB_HASH); print $_,qq(\t),$db{$_} for keys %db'| head -3
+17307   U+3588
+20073   U+7A3D
+20190   U+4EED
+
+=end pre
+
+这里使用了 DB_File 模块打开这个数据库文件，发现了其中的键值关系。其中的键是十进制的 Unicode 编码，值是字符模式的 Unicode 编码。因此可以自己实现一个映射，使用的还是 Unicode::String 模块，只不过这次需要另一个子程序 uchr：
+
+=begin pre
+
+$ perl -MDB_File -le '$db=tie(%db,q(DB_File),q(/home/jjiang/perl5/lib/perl5/Unicode/Unihan/ZVariant.db),O_RDONLY,0644,$DB_HASH); print $_,qq(\t),$db{$_} for keys %db' | head -3 | perl -MUnicode::String=uchr,uhex -F\\t -lane 'print uchr($F[0]),qq(\t),uhex($F[1])'
+䎛      㖈
+乩      稽
+仞      仭
+
+=end pre
+
+这里第一行的字符在终端上找不到字体显示，所以在复制粘贴时候成了框框。现在，你应该很容易自己生成一个哈希，来完成映射了，从此不必再依赖于 Unicode::Unihan 模块。
+
+Happy 汉字 Hacking please ...
