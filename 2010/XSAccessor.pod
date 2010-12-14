@@ -1,0 +1,62 @@
+=for advent_year 2010
+
+=for advent_day 14
+
+=for advent_title Class::XSAccessor
+
+=for advent_author Fayland Lam
+
+创建所谓的 accessor 应该是件很普遍的事情，对于对象来说，大部分的属性都是 accessor. 因为这个功能的普遍性，CPAN 上大概有超过 20 个模块可以完成这个任务。其中最有名的应该是 M<Moose>, M<Mouse> 或者是 mst 刚开发的更轻量级的 M<Moo>. 或许大家用过的有 M<Class::Accessor>, M<Class::Accessor::Fast> 或者 M<Class::MethodMaker>. 今天要推荐的是目前来说最快速的 M<Class::XSAccessor>.
+
+Class::XSAccessor 最初是为了加速和简化 M<Padre> 的代码而开发，用法与其他的 accessor 模块大同小异。
+
+=begin code
+
+package MyClass;
+
+use Class::XSAccessor
+    replace     => 1,   # Replace existing methods (if any)
+    constructor => 'new',
+    getters     => {
+      get_foo => 'foo', # 'foo' is the hash key to access
+      get_bar => 'bar',
+    },
+    setters => {
+      set_foo => 'foo',
+      set_bar => 'bar',
+    },
+    accessors => [ 'foo', 'bar' ],
+    predicates => {
+      has_foo => 'foo',
+      has_bar => 'bar',
+    },
+    lvalue_accessors => { zip_code => 'zip' };
+    true  => [ 'is_token', 'is_whitespace' ],
+    false => [ 'significant' ];
+
+=end code
+
+几个简单的解释是，
+
+* constructor => 'new' 意味着你不用写无聊的 new 了。
+
+* accessors => [] 是最常用的，因为大部分情况下 getter 和 setter 的名字会是一样的。
+
+* lvalue 是个比较 fun 的功能。比如上面的设置可以有如下的测试代码
+
+=begin code
+
+  my $address = MyClass->new(zip => 2);
+  print $address->zip_code, "\n"; # prints 2
+  $address->zip_code = 76135; # <--- This is it!
+  print $address->zip_code, "\n"; # prints 76135
+
+=end code
+
+某些极端要求速度的人，会认为 bless 一个 hashref 给 class 是件很浪费的事情，他们说应该 bless 一个 arrayref 给 class 才是正确的。这种情况下，我们可以使用 L<Class::XSAccessor::Array>, 它更给力。
+
+当然，如果你需要说服你的上级或者你自己，你需要一个对大部分流行的 accessor 模块的 benchmark，我们也有这样的东西。简单的安装 M<App::Benchmark::Accessors>, 你就能得到你所需要的结果。
+
+类似的结果可以参考 A<http://www.cpantesters.org/distro/A/App-Benchmark-Accessors.html> 里的 test reporters，我就不重复 copy 我自己的结果了。
+
+Enjoy!
