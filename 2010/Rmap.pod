@@ -1,0 +1,24 @@
+=for advent_year 2010
+
+=for advent_day 16
+
+=for advent_title Data::Rmap
+
+=for advent_author Fayland Lam
+
+有时候你有一个很复杂的数据结构，比如我们的 M<Catalyst> M<YAML> 配置文件。有时候你会有一个很奇特的要求，比如我们的某台服务器没有私有 IP，所以需要对这个 YAML 里的所有 IP 进行转换。
+
+解决的方案有很多种。下面是一个很简单实用的方案（使用 M<Data::Rmap>）：
+
+=begin code
+
+use Data::Rmap;
+rmap { s/192\.168\.1/xx\.xxx\.xxx/; s/192\.168\.2/xx\.xxx\.yyy/; } $config;
+
+=end code
+
+2 行代码解决问题。这就是 CPAN 的魅力所在。
+
+题外话：我觉得 advent 并不能给诸位带来多大的提高或者什么，它最大的作用在于扩展视野。如果诸位下次碰到问题，比如对某个数据结构进行迭代 map 的时候，能想起今天推荐的模块，那就是 advent 的最大成功。
+
+谢谢。
