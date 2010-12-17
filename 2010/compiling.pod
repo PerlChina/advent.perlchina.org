@@ -1,0 +1,92 @@
+=for advent_year 2010
+
+=for advent_day 17
+
+=for advent_title 使用 Perl 实现小语言
+
+=for advent_author agentzh
+
+日常工作中，我们经常会注意到可以发明一种小语言，来简化复杂问题的描述。此时，我们
+需要做一个编译器，以便把我们自己的小语言翻译成机器可以理解的形式，比如某种高级
+语言，甚至只是一个复杂的数据结构的序列化形式。
+
+编译器一般由三部分构成：
+
+=over
+
+=item 语法/词法解析器 (Parser)
+
+在 Perl 5 中，构造编译器最方便的利器之一便是 Damian Conway 的 Parse::RecDescent
+模块。它在 CPAN 上拥有非常详尽的用法文档。
+
+它生成的解析器是支持回溯的"递归下降"方式，具体细节请参考编译理论方面的书籍。
+
+一个 SQL 语言的文法定义片段，使用 Parse::RecDescent 的语法类似下面这个样子：
+
+=begin code
+
+    select_query: 'select' distinct(?) select_arg(s /,/)
+                  from_clause(?)
+                  where_clause(?)
+                  group_by_clause(?)
+                  order_by_clause(?)
+                  limit_clause(?)
+                    { SQL::SelectQuery->new({ ... }) }
+                | <error>
+
+=end code
+
+但此模块的性能并不出色，对于大量的文本解析会花费较多的时间。此时，yacc 风格的
+Parse::Yapp 模块可以让性能大幅提升，但它的功能就远没有 Parse::RecDescent
+丰富和灵活了，因为它生成的解析器是标准的 LALR(1) 分析。
+
+=item 解析树/抽象语法树 (AST)
+
+使用简单的嵌套数组或者哈希对象可以在 Perl 5 中很好地表达简单的树形结构。但为了
+后序的操作方便，我们会选择 Moose 来定义一套类似 DOM 的节点类。不过值得提醒的是，
+使用 Moose 是有代价的，它会让你的纯 Perl 5 编写的编译器花费更多的时间来启动。
+
+最近几年，Moose 的粉丝越来越多，或许你在自己的小编译器中也可以小试牛刀 ;)
+
+比如对于一个类 SQL 的小语言，其二元运算符表达式的 AST 节点可以用 Moose 定义如下：
+
+=begin code
+
+package SQL::BinaryRelExpr;
+use Moose;
+use lib 'lib';
+use SQL::ArithExpr;
+
+extends 'SQL::RelExpr';
+
+has 'terms',
+    is => 'rw',
+    isa => 'ArrayRef[SQL::ArithExpr]',
+    required => 1;
+
+has 'operator',
+    is => 'rw',
+    isa => 'Str',
+    required => 1;
+
+...
+
+1;
+
+=end code
+
+=item 代码生成器 (Code Emitter)
+
+很多时候，我们直接写 Perl 5 代码来遍历 AST 就可以直接生成目标代码（或者说最终
+想要的文本）。但还有一些场合，特别适合使用 Perl Template Toolkit (TT2) 来
+作模版驱动的代码生成。谁说 TT2 模版只能用来生成 HTML 和 XML? 我们经常在自己
+的工作中使用 TT2 模版来生成 Lua, C, 甚至 Perl ;)
+
+把“写程序的程序”的革命进行到底！
+
+=back
+
+Perl 6 为编译器的构造提供了语言级别的完美支持。我们不必再求助于第三方模块来
+实现自己的小语言了。Perl 6 的 regex 引擎已经强大到足以解析像 Perl 6 本身
+这样复杂的语言的文法了。小语言的未来更值得期待！
+
