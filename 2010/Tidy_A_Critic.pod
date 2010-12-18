@@ -1,0 +1,47 @@
+=for advent_year 2010
+
+=for advent_day 18
+
+=for advent_title Perl::Tidy 和 Perl::Critic
+
+=for advent_author Fayland Lam
+
+我觉得我没能在去年或者今年的第一天介绍 M<Perl::Tidy> 和 M<Perl::Critic> 是我的过错。
+
+有些人喜欢 Python 的缩进风格，觉得 Perl 太随意了，你可以将 ; 放在一行最前面或者最后面。你可以将一大堆 Perl 代码堆积在一行里。他们觉得阅读 Perl 的代码很累。当然，这并不是 Perl 的错。
+
+使用 M<Perl::Tidy> 的理由可以有很多，比如你接手了前同事的代码，而他的风格跟你相差甚远。或者你希望你的团队能保持一个风格，但是你又不想强迫队员去更改代码的编写习惯。
+
+M<perltidy> 的使用很简单，您可以使用它的模块，或者简单的命令行
+
+=begin pre
+
+$ perltidy test.pl
+
+=end pre
+
+大部分情况下你可能只需要默认的配置选项，但是如果你觉得对什么不满意的话，你可以创建自己的 ~/.perltidyrc 文件。或者直接去 Google 搜索 .perltidyrc
+
+另外一个有用的 options 是 --html 可以创建一个简单的加亮 html 文件。
+
+=begin pre
+
+$ perltidy --html test.pl
+
+=end pre
+
+另一个模块是 M<Perl::Critic>, 该模块的大部分 policy 都基于 Damian Conway 的 Perl Best Practices (Perl 最佳实践) 一书。
+
+M<perlcritic> 的使用也是很简单，您可以使用模块本身，或者简单的命令行
+
+=begin pre
+
+$ perlcritic -5 test.pl
+
+=end pre
+
+当然，如果你对某个 policy 不喜欢，或者你仅仅需要某些 policy 或额外的 policy，你可以拥有自己的 ~/.perlcriticrc
+
+试着尝试它们，让您的代码更具有可读性和更少的 bug。
+
+Enjoy!
