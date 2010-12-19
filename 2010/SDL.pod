@@ -1,0 +1,17 @@
+=for advent_year 2010
+
+=for advent_day 19
+
+=for advent_title SDL
+
+=for advent_author Fayland Lam
+
+老实说，我对 M<SDL> 一点都不熟悉。但是这不应该成为我不推荐该模块的原因之一。
+
+如果您对 Perl 编写游戏感兴趣，不管是 2D 还是 3D，我认为都有必要去看看该模块。
+
+学习该模块最好的办法是阅读它的 M<SDL::Tutorial>, 然后两个非常棒的应用，M<SDL::Tutorial::Tetris> 和 Adam 的 M<SDL::Tutorial::3DWorld>。
+
+安装 3DWorld 失败的话，可能需要安装下 OpenGL::RWX，0.18 忘了将该模块加入 requires 了。
+
+安装完毕后，直接在命令行输入 3dworld
