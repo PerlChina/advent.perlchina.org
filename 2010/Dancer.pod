@@ -1,0 +1,84 @@
+=for advent_year 2010
+
+=for advent_day 20
+
+=for advent_title Dancer
+
+=for advent_author Fayland Lam
+
+M<Dancer> 应该是本年度最值得推荐的模块之一。
+
+Perl 的世界一向是百花齐放，There is more than one way to do it. MVC 框架也不例外，从最早的 Maypole 到完整的 M<Catalyst>, 从 M<Jifty>, M<Mojo>, M<CGI::Application>,M<Web::Simple> 到 M<WebNano>, M<Dancer> 绝对是我试过的最棒的轻量级框架（个人浅见，请勿攻击）。
+
+所有的框架都有命令行创建新的 app，M<dancer> 也不例外。
+
+=begin pre
+
+$ dancer -a MyExcitingApp
++ MyExcitingApp
++ MyExcitingApp/bin
++ MyExcitingApp/bin/app.pl
++ MyExcitingApp/config.yml
++ MyExcitingApp/environments
++ MyExcitingApp/environments/development.yml
++ MyExcitingApp/environments/production.yml
++ MyExcitingApp/views
++ MyExcitingApp/views/index.tt
++ MyExcitingApp/views/layouts
++ MyExcitingApp/views/layouts/main.tt
++ MyExcitingApp/lib
+  MyExcitingApp/lib
++ MyExcitingApp/lib/MyExcitingApp.pm
++ MyExcitingApp/public
++ MyExcitingApp/public/css
++ MyExcitingApp/public/css/style.css
++ MyExcitingApp/public/css/error.css
++ MyExcitingApp/public/images
++ MyExcitingApp/public/500.html
++ MyExcitingApp/public/404.html
++ MyExcitingApp/public/dispatch.fcgi
++ MyExcitingApp/public/dispatch.cgi
++ MyExcitingApp/public/javascripts
++ MyExcitingApp/public/javascripts/jquery.js
++ MyExcitingApp/Makefile.PL
++ MyExcitingApp/t
++ MyExcitingApp/t/002_index_route.t
++ MyExcitingApp/t/001_base.t
+
+=end pre
+
+初看并无新奇之处，如同所有的框架类似，运行 perl bin/app.pl 你就可以访问 http://localhost:3000/ 了。
+
+但是如果你想写一些你自己的东西的话，你就会发现它是非常的简洁。
+
+它不像 Catalyst，所有的 sub 都有 $self, $c, 获取 param 就是简单的 params->{xxxx}; redirect 就是 redirect $url, 转为 json 格式就是简单的 to_json( { love => ['Perl'] } ); 不用在每个函数前面写上 $c->req $c->res，你所有的输入都是有用的。
+
+你所有的代码通常都只需要在这个 pm 主文件里。当然你也可以通过 load 或者 load_app 来载入其他文件。
+
+另外值得一说的是 dancer 的 routue, any, get, post 和简单的正则可以满足大部分需求，你无需知道 Local 或者其他的 URL dispatch 语法。
+
+Dancer 的 deploy 基于 M<Plack>, 这意味着你几乎可以 deploy 到任何你想 deploy 的地方，你还可以将它合并到任何基于 Plack 的 app 里。你还可以使用不同的 handle 如
+
+=begin pre
+
+$ plackup -s Twiggy -p 3000 bin/app.pl
+
+=end pre
+
+它还意味着你可以使用丰富多样的 Plack middleware 如 M<Plack::Middleware::Debug::DBIProfile> 等。
+
+Dancer 的 one line start 也非常优雅：
+
+=begin pre
+
+$ perl -MDancer -e 'get "/hello" => sub{"world"}; dance'
+
+=end pre
+
+当然，Dancer 对初学者也有不便之处，比如它的默认 Template 不是 TT2，比如它在 development mode 下会将 warnings 作为 critic 错误直接报错（将 development.yml 里的 warnings 设置为 0）等等。但是这并不妨碍它是轻量级框架中我最喜欢的。
+
+简单的介绍当然是一点都不过瘾，Dancer 在本年度做了 advent: A<http://advent.perldancer.org/2010>，非常棒，值得一看。
+
+如果诸位有 Dancer 的任何问题，都可以直接发信到 perlchina@googlegroups.com 新闻组。我想会有志同道合的人一起讨论和进步。
+
+谢谢。
