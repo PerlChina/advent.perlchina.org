@@ -8,7 +8,7 @@
 
 M<Dancer> 应该是本年度最值得推荐的模块之一。
 
-Perl 的世界一向是百花齐放，There is more than one way to do it. MVC 框架也不例外，从最早的 Maypole 到完整的 M<Catalyst>, 从 M<Jifty>, M<Mojo>, M<CGI::Application>,M<Web::Simple> 到 M<WebNano>, M<Dancer> 绝对是我试过的最棒的轻量级框架（个人浅见，请勿攻击）。
+Perl 的世界一向是百花齐放，There is more than one way to do it. MVC 框架也不例外，从最早的 Maypole 到完整的 M<Catalyst>, 从 M<Jifty>, M<Mojo>, M<CGI::Application>, M<Web::Simple> 到 M<WebNano>, M<Dancer> 绝对是我试过的最棒的轻量级框架（个人浅见，请勿攻击）。
 
 所有的框架都有命令行创建新的 app，M<dancer> 也不例外。
 
