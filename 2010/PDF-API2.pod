@@ -1,0 +1,36 @@
+=for advent_year 2010
+
+=for advent_day 21
+
+=for advent_title PDF::API2
+
+=for advent_author Joe Jiang
+
+M<PDF::API2> 是久负盛名的 PDF 处理利器，我们这里演示的是如何用它来追踪 PDF 侵权的用户。
+
+=begin pre
+
+#!/usr/bin/perl -w
+
+use strict;
+use PDF::API2;
+
+my $file=PDF::API2->openScalar(do{join(q(),<STDIN>)});
+
+my $font=$file->corefont(q(Courier));
+
+do {my $t=$_->text; $t->font($font, 8); $t->fillcolor(q(white)); $t->translate(40,10); $t->text(q(Hello world))} for map {$file->openpage($_)} 1..$file->pages;
+
+print $file->stringify;
+
+=end pre
+
+这段代码能从标准输入读取 PDF 文件，只要它没有被加过密，就可以在它每一页的相对位置 40,10 处用白色字体打印 Hello World，然后用 stringfy 和 print 输出到标准输出。只要重定向到文件，就可以储存下来。假如我们把以上的代码储存为 watermark.pl，那么就可以这样调用：
+
+=begin pre
+
+$ cat abc.pdf | ./watermark.pl > def.pdf
+
+=end pre
+
+现在，因为大多数的 PDF 是用白色作为背景色，那么页脚处的 Hello world 就不容易被发现，然后你可以在网上设置一个收索机器人，专门搜索内含此字的 PDF 文件，那就是被人盗用的。如果其中加入用户的帐号、下载日期等等，就可以用来作为追诉的依据。Thanks Alfred & the community!
