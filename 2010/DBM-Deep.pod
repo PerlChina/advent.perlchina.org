@@ -1,0 +1,42 @@
+=for advent_year 2010
+
+=for advent_day 22
+
+=for advent_title DBM::Deep
+
+=for advent_author Joe Jiang
+
+DBM::Deep 这个模块是用 Perl 实现的一种数据存储引擎，对 Perl 的数据结构（哈希和数组）有着良好的支持。作者完全 Perl 代码实现，因此对其他库程序和模块没有什么依赖。
+
+=begin pre
+
+$ apt-cache depends libdbm-deep-perl
+libdbm-deep-perl
+  Depends: perl
+
+$ apt-cache rdepends libdbm-deep-perl
+libdbm-deep-perl
+Reverse Depends:
+  libipc-pubsub-perl
+
+$ apt-cache rdepends libipc-pubsub-perl
+libipc-pubsub-perl
+Reverse Depends:
+  libjifty-perl
+
+=end pre
+
+以上显示它单单依赖于 Perl 本身。另外还发现，这个基础模块还被 Jifty 引用了。实际使用非常简单：
+
+=begin pre
+
+$ perl -MDBM::Deep -F: -lane 'BEGIN{$db = DBM::Deep->new(q(passwd.db))} $db->{$F[0]}=[@F]' /etc/passwd
+
+$ perl -MDBM::Deep -le '$db=DBM::Deep->new(q(passwd.db)); print for grep {$db->{$_}->[-1] eq q(/bin/false)} sort keys %$db' | head -3
+avahi
+avahi-autoipd
+dictd
+
+=end pre
+
+以上的两行代码，分别实现了数据文件的创建，以及数据的查询（头三个不允许登录的 login name）。欢迎使用，感谢 Joseph（作者）和 Rob（维护者）！
