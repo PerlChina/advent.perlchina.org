@@ -1,0 +1,101 @@
+=for advent_year 2010
+
+=for advent_day 23
+
+=for advent_title XML::XSH2
+
+=for advent_author Joe Jiang
+
+XML::XSH2 这个模块是用来实现类似 XSLT 功能的一个 Shell，可以用来很方便的操作 XML 文件。
+
+=begin pre
+
+$ xsh
+---------------------------------------
+ xsh - XML Editing Shell version 2.1.1
+---------------------------------------
+
+Copyright (c) 2002 Petr Pajas.
+This is free software, you may use it and distribute it under
+either the GNU GPL Version 2, or under the Perl Artistic License.
+Using terminal type: Term::ReadLine::Perl
+Hint: Type `help' or `help | less' to get more help.
+
+$scratch/>
+
+=end pre
+
+在登录 Shell 以后，可以打开一个 XML 文件：
+
+
+=begin pre
+
+$scratch/>$x:=open chat.xml
+parsing chat.xml
+done.
+
+$x/>ls Log/Message | cat > /dev/null
+
+Found 31 node(s).
+
+=end pre
+
+如此就有了一个可以操作的对象，这里打开的是 MSN 聊天记录导出的 XML 文件。可以看到其中有 31 条聊天记录，为了保护隐私，用了 shell 转向过滤掉了。
+
+然后，可以用 XPath 语法来查询聊天记录内容，比如我们已经知道第 12 条聊天记录是感兴趣的，可以发现它对应的会话编号：
+
+=begin pre
+
+$x/>ls Log/Message[12]/@SessionID
+SessionID='2'
+
+=end pre
+
+那么，现在，我们可以调查整个 2 号会话的内容：
+
+=begin pre
+
+$x/>ls Log/Message[@SessionID="2"] | cat > /dev/null
+
+Found 22 node(s).
+
+$x/>ls Log/Message[@SessionID="2"]/Text/text() | grep -i for-ssh
+
+Found 24 node(s).
+http://dipplum.com/2010/09/12/launchd-plist-for-ssh-d/
+
+=end pre
+
+这样，我们就发现了 2 号会话中有 22 条聊天记录，其中有一条是关于 ssh -d 的网址。
+
+这些命令还可以存储为脚本：
+
+=begin pre
+
+$ cat convert.xsh
+$x:=open ArticleInfo_9.xml;
+$y:=new html;
+xadd element "<head/>" into $y/html;
+xadd element "<title/>" into $y/html/head;
+xadd element "<body/>" into $y/html;
+xadd element "<img/>" into $y/html/body;
+xadd text $x//小样/标题/text() into $y/html/head/title;
+xadd text $x//小样/内容/text() into $y/html/body;
+xadd text $x//小样/附图/简图/文件名/text() into $y/html/body/img;
+ls $y;
+
+$ xsh -q convert.xsh > abc.html
+
+$ cat abc.html
+<?xml version="1.0" encoding="utf-8"?>
+<html>
+  <head>
+    <title>第一推荐</title>
+  </head>
+  <body><img>../cnmlfiles/A01/A01Ab25C005_b.jpg</img>　　华为美国拓展求解
+　　华为对美国市场的执着显示出中国企业走出去的急切需要，但这样高调注定要经受更多挫折。</body>
+</html>
+
+=end pre
+
+这样以后你操作起 XML 来，就会感觉很方便了，不是么？谢谢 Petr Pajas！
