@@ -1,0 +1,115 @@
+=for advent_year 2010
+
+=for advent_day 24
+
+=for advent_title Mojolicious::Lite 和 WebSocket
+
+=for advent_author cnhackTNT 
+
+
+=head3 M<Mojolicious>
+
+CGI 时代，Web 曾是 Perl 的天下，刚接触 Perl 时通宵写一个留言本的兴奋感一回头尤在昨夜，然而这些年，PHP、Python、Ruby 等的崛起带来了 Web 开发框架的百花齐放，Ruby on Rails 的出现更把 Web2.0 简洁轻灵之美的特性带给了幕后的工程师们。作为一名 Perl 爱好者，当我敲下 I<cpan Catalyst> 后面对满屏的依赖，测试耗去半个小时甚至更久的时候，很难说我对玩 Rails 或是 Django 的程序员不心存嫉妒－尤其是当出现 I<make test: Failed> 的时候。
+
+M<Catalyst> 很好，可是它太重了，哪怕是最简单的 Hello World，Catalyst 服务器跑起来在我不算落后的机器上也要等上好几秒，但是不能否认它对 Perl 社区的重要性，我认为它是第一个把 MVC B<清晰>地带给 Perl 社区并且功能完整的框架，它也吸收很很多其他语言框架的优秀特性，可是凭心而论，它对初学者算不上友好。
+
+Catalyst 的种种弊端让它的主要开发者之一 I<Sebastian Riedel> 跳出来开始了 M<Mojolicious> 这个项目，他希望 Mojolicious 在保留 Catalyst 优点的同时，摒弃复杂的模块依赖，融合更多方便 Web 开发者的特性，做到开箱即用。
+
+M<Mojolicious::Lite> 是基于 M<Mojolicious> 的一个轻量级框架，本文不会讨论 Mojolicious 本身，你可以通过 M<Mojolicous::Lite> 模块的文档学习如何快速上手，我们这里要介绍的是该模块一个有趣的地方，即它支持的 I<WebSocket>。
+
+=head3 什么是 WebSocket
+
+接触过网络编程的同学肯定对 I<Sockets> 不陌生，那 A<http://www.whatwg.org/specs/web-socket-protocol/|WebSocket> 是个什么东东？
+
+I<WebSocket> 是基于 TCP 的一个独立的协议，如果 Web 服务器和客户端都支持该协议，那么 Web 应用程序就可以基于此协议进行双向通讯，典型的应用场景便是 Web 聊天室，Web 股票行情实时推送，实时多人 Web 协作平台，Web 网游等。
+
+以 Web 股票行情系统为例，在 I<WebSocket> 出现以前的做法无非下面几种：
+
+- 页面通过 HTML 标签或是 Javascript 定时向 Web 服务器发起新请求，获得新的股票行情数据。
+
+- 通过在网页中内嵌 Flash/ActiveX/Java Applet 插件程序来实现服务器端到客户浏览器的数据推送。
+
+- 通过 Ajax 或是隐藏的 I<iframe> 和服务器建立长连接，即通过 Long Polling 来模拟推送，这种方式也被称为 I<Comet> 技术，也是时下流行的做法。 
+
+
+这些做法存在一些问题：
+
+- 定时刷新的方式会造成对服务器的频繁请求。
+
+- 插件的方式需要客户端相应平台支持。
+
+- 通过 HTTP 长连接这种方式并不是真正的双向交互，它仍然需要发起多次请求来实现双向交互，而且每次客户端对服务器的请求都得包含 HTTP 头信息，服务器还得解析这些信息，资源上有浪费。
+
+
+所以 A<http://www.whatwg.org/|WHATWG> 提出了 A<http://www.whatwg.org/specs/web-socket-protocol/|WebSocket>，并起草了协议标准提交给了 A<http://www.ietf.org/|IETF>。
+
+通过 I<WebSocket>，便可以在单个 TCP 连接上进行双向通讯，另外关键的是，I<WebSocket> 的握手过程对目前支持 A<http://tools.ietf.org/html/rfc2616|HTTP/1.1> 的主流  Web 服务器来说即是 A<http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.42|HTTP Upgrade> 请求，并且 I<WebSocket> 默认使用 80 或 443 端口，分别对应着 HTTP 和 HTTPS 的默认端口。
+
+市面上支持 HTML5 的浏览器如 Chrome 8，Opera 11，Safari 5，Firefox 4 均支持 I<WebSocket>。
+
+浏览器通过 I<WebSocket> 进行通讯的过程类似这样：
+
+1. 客户端浏览器向 Web 服务器发起 I<WebSocket> 握手请求
+
+2. 服务器解析客户端浏览器发来的请求，通过 HTTP 的 I<Upgrade> 头获知这是一个 I<WebSocket> 请求，于是从客户端发来的数据获取相应的 Key 进行计算，并准备好其它数据返回给客户端浏览器，完成握手。
+
+3. 握手完成后，浏览器和客户端便可遵循 I<WebSocket> 协议双向互发数据了。
+
+
+协议的具体内容可以参看：A<http://www.whatwg.org/specs/web-socket-protocol/>
+
+I<WebSocket> 的 API 可以参看：A<http://www.w3.org/TR/websockets/>
+
+=head3 Mojolicious::Lite 和 WebSocket
+
+从上面的信息中我们可以知道，无论是客户端还是服务器端都是需要支持 I<WebSocket> 才可以使用它来进行通讯的，而 M<Mojolicious::Lite> 已经内置了对 I<WebSocket> 的支持，因此我们可以通过它来开发支持 I<WebSocket> 的 Web 应用程序，是不是非常酷？
+
+M<Mojolicious::Lite> 提供了名为 I<websocket> 的方法让使用者能将特定的 I<WebSocket> 请求关联到处理程序，如：
+
+=begin pre
+
+websocket '/say' => sub {
+    my $self = shift;
+    warn "User connected!\n";
+
+    $self->finished( sub { warn "User disconnected!\n" } );
+    
+    $self->on_message( sub {
+        my ($self, $message) = @_;
+        $self->send_message( "You said: $message" );
+    });
+
+}
+
+=end pre
+
+I<$self-&gt;finished(sub {...});> 指定了当客户端连接断开时，程序该做什么处理;
+
+I<$self-&gt;on_message(sub {...});> 指定了当客户端发来信息时，程序该做什么处理；
+
+I<$self-&gt;send_message("...");> 用来从服务器程序向客户端发送消息。
+
+上面示例中的代码指定当客户端发起 I<WebSocket> 请求到服务器的 I</say> 这个路径的时候，如果是刚建立连接，则服务器在控制台输出 I<"User connected!">；
+
+如果客户端断开连接，则调用 I<finished()> 中定义的匿名子程序在控制台输出 I<"User disconnected!">；
+
+如果客户端有消息发来，则调用 I<on_message()> 中定义的匿名子程序，将 I<"You said: "> 加上客户端发来的消息，通过 I<send_message()> 方法发给客户端。
+
+于是通过 I<on_message()> 和 I<send_message()> 方法，服务器端的 Web 应用程序便可以和客户端进行 I<WebSocket> 通讯了。
+
+=head3 应用举例
+
+举个例子来玩玩吧，比如说手边有一台升级到 iOS4.2 的 iPod Touch，我想将 A<http://www.flickr.com|Flickr> 和目前比较火的 A<http://instagr.am/|Instagram> 上最新的图片推送到我的 iPod Touch 自带的浏览器中， 但是不巧的是我本地访问这两个网站非常慢，怎么办呢？
+
+恰好还有台中间主机A， 我从 iPod Touch 上访问 A 速度很快，并且从 A 上访问上面提到的两个网站也非常快，于是我们可以用 M<Mojolicious::Lite> 在主机 A 上建立一个 Web 应用程序，抓取这两个网站上的新图片，并通过 I<WebSocket> 推送到 iPod Touch 的浏览器中。
+
+代码可以在我的 A<https://github.com/cnhacktnt/demos/tree/master/websockets|Github 仓库>中找到，里面也使用到了A<http://advent.perlchina.org/2010/scoreboard.html|之前介绍的 Parallel::Scoreboard 模块> 和 I<fork>。
+
+当然这里用 M<Parallel::Scoreboard> 和 I<fork> 纯粹只是为了和之前的文章有所关联，加深印象，好玩而已，我们可以直接用 M<Mojo::Client> 模块来并发抓取 Flickr 和 Instagram 的图片，并且还是非阻塞的。
+
+有问题可以发邮件到 cnhacktnt 在 gmail 的邮箱，或者 @cnhacktnt （你懂的） :-)
+
+谢谢!
+
+
+
