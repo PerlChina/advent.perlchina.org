@@ -12,7 +12,7 @@
 <h1><a href="../">Perl Advent Calendar 2011-12</a>-01</h1>
 <h2 align="center">Socks on the fly</h2>
 <h3 align="center">by Fayland Lam</h3>
-<p>去年的 <a href="../2010/">Advent</a> 我们讲过如果在 http/https 上铺上一层 <a href="../2010/Tor.html">Tor</a>. 这次我们将更近一步，谈论如果在 Socket 上用上 socks proxy.</p>
+<p>去年的 <a href="../2010/">Advent</a> 我们讲过如何在 http/https 上铺上一层 <a href="../2010/Tor.html">Tor</a>. 这次我们将更近一步，谈论如果在 Socket 上用上 socks proxy.</p>
 <p>此次主角便是 <tt><a href="http://search.cpan.org/perldoc?IO::Socket::Socks::Wrapper" title="IO::Socket::Socks::Wrapper">IO::Socket::Socks::Wrapper</a></tt>，无需更改所需模块的源码，轻松简易加套。</p>
 <p>如下例子是使用 <tt><a href="http://search.cpan.org/perldoc?Net::Whois::Raw" title="Net::Whois::Raw">Net::Whois::Raw</a></tt>。</p>
 <p>查看它的源码，可以发现在 sub whois_query 里有 IO::Socket::INET->new 链接。所以在该 Socket 上使用 socks proxy 就变得非常简单。</p>

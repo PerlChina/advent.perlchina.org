@@ -6,7 +6,7 @@
 
 =for advent_author Fayland Lam
 
-去年的 A<../2010/|Advent> 我们讲过如果在 http/https 上铺上一层 A<../2010/Tor.html|Tor>. 这次我们将更近一步，谈论如果在 Socket 上用上 socks proxy.
+去年的 A<../2010/|Advent> 我们讲过如何在 http/https 上铺上一层 A<../2010/Tor.html|Tor>. 这次我们将更近一步，谈论如果在 Socket 上用上 socks proxy.
 
 此次主角便是 M<IO::Socket::Socks::Wrapper>，无需更改所需模块的源码，轻松简易加套。
 
