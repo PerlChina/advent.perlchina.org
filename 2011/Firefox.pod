@@ -1,0 +1,34 @@
+=for advent_year 2011
+
+=for advent_day X
+
+=for advent_title WWW::Mechanize::Firefox
+
+=for advent_author Fayland Lam
+
+M<WWW::Mechanize::Firefox> 是个非常强大的工具。
+
+第一步是安装。安装该模块之前，需要安装一个 firefox 的 A<https://addons.mozilla.org/en-US/firefox/addon/mozrepl/|mozrepl> addon. Install 完毕后，重启然后启动 MozRepl (Tools -> MozRepl -> Start), 然后 cpan WWW::Mechanize::Firefox, 在安装的过程中，你可以看着 firefox, 你会发现它不停的打开 tab 然后做些测试，关掉 tab。如果某些 tests fail, 你可以 force install 该模块。
+
+接下来做什么呢？大部分你用 firefox 加你双手能完成的任务，该模块都可以帮你自动化。
+
+简单的比如登录，填写表单，提交然后解析 HTML。对比 M<WWW::Mechanize>, 它可以无视 JavaScript 的阻拦。
+
+复杂的如运行 JavaScript, 模拟鼠标点击，触发 JavaScript 事件，截屏，保存文件，更改 firefox 配置等等。详细的可以参阅 M<WWW::Mechanize::Firefox::Examples>
+
+下面是一个非常无聊的例子。但是除了该模块，你很难用其他模块来实现它。
+
+=begin code
+
+use strict;
+use warnings;
+use WWW::Mechanize::Firefox;
+
+my $mech = WWW::Mechanize::Firefox->new();
+
+$mech->get('http://www.google.com/codesearch#search/&q=WWW::Mechanize::Firefox&type=cs');
+print $_->{innerHTML} . "\n" foreach $mech->selector('div.GEQUXKXGJB span:first-child');
+
+=end code
+
+谢谢。
