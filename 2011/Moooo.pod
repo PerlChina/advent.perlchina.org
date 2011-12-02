@@ -19,7 +19,7 @@ L<Moo>与L<Mouse>最大的区别是：它完全不提供任何B<meta object prot
 供B<new>，B<extends>，B<has>这些功能，但你可以按照需求加载你所需要的功能
 。
 
-=begine code
+=begin code
 
 use Mo qw'build default builder coerce is required';
 
