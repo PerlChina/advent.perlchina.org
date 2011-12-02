@@ -1,0 +1,56 @@
+=for advent_year 2011
+
+=for advent_day X
+
+=for advent_title qr/Moo?/
+
+=for advent_author Woosley Xu
+
+每个人都喜欢面向对象编程，于是每个人都喜欢L<Moose>。但是有些时候，Moose
+的加载速度成为了我们应用的瓶颈。这时候L<Mouse>出现了，L<Class::Accessor>
+出现了。但这还不够，L<Mouse>仍然过于沉重，L<Class::Accessor>仍然只能提供
+有限的特性。这时候，L<Moo>和L<Mo>出现了。
+
+L<Moo>与L<Mouse>最大的区别是：它完全不提供任何B<meta object protocol>，
+因此它的速度更快，体积更小。在将来的1.0版本，它计划可以和L<Any::Moose>一
+起使用。
+
+如果你仍然觉得L<Moo>太过重量级，那么L<Mo>是你的下一个选择。L<Mo>核心只提
+供B<new>，B<extends>，B<has>这些功能，但你可以按照需求加载你所需要的功能
+。
+
+=begine code
+
+use Mo qw'build default builder coerce is required';
+
+sub BUILD {
+    my $self = shift;
+    ...
+}
+
+=end code
+
+你还可以轻松的将L<Mo>压缩，然后包括到你的模块中去。
+
+=begin code
+
+>cat A.pm
+
+package A;
+# use Mo qw 'build default';
+
+>mo-inline A.pm
+
+>cat  A.pm
+
+package A;
+# use Mo qw 'build default';
+#   The following line of code was produced from the previous line by
+#   Mo::Inline version 0.27
+no warnings;my$M=__PACKAGE__.::;*{$M.Object::new}=sub{bless{@_[1..$#_]},$_[0]};*{$M.import}=sub{import warnings;$^H|=1538;my($P,%e,%o)=caller.::;shift;eval"no Mo::$_",&{$M.$_.::e}($P,\%e,\%o,\@_)for@_;return if$e{M};%e=(extends,sub{eval"no $_[0]()";@{$P.ISA}=$_[0]},has,sub{my$n=shift;my$m=sub{$#_?$_[0]{$n}=$_[1]:$_[0]{$n}};$m=$o{$_}->($m,$n,@_)for sort keys%o;*{$P.$n}=$m},%e,);*{$P.$_}=$e{$_}for keys%e;@{$P.ISA}=$M.Object};*{$M.'build::e'}=sub{my($P,$e)=@_;$e->{new}=sub{$c=shift;my$s=bless{@_},$c;my@B;do{@B=($c.::BUILD,@B)}while($c)=@{$c.::ISA};exists&$_&&&$_($s)for@B;$s}};*{$M.'default::e'}=sub{my($P,$e,$o)=@_;$o->{default}=sub{my($m,$n,%a)=@_;$a{default}or return$m;sub{$#_?$m->(@_):!exists$_[0]{$n}?$_[0]{$n}=$a{default}->(@_):$m->(@_)}}};@f=qw[build default];use strict;use warnings;
+
+=end code
+
+从 Moose 到 Moo 到 Mo，下一个会是 M ? :)
+
+谢谢
