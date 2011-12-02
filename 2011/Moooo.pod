@@ -1,6 +1,6 @@
 =for advent_year 2011
 
-=for advent_day X
+=for advent_day 2
 
 =for advent_title qr/Moo?/
 
