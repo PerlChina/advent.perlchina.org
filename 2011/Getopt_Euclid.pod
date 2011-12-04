@@ -1,0 +1,89 @@
+=for advent_year 2011
+
+=for advent_day 4
+
+=for advent_title Getopt::Euclid
+
+=for advent_author Joe Jiang
+
+写脚本的时候，最麻烦的两件事，无非是写文档和设计用户接口。有了 Getopt::Euclid，这两件事情居然开始变得十分有趣了。应该说，文档驱>动的程序，这样的创意并不少见，可是用来作为用户接口，这真的还是让人觉得十分恰当。
+
+相比其他的脚本参数分析模块，这个模块的知名度比较低，不过它的作者 Damian Conway 还是十分知名的。现在的维护者 Florent Angly 看起来
+也是参数模块这方面的爱好者，一同被他收纳的还有 Getopt::Declare。
+
+具体的使用方法可以参考以下的测试代码：
+
+=begin code
+
+    #!/usr/bin/perl -wl
+
+    use Getopt::Euclid;
+    print for @{$ARGV{-i}};
+
+    =head1 NAME
+
+    demo-euclid - testing of module Getopt::Euclid
+
+    =head1 VERSION
+
+    This documentation refers to demo-euclid version 0.0.1
+
+    =head1 USAGE
+
+        demo-euclid [options]  -i[n][file] <file>
+
+    =head1 REQUIRED ARGUMENTS
+
+    =over
+
+    =item  -i[n][file] <file>
+
+    Specify input file
+
+    =for Euclid:
+        repeatable
+        file.type:    readable
+        file.default: '-'
+
+    =back
+
+=end code
+
+有了以上的代码，你就可以这样测试一下了：
+
+=begin code
+
+    $ perl demo-euclid.pl --version
+    This is demo-euclid.pl version 0.0.1
+
+=end code
+
+看上去还不错，这个工具脚本已经可以自动汇报版本号了！然后再测试一下正式的功能：
+
+=begin code
+
+    $ perl demo-euclid.pl -i /etc/passwd -i /etc/group
+    /etc/passwd
+    /etc/group
+
+=end code
+
+这正是我们的工具需要的功能，也就是分行（因为 #! 行的末尾有个 l 选项）打印文件名。另外，文件不存在，或者不可读的时候，脚本还会自>动报错：
+
+=begin code
+
+
+    $ perl demo-euclid.pl -i /etc/pass
+    Invalid "-i[n][file] <file>" argument.
+    <file> must be readable but the supplied value ("/etc/pass") isn't.
+    (Try: demo-euclid.pl --help)
+
+    $ perl demo-euclid.pl --help
+    Usage:
+
+    demo-euclid.pl -i <file>
+    ...
+
+=end code
+
+看上去还挺专业的，连相应的帮助信息也有了。衷心希望你会喜欢上这个小模块！
