@@ -1,0 +1,37 @@
+=for advent_year 2011
+
+=for advent_day 5
+
+=for advent_title Data::MessagePack
+
+=for advent_author Fayland Lam
+
+很多时候我们经常会碰到，要将某个对象或者变量保存起来，然后在另外的时间或者地点重新使用它。这种用途非常广泛，但是您可能没有发现。比如当您用 Cache 模块的时候，我们都需要将要保存的东西先转化成 binary 或者文本格式，然后再保存到缓存里。
+
+在计算机世界，这种做法叫做 B<serialize>。
+
+Perl 里最常见的是 M<Storable>。Storable 很古老但却最常用。它的缺点之一是不垮语言的。你无法用其他语言来 deserialize 出保存的东西。但是它很强大，可以 serialize 复杂的模块实例。
+
+另外常用的有 M<JSON> 甚至 M<YAML>。JSON 更流行一些。它们的优点在于不 deserialize 也可以直接看到内容。
+
+而今天我们要介绍的是 M<Data::MessagePack>。它相对 JSON 的优点在于小（节省内存）而且快速。它也是跨语言的，大部分流行的语言支持都可以在 A<http://msgpack.org/> 里找到。
+
+它的 RPC 实现是 M<AnyEvent::MPRPC>。
+
+使用例子摘抄 perldoc:
+
+=begin code
+
+use Data::MessagePack;
+
+my $mp = Data::MessagePack->new();
+$mp->canonical->utf8->prefer_integer if $needed;
+
+my $packed   = $mp->pack($dat);
+my $unpacked = $mp->unpack($dat);
+
+=end code
+
+更多更详细的可以查阅模块文档和 msgpack.org 网站。
+
+谢谢。
