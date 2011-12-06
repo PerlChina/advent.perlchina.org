@@ -1,0 +1,80 @@
+=for advent_year 2011
+
+=for advent_day 6
+
+=for advent_title BerkeleyDB
+
+=for advent_author Fayland Lam
+
+M<BerkeleyDB> 是个高性能的数据库。
+
+当您需要操作一个极其巨大的文件，需要构造一个 super big 的 hash 或者 array 的时候，内存可能就是您最大的烦恼所在。而 BerkeleyDB 可以通过硬盘空间来保存该 hash 或者 array，到时候可以快速定位和 sort 之类，来完成您的需求。
+
+BerkeleyDB 的详细介绍和设计可以参阅 A<http://www.aosabook.org/en/bdb.html|The Architecture of Open Source Applications> 的章节。
+
+在 Ubuntu 之类的系统下可以通过 $ sudo apt-get install libberkeleydb-perl 来安装，FreeBSD 可以到 /usr/ports/databases/p5-BerkeleyDB 来 make install, Win32 下不支持，其它的可以 Google 得到安装指南。
+
+在单线程的情况下，一个简单的例子如下：
+
+=begin code
+
+use FindBin qw/$Bin/;
+use BerkeleyDB;
+
+my $berkeleydb_temp_file = "$Bin/tmp.berkeleydb"; # temp file for BerkeleyDB
+tie my %data, 'BerkeleyDB::Hash',
+    -Filename => $berkeleydb_temp_file,
+    -Flags    => DB_CREATE|DB_TRUNCATE
+        or die "Cannot create file: $! $BerkeleyDB::Error\n";
+open(my $fh, '<', 'RealBigFile.log') or die "Can't open: $!";
+while (my $line = <$fh>) {
+    ## some code that %data will be a real very big hash
+    ## we just need the first line and the last line which matches the $pattern
+    my $pattern = get_pattern($line);
+    if (exists $data{"start_$pattern"}) {
+        $data{"end_$pattern"} = $line;
+    } else {
+        $data{"start_$pattern"} = $line;
+    }
+}
+close($fh);
+# now working on the %data
+
+=end code
+
+你可以不停的 ls -ls 来查看 tmp.berkeleydb 的大小，顺便 monitor 下内存。
+
+BerkeleyDB 对多线程的支持也很不错，支持数千并发线程，最大 256TB 数据。在多线程的情况下，需要使用 BerkeleyDB::Env cds_lock 保证数据安全。简单的例子如下：
+
+=begin code
+
+my $env = new BerkeleyDB::Env
+    -Home   => $tmp_dir,
+    -Flags  => DB_CREATE|DB_INIT_CDB|DB_INIT_MPOOL
+        or die "cannot open environment: $BerkeleyDB::Error\n";
+my $db = tie my %data, 'BerkeleyDB::Hash',
+    -Filename => $berkeleydb_temp_file,
+    -Flags    => DB_CREATE,
+    -Env      => $env
+        or die "Cannot create file: $! $BerkeleyDB::Error\n";
+
+my $pm = new Parallel::ForkManager(4);
+foreach my $i (1 .. 1000) {
+    $pm->start and next; # do the fork
+    
+    my $lock = $db->cds_lock();
+    $data{$i} = $i * 2;
+    $db->db_sync();
+    $lock->cds_unlock();
+    
+    $pm->finish; # Terminates the child process
+}
+
+$pm->wait_all_children;
+
+=end code
+
+更多的使用方法请参阅 perldoc M<BerkeleyDB>。
+
+谢谢。
+
