@@ -1,0 +1,44 @@
+=for advent_year 2011
+
+=for advent_day ?
+
+=for advent_title Template::Mustache
+
+=for advent_author Beckheng Lam
+
+M<Template::Mustache>是一个模板模块,它是mustache (http://mustache.github.com/) 的Perl实现版本. 
+mustache的语法相当简洁, 有多个编程语言 (.NET, JavaScript, PHP, Python, Ruby, Java等)的实现. 因而能在多个语言中共享一个模板内容, 传入相应的数据即可. 不可过分依赖这种情形.
+当然Template::Mustache的安装也较容易. 但要求Perl 5.8或之后的版本.
+
+安装模块, 有时我会用cpanp (M<CPANPLUS>), 有时会用cpanm (M<App::cpanminus>), 这次使用前者:
+cpanp -i Template::Mustache
+
+详细请参阅CPAN: M<Template::Mustache>, 下面是小例子:
+
+=begin code
+
+use strict;
+
+use Template::Mustache;
+
+my $tmpl = Template::Mustache->new();
+
+my $strTemplateContent = "Hello {{name}}!\n";
+
+print $tmpl->render($strTemplateContent, { 'name' => 'Beckheng' });
+#output:
+#Hello Beckheng!
+
+my $strTemplateContent2 = "Person:\n{{#person}}  {{name}}, {{age}}\n{{/person}}\n";
+print $tmpl->render($strTemplateContent2, { 'person' => [
+			{ 'name' => 'Beckheng', 'age' => 33 },
+			{ 'name' => 'BB', 'age' => 2 },
+		] });
+#output:
+#Person:
+#  Beckheng, 33
+#  BB, 2
+
+=end code
+
+第一次参与, 谢谢!
