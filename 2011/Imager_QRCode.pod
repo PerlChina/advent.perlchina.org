@@ -14,7 +14,7 @@ Imager::QRCode是一套基于开源二维码生成库libqrencode的模块,这两
 
 Imager::QRCode自带了libqrencode的源码,并且在安装的时候会自动编译,所以你不用去专门下载libqrencode而只需要使用CPAN正常安装即可。
 
-需要说明的是Imager::QRCode依赖Imager模块,并且生成的图片格式也是依赖Imager模块能产生的格式。所以如果你希望生成GIF格式的文件却发现没有任何效果不妨先检查下你所装的Imagerm模块是否能正常生成GIF格式的文件。
+需要说明的是Imager::QRCode依赖Imager模块,并且生成的图片格式也是依赖Imager模块能产生的格式。所以如果你希望生成GIF格式的文件却发现没有任何效果不妨先检查下你所装的Imager模块是否能正常生成GIF格式的文件。
 
 
 Imager::QRCode使用的方法非常简单：
