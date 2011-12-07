@@ -1,0 +1,44 @@
+=for advent_year 2011
+
+=for advent_day 7
+
+=for advent_title Imager::QRCode
+
+=for advent_author CGI.NET
+
+M<Imager::QRCode> 有趣的二位码生成模块。
+
+随着电子商务的兴起，二维码这种东西越来越多的出现在我们的生活中,想不想给你的用户也拥有一份属于自己网站的二维码呢？那用Imager::QRCode就没错了。
+
+Imager::QRCode是一套基于开源二维码生成库libqrencode的模块,这两个的作者都是日本人。
+
+Imager::QRCode自带了libqrencode的源码,并且在安装的时候会自动编译,所以你不用去专门下载libqrencode而只需要使用CPAN正常安装即可。
+
+需要说明的是Imager::QRCode依赖Imager模块,并且生成的图片格式也是依赖Imager模块能产生的格式。所以如果你希望生成GIF格式的文件却发现没有任何效果不妨先检查下你所装的Imagerm模块是否能正常生成GIF格式的文件。
+
+
+Imager::QRCode使用的方法非常简单：
+
+=begin code
+
+#!/usr/bin/perl -w
+use Imager::QRCode;
+my $qrcode = Imager::QRCode->new(
+        size          => 2,
+        margin        => 2,
+        version       => 1,
+        level         => 'M',
+        casesensitive => 1,
+        lightcolor    => Imager::Color->new(255, 255, 255),
+        darkcolor     => Imager::Color->new(0, 0, 0),
+    );
+    my $img = $qrcode->plot("You infomation here!");
+       $img->write(file => 'qrcode.gif', type=>'gif')  or die  $img->errstr;
+     
+=end code
+
+有关Libqrencode的信息可以访问 L<http://fukuchi.org/works/qrencode/index.html.en>
+更多的使用方法请参阅 perldoc M<Imager::QRCode>。
+
+谢谢。
+
