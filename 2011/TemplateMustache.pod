@@ -1,6 +1,6 @@
 =for advent_year 2011
 
-=for advent_day ?
+=for advent_day 8
 
 =for advent_title Template::Mustache
 
