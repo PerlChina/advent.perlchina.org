@@ -35,7 +35,6 @@ $EUID 就是 Effective User ID 变量的缩写（由 English 模块引入别名�
 =begin code
 
     $ cp /usr/bin/perl ~/bin/mysqlperl
-    $ cp /usr/bin/perl ~/bin/mysqlperl
 
     $ sudo chown mysql:mysql ~/bin/mysqlperl
 
