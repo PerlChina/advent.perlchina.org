@@ -1,0 +1,55 @@
+=for advent_year 2011
+
+=for advent_day 9
+
+=for advent_title setuid perl
+
+=for advent_author Joe Jiang
+
+SUID 是 Unix 的一个概念，可以让执行的程序拥有脚本的拥有者的权限。
+
+=begin code
+
+    $ bin/mysqlperl -MEnglish -le 'print join qq(\t), $UID, $EUID'
+    500     27
+
+    $ id mysql
+    uid=27(mysql) gid=27(mysql) groups=27(mysql)
+
+=end code
+
+这里的脚本程序 mysqlperl 其实就是 /usr/bin/perl 的一个拷贝，只不过能让 EUID 成为 mysql 用户而已。
+
+$EUID 就是 Effective User ID 变量的缩写（由 English 模块引入别名），代表脚本执行时的实际权限。
+
+这里的 mysql 用户可能有进一步的系统权限设定，比如能够不用密码登录数据库。
+
+=begin code
+
+    mysql> GRANT ALL ON rt.* TO mysql@localhost identified by '';
+
+=end code
+
+要实现这样的 bin/mysqlperl，只需要三步即可：
+
+=begin code
+
+    $ cp /usr/bin/perl ~/bin/mysqlperl
+    $ cp /usr/bin/perl ~/bin/mysqlperl
+
+    $ sudo chown mysql:mysql ~/bin/mysqlperl
+
+    $ sudo chmod u+s ~/bin/mysqlperl
+
+=end code
+
+作为验证，一个可选的步骤就是用 ls 查看这个可执行程序的 SUID 位。
+
+=begin code
+
+    $ ls -l ~/bin/mysqlperl
+    -rwsr-xr-x 1 mysql mysql 8836 Dec  4 15:36 bin/mysqlperl
+
+=end code
+
+希望你能小心使用这个技巧，注意藏好你的脚本解释器，最好不要轻易被系统管理员发现 :)
