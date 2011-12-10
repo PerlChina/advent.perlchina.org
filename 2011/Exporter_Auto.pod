@@ -6,9 +6,9 @@
 
 =for advent_author Fayland Lam
 
-M<Exporter::Auto> 是 M<Exporter> 的 enhanced 版本。它默认将您代码里的 subs 导入到 @EXPORT 里，免去了你在 @EXPORT 里人工添加和删除 sub 的烦恼。
+M<Exporter::Auto> 是 M<Exporter> 的 enhanced 版本。它默认将您代码里的 subs 导入到 @EXPORT 里，免去了您在 @EXPORT 里人工添加和删除 sub 的烦恼。
 
-该模块今天新鲜出炉，功能方便有某些缺陷，比如你不能控制弄到 @EXPORT_OK （有兴趣的童鞋可以给作者发送 patch, 通过传递 import 参数来配置），比如你不能将 $, @, % 自动或者额外加到 @EXPORT 里，但是该模块还是非常方便的完成了一个既定的任务，将所有的 subs 自动导出。
+该模块今天新鲜出炉，功能方便有某些缺陷，比如您不能控制弄到 @EXPORT_OK （有兴趣的童鞋可以给作者发送 patch, 通过传递 import 参数来配置），比如您不能将 $, @, % 自动或者额外加到 @EXPORT 里，但是该模块还是非常方便的完成了一个既定的任务，将所有的 subs 自动导出。
 
 尤其是代码非常简洁优雅，所以想和诸位共享一下。（中文注释是本人添加）
 
@@ -46,7 +46,7 @@ __END__
 
 =end codeNNN
 
-非常简洁优雅。use Exporter::Auto; 就等同于 unshift @MYCLASS::ISA, 'Exporter'; @MYCLASS::EXPORT_OK = ('all-my-subs');
+非常简洁优雅。use Exporter::Auto; 就等同于 unshift @MYCLASS::ISA, 'Exporter'; @MYCLASS::EXPORT = ('all-my-subs');
 
 每一行都起作用，又能非常完美地完成既定任务。多阅读阅读类似的代码，对 Perl 的学习提升非常有帮助。
 
