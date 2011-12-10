@@ -1,0 +1,55 @@
+=for advent_year 2011
+
+=for advent_day 10
+
+=for advent_title Exporter::Auto
+
+=for advent_author Fayland Lam
+
+M<Exporter::Auto> 是 M<Exporter> 的 enhanced 版本。它默认将您代码里的 subs 导入到 @EXPORT 里，免去了你在 @EXPORT 里人工添加和删除 sub 的烦恼。
+
+该模块今天新鲜出炉，功能方便有某些缺陷，比如你不能控制弄到 @EXPORT_OK （有兴趣的童鞋可以给作者发送 patch, 通过传递 import 参数来配置），比如你不能将 $, @, % 自动或者额外加到 @EXPORT 里，但是该模块还是非常方便的完成了一个既定的任务，将所有的 subs 自动导出。
+
+尤其是代码非常简洁优雅，所以想和诸位共享一下。（中文注释是本人添加）
+
+=begin codeNNN
+
+package Exporter::Auto;
+use strict;
+use warnings;
+use 5.008005;
+our $VERSION = '0.01';
+
+use Sub::Identify qw(stash_name);
+use B::Hooks::EndOfScope;
+use Exporter; # 该行并无必要
+
+sub import {
+    my $klass = caller(0); # 得到该调用模块的名字
+
+    no strict 'refs';
+    unshift @{"${klass}::ISA"}, 'Exporter'; # 将 Exporter 当成目标模块的父类
+
+    on_scope_end { # 在编译该块代码结束马上运行，因为在 runtime 时会无效
+        while (my ($k, $v) = each %{"${klass}::"}) {
+            next if $k =~ /^(?:BEGIN|CHECK|END)$/; # 跳过一些 Perl 自带的 sub, 因为都没必要导入。可能需要更多的如 INIT, DESTORY, AUTOLOAD 等。
+            next if $k =~ /^_/; # 不导入私有函数
+            next unless *{"${klass}::${k}"}{CODE}; # 只导入代码，不导入 scalar, array, hash 等
+            next if $klass ne stash_name($klass->can($k)); # 只导入属于调用模块的，而非调用模块所导入的额外sub
+            push @{"${klass}::EXPORT"}, $k; # 添加到 @EXPORT
+        }
+    };
+}
+
+1;
+__END__
+
+=end codeNNN
+
+非常简洁优雅。use Exporter::Auto; 就等同于 unshift @MYCLASS::ISA, 'Exporter'; @MYCLASS::EXPORT_OK = ('all-my-subs');
+
+每一行都起作用，又能非常完美地完成既定任务。多阅读阅读类似的代码，对 Perl 的学习提升非常有帮助。
+
+PS，阅读模块的代码别忘了阅读模块的 .t 文件。
+
+谢谢。
