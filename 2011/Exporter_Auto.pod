@@ -12,7 +12,7 @@ M<Exporter::Auto> 是 M<Exporter> 的 enhanced 版本。它默认将您代码里
 
 尤其是代码非常简洁优雅，所以想和诸位共享一下。（中文注释是本人添加）
 
-=begin codeNNN
+=begin pre
 
 package Exporter::Auto;
 use strict;
@@ -44,7 +44,7 @@ sub import {
 1;
 __END__
 
-=end codeNNN
+=end pre
 
 非常简洁优雅。use Exporter::Auto; 就等同于 unshift @MYCLASS::ISA, 'Exporter'; @MYCLASS::EXPORT = ('all-my-subs');
 
