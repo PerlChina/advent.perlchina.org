@@ -1,0 +1,99 @@
+=for advent_year 2011
+
+=for advent_day 12
+
+=for advent_title 最简单的 Git 服务器
+
+=for advent_author 扶凯
+
+=head1 简单介绍
+
+目前大家的开发平台都从 svn 转成了 git 来管理应用了。说明老大们的影响力还真是不小啊. 近来查了一下资料配置 Apache 加 dav 来管理是相当的麻烦。现在用习惯了 M<Plack> 的方案来做 Web 的应用，太方便了。所以都感觉配置 Apache 之类是很麻烦的一个事情。
+
+现在 Plack 很火，今天就介绍怎么使用 Plack 来实现 Git 服务器，在这，我们使用的是 M<Plack::App::DAV> 这个应用.
+
+=head1 配置 Git 的客户端
+
+因为 Git 的服务器在 Linux 中是使用的 Curl ，所以一定要先配置 Curl 的默认的用户和密码(注: 此设定不可略过).修改这个的默认的配置文件 ~/.netrc .
+
+    machine example.com
+    login USERNAME
+    password PASSWORD
+
+可以用这个来测试一下下面的 Git 的库认证(怎么样建一个 HTTP 的 Git 的库,请 Google .)
+
+    curl --netrc --location http://git.example.com/project_name.git/HEAD 
+
+会看到如下的输出 
+
+    ref: refs/heads/master 
+
+=head1 建立 DAV 的服务器
+    
+在 Plack 中有很多应用，都象下面这样的单行，比如我常用的静态文件服务器，就是个使用 Plack 的单行的 Perl 。这个 DAV 的服务器也能这样。
+但只是 DAV 的服务器在 Git  中并行不通，因为一定需要用户认证。所面只是一个建立 DAV 服务器的演示.
+
+    plackup -MPlack::App::DAV -e 'Plack::App::DAV->new->to_app'
+    
+
+=head2 最简单的 Git 服务器
+
+最简单的 Git 的服务器。这个一定需要用户和密码才行。因为 Git 多人读取文件需要使用了一个外部锁认证,在这会根据用户名来做文件共享锁的识别。
+
+    #!/usr/bin/perl
+    use strict;
+    use Plack::Builder;
+    use Plack::App::DAV;
+    
+    my $gitPath = '/data/dev/git'; 
+    my $app      = Plack::App::DAV->new(root => $gitPath )->to_app;
+    
+    builder {
+        enable "Auth::Basic", authenticator => sub {
+            my($username, $password) = @_; 
+            return $username eq 'admin' && $password eq 'passwd';
+        };  
+        $app;
+    };
+
+启动这个 Git 的服务器
+
+    plackup git.psgi
+
+=head2 支持只读用户和读写用户的 Git 服务器 
+
+这个需要使用使用 Plack 的中间件 Options 来管理读写的 HTTP 的方法.另外我还使用了一个 Junction 的模块，超级好用，也值得推荐.
+
+    #!/usr/bin/perl
+    use strict;
+    use Plack::Builder;
+    use Plack::App::DAV;
+    use Perl6::Junction qw(any);
+    
+    
+    my %userList = (
+        test1 => 'pass1',
+        test2 => 'pass2',
+        );
+    
+    my @readOnly = qw( test1 );
+    my $gitPath = '/data/dev/git'; 
+    
+    my $app = Plack::App::DAV->new(root => $gitPath )->to_app;
+     
+    builder {
+        enable "Auth::Basic", authenticator => sub {
+            my($user, $pass) = @_;
+            return exists $userList{$user} and $pass eq $userList{$user};
+        };
+        enable 'Options', allowed => [qw/GET PUT POST DELETE  HEAD PROPPATCH PROPFIND MKCOL COPY MOVE LOCK UNLOCK/];
+        enable_if { any(@readOnly) eq  $_[0]->{REMOTE_USER}  } 
+            "Options", allowed => [qw/GET HEAD/];
+        $app;
+    };
+
+启动这个 Git 的服务器
+
+    plackup git.psgi
+
+我们还可以使用其它的方法来管理读写用户，比如通过路径。这时我们可以使用 Plack::App::URLMap 的模块。
