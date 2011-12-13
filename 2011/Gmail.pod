@@ -1,0 +1,86 @@
+=for advent_year 2011
+
+=for advent_day 13
+
+=for advent_title Gmail
+
+=for advent_author Fayland Lam
+
+Gmail 挺不错的。本章主要介绍如何使用 IMAP 来收取邮件和如何在 TLS 上发送邮件。
+
+Gmail 支持 POP3, 但是个人更喜欢用 IMAP，因为可以只查询未读邮件，和标记为已读，无须将其删除。还有它还能检查非 INBOX 的邮件。
+
+IMAP 一般使用 M<Mail::IMAPClient>, 使用例子如下：
+
+=begin code
+
+use Mail::IMAPClient;
+use IO::Socket::SSL;
+
+# Connect to IMAP server
+my $imap = Mail::IMAPClient->new(
+  Server   => 'imap.gmail.com',
+  User     => 'myusername@gmail.com', # or App mail
+  Password => 'mysecretpass',
+  Port     => 993,
+  Ssl      =>  1,
+) or die "Cannot connect through IMAPClient: $!";
+
+$imap->select("INBOX");
+$imap->Peek(1); # we'll use see to mark as read
+my @unseen = $imap->unseen or print "No unseen messages in inbox\n";
+foreach my $msg_id (@unseen) {
+    my $msg_from = $imap->get_header($msg_id, "From");
+    my $msg_subject = $imap->get_header($msg_id, "Subject");
+    my $string = $imap->body_string($msg_id)
+        or die "Could not body_string: ", $imap->LastError;
+    print "We get $msg_subject from $msg_from: $string\n";
+    
+    $imap->see($msg_id); # mark as read if needed
+}
+
+# Say so long
+$imap->logout();
+
+=end code
+
+邮件的用途比较广泛，比如你在其他地方或者某些人会经常给你发送一些特定格式的邮件，您可以写个脚本来处理这些。
+
+另外我们也经常需要发送邮件，如果要大批量发送的话，sendmail, Qmail 或者 Postfix 等是一个不错的选择，但是如果仅仅是需要偶尔发送一些邮件，还是可以使用 Gmail 的 SMTP 服务器的。这里我们用 M<Email::Sender::Simple> 和 M<Email::Sender::Transport::SMTP::TLS> 来发送。
+
+=begin pre
+
+use Email::Sender::Simple qw(sendmail);
+use Email::Sender::Transport::SMTP::TLS;
+use Try::Tiny;
+
+my $transport = Email::Sender::Transport::SMTP::TLS->new(
+    host => 'smtp.gmail.com',
+    port => 587,
+    username => 'myusername@gmail.com',
+    password => 'mysecretpass',
+);
+
+
+use Email::Simple::Creator; # 需要发送附件的话，可以试试 MIME::Lite 到最后 my $message = $msg->as_string; 即可
+my $message = Email::Simple->create(
+    header => [
+        From    => 'myusername@gmail.com',
+        To      => 'mylove@mail.com',
+        Subject => 'Hi Baby',
+    ],
+    body => 'I Love you!',
+);
+
+try {
+    sendmail($message, { transport => $transport });
+} catch {
+    die "Error sending email: $_";
+};
+
+=end pre
+
+更多更详细的资料，请参阅各自的 perldoc
+
+谢谢。
+
