@@ -1,0 +1,84 @@
+=for advent_year 2011
+
+=for advent_day 14
+
+=for advent_title CSV & XLS
+
+=for advent_author Fayland Lam
+
+Well, 很多人都喜欢用 Excel or OpenOffice Calc 来打开表格文件。所以您的上司，客户或者朋友，会让你输出 csv 或者 xls 给他们。
+
+有些人喜欢直接用 print join(', ', map { '"' . $_ . '"' } @outs) 来输出成 CSV, 但是这是极度不好的行为，因为 outs 里可能有 " 也可能有 ,
+
+所以个人建议，不管是解析 CSV 或者构造 CSV, 都应该使用标准的 CPAN 模块。如 M<Text::CSV_XS>
+
+=begin code
+
+use Data::Dumper;
+use Text::CSV_XS;
+my $csv = Text::CSV_XS->new ({ binary => 1 }) or
+    die "Cannot use CSV: " . Text::CSV_XS->error_diag();
+
+# read
+open(my $fh, "<:encoding(utf8)", "test.csv") or die "test.csv: $!";
+while (my $row = $csv->getline($fh)) {
+    print Dumper(\$row);
+}
+$csv->eof or $csv->error_diag();
+close($fh);
+
+# read from string
+my $line = "myid,filename,size as 9mb";
+unless ($csv->parse($line)) {
+    die "Failed to parse $line: " . $csv->error_diag() . "\n";
+}
+my @field = $csv->fields;
+print Dumper(\@field);
+
+# print out to file
+$csv->print($fh, ['myid', 'filename', 'size as 9mb']); print $fh "\n";
+# print out to STDOUT
+$csv->print(\*STDOUT, \@rows); print "\n";
+
+=end code
+
+如果有人非要找你要 xls 格式的话，你可以简单的用一下 A<http://cpansearch.perl.org/src/HMBRAND/Text-CSV_XS-0.85/examples/csv2xls|csv2xls> 来转成 xls 给他们。（如果连接失效，可 google "csv2xls cpan"）
+
+但是如果他们需要一些特殊的 xls 功能的话，比如一些颜色，大小格式，或者 function 之类的，那我们就得求助于 M<Excel::Writer::XLSX> 了。
+
+该模块由 M<Spreadsheet::WriteExcel> 的作者写的，相对 Spreadsheet::WriteExcel 提供了更好的性能和支持。
+
+模块的使用也是非常简单的。（模块的使用都应该是很简单的，所有复杂的模块都是不合格的模块。:)
+
+我们复制了 SYNOPSIS 过来。
+
+=begin code
+
+use Excel::Writer::XLSX;
+
+# Create a new Excel workbook
+my $workbook = Excel::Writer::XLSX->new( 'perl.xlsx' );
+
+# Add a worksheet
+$worksheet = $workbook->add_worksheet();
+
+#  Add and define a format
+$format = $workbook->add_format();
+$format->set_bold();
+$format->set_color( 'red' );
+$format->set_align( 'center' );
+
+# Write a formatted and unformatted string, row and column notation.
+$col = $row = 0;
+$worksheet->write( $row, $col, 'Hi Excel!', $format );
+$worksheet->write( 1, $col, 'Hi Excel!' );
+
+# Write a number and a formula using A1 notation
+$worksheet->write( 'A3', 1.2345 );
+$worksheet->write( 'A4', '=SIN(PI()/4)' );
+
+=end code
+
+2个模块都有非常详细的 EXAMPLES 目录。如果还是不会的话，可以来 PerlChina Group 发帖求助。
+
+谢谢。
