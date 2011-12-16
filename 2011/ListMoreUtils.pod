@@ -1,0 +1,70 @@
+=for advent_year 2011
+
+=for advent_day 15
+
+=for advent_title List::MoreUtils
+
+=for advent_author Joe Jiang
+
+对于大多数人来说，列表的处理是最让人头疼的一件事了，因为循环、变量一类的逻辑非常难以调试。而 M<List::MoreUtils> 则提供了一个简洁的接口，帮助我们进行高效的开发。
+
+这里就用其中一个有用的函数 natatime 作为例子介绍这个常用的模块。
+
+我们常常遇到的一个情况是，通过 Perl 生成 shell 脚本，然后用 shell 来执行。
+
+=begin code
+
+  % perl -le '...' > todo.sh
+  % source todo.sh
+
+=end code
+
+如果 todo.sh 里面某一行有许多的参数，比如 md5sum 1.txt 2.txt ... 9999.txt，这就可能导致一个问题，那就是命令行过长：
+
+=begin code
+
+  % md5sum *
+  -bash: /usr/bin/md5sum: Argument list too long
+
+=end code
+
+这样的问题，对于喜欢脚本的你来说，迟早会遇到的。natatime 这个有点大舌头的 not_a_time 函数能够帮助你去分批完成任务。
+
+=begin code
+
+  % seq 1 30 | perl -MList::MoreUtils=natatime -lne 'push @all, $_; END{ $i=natatime 10, @all; print join q( ), q(/usr/bin/md5sum), @f while @f=$i->() }'
+  /usr/bin/md5sum 1 2 3 4 5 6 7 8 9 10
+  /usr/bin/md5sum 11 12 13 14 15 16 17 18 19 20
+  /usr/bin/md5sum 21 22 23 24 25 26 27 28 29 30
+
+=end code
+
+这里用 natatime(10, @all) 产生了一个 $i 引用的函数，然后反复调用函数，每次产生十个数据，用来生成最终的命令。
+
+另一个有趣的例子是打印日历，如果你常常需要在命令行显示日历的话，可以用下面的代码实现：
+
+=begin code
+
+  #!/usr/bin/perl -l
+  use List::MoreUtils qw(natatime);
+  $it=natatime(7, (qw(Sun Mon Tue Wed Thr Fri Sat), (undef)x((8+@{[localtime]}[6]-@{[localtime]}[3]) % 7),map {s{^(@{[localtime]}[3])$}{\1*}; $_} (1..30))); 
+  print join qq(\t), @days while (@days=$it->()) 
+
+=end code
+
+运行效果如下：
+
+=begin pre
+
+  Sun     Mon     Tue     Wed     Thr     Fri     Sat
+                                  1       2       3
+  4       5       6       7       8       9       10
+  11      12      13      14      15*     16      17
+  18      19      20      21      22      23      24
+  25      26      27      28      29      30
+
+=end pre
+
+需要承认的是，安装 M<Calendar::Simple> 模块也能输出同样功能的脚本 pcal，但是这个脚本毕竟可以在 Windows 下运行。
+
+更多例子可以参考 A<http://www.effectiveperlprogramming.com/>。
