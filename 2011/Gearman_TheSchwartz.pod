@@ -1,0 +1,33 @@
+=for advent_year 2011
+
+=for advent_day 16
+
+=for advent_title Gearman & TheSchwartz
+
+=for advent_author Fayland Lam
+
+A<http://search.cpan.org/dist/Gearman/|Gearman> 和 M<TheSchwartz> 是著名 Perl 公司 Six Apart （Danga 已被 Six Apart 收购）的作品。
+
+这里我们不详细贴示例代码了，因为 perldoc 和网上搜索的例子都有一大把。
+
+两者都是与 job 相关，但是有各自的优点，可以适合不同的需求。
+
+两者都是比较适合将一些任务派发给别的后台程序来执行。适用的情况比如：
+
+1。有个程序极度占用内存，比如当我们要用 M<Algorithm::Bayesian> 来检查 spam 的时候，spam/ham 数据都是好几百 M，而我们不可能在 n 个 Web 服务器的 n 个进程中全部 slurp 数据文件。
+
+2。有段代码极度占用时间，但是我们不需要考虑其返回值，所以我们不想让 web 服务器在那里等待。
+
+3。有段代码性能极度差劲，你需要用 C 重写。或者某个东西是由其他语言所写，我们想使用它。
+
+等等。
+
+A<http://gearman.org/|gearman> 适合于你需要返回值，或者你需要和其他语言交流。
+
+TheSchwartz 适用于不需要返回值的。
+
+两者构架比较相似。都是有 Server/Client 模式，在一个地方插入对于某个 Worker 的 job, 然后 server 通过函数名字和参数来执行相对应的代码。
+
+当然也有很多不同的地方，TheSchwartz 需要数据库做中转，对于一个 Worker 来说，可以多处插入 job 但为了避免冲突往往只有一个 server 通过 fork 来处理。而 gearman 不需要任何数据库做中转，直接通过 ip servers 来自动分配任务到不同的服务器上，并且自动进行容错处理。
+
+本章只做抛砖引玉，希望诸位需要的时候能有所记忆。谢谢。
