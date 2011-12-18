@@ -1,0 +1,101 @@
+=for advent_year 2011
+
+=for advent_day 17
+
+=for advent_title DB::Skip for Debugging
+
+=for advent_author Joe Jiang
+
+有时候，天气不好、手发潮、皮肤过敏，你的老板在脖子边上咆哮，这样的时候写出的代码都特别需要调试器的支持。
+
+而且，更多时候，你实在容易迷失在一段别人写的 Perl 代码里面，于是你感觉快要进入之前说的倒霉状态了。这时候你需要的，其实还是调试器。
+
+=begin pre
+
+    $ perl -MCalendar::Simple=date_span -lde 'date_span(mon => 12, year => 2011,  begin => 1, end => 25)'
+    
+    Loading DB routines from perl5db.pl version 1.33
+    Editor support available.
+    
+    Enter h or `h h' for help, or `man perldebug' for more help.
+    
+    main::(-e:1):   date_span(mon => 12, year => 2011,  begin => 1, end => 25)
+      DB<1> s
+    Calendar::Simple::date_span(/usr/share/perl5/Calendar/Simple.pm:157):
+    157:      my %params = @_;
+      DB<1> 
+    Calendar::Simple::date_span(/usr/share/perl5/Calendar/Simple.pm:159):
+    159:      my @now = (localtime)[4, 5];
+      DB<1>
+    Calendar::Simple::date_span(/usr/share/perl5/Calendar/Simple.pm:161):
+    161:      my $mon   = $params{mon}   || ($now[0] + 1);
+      DB<1>
+    ...
+    ...
+    ...
+    Calendar::Simple::date_span(/usr/share/perl5/Calendar/Simple.pm:167):
+    167:      my @cal = calendar($mon, $year, $start_day);
+      DB<1>  # 这里进入了一个新的函数，叫做 calendar
+    Calendar::Simple::calendar(/usr/share/perl5/Calendar/Simple.pm:69):
+    69:       my ($mon, $year, $start_day) = @_;
+    ...
+    ...
+    ...
+      DB<1>
+    Calendar::Simple::calendar(/usr/share/perl5/Calendar/Simple.pm:85):
+    85:         $first = DateTime->new(year => $year,
+    86:                                month => $mon,
+    87:                                day => 1)->day_of_week % 7;
+      DB<1>  # 这里进入了一个新的模块，叫做 DateTime
+    DateTime::new(/usr/lib/perl5/DateTime.pm:199):
+    199:        my $class = shift;
+    ...
+    ...
+    ...
+    
+=end pre
+
+于是，一个个新模块被跟踪进去（前方还有 Class::Singleton、Params::Validate 等著名模块），直到最后彻底放弃，宣告今天不适合工作。
+
+其实，你心里知道 DateTime 这个模块应该早已做过许多测试，问题不大，可是又懒得去查 Perl Debug 手册，不知道 r 命令就能返回摸个函数的上级调用。
+
+没错，这样的场合，在第 85 行其实可以使用 n 命令代替 s 来执行整个语句，不进入某个具体函数。但是，还是常常容易后悔，发现某个跳过的地方其实应该跟踪进去的。于是只能重新开始整个调试过程。
+
+有了 DB::Skip 模块，这样的问题就很容易解决了。你可以这样调用它来跳过那些带来调试麻烦的“可靠”模块和函数：
+
+=begin code
+
+    use DB::Skip pkgs => [qr{^(DateTime|Class)}];
+
+=end code
+
+这里的 qr{...} 建立的是一个需要跳过的模块名模式。另外还可以用 subs => [qw( ... )] 建立需要跳过的函数列表。
+
+感谢模块作者 Christian Walde，让我们可以这样完成快速调试：
+
+=begin pre
+
+    $ perl -MCalendar::Simple=date_span -lde 'use DB::Skip pkgs => [qr{^(DateTime|Class)}]; date_span(mon => 12, year => 2011,  begin => 1, end => 25)'
+    
+    Loading DB routines from perl5db.pl version 1.33
+    Editor support available.
+    
+    Enter h or `h h' for help, or `man perldebug' for more help.
+    
+    DB::DB(-e:1):   use DB::Skip pkgs => [qr{^(DateTime|Class)}]; date_span(mon => 12, year => 2011,  begin => 1, end => 25)
+      DB<1> s
+    DB::DB(/usr/share/perl5/Calendar/Simple.pm:157):
+    ...
+    ...
+    ...
+      DB<1>
+    DB::DB(/usr/share/perl5/Calendar/Simple.pm:85):
+    85:         $first = DateTime->new(year => $year,
+    86:                                month => $mon,
+    87:                                day => 1)->day_of_week % 7;
+      DB<1> # 现在第 85 行上的单步调用，却不会再进入 DateTime 这个模块了
+    DB::DB(/usr/share/perl5/Calendar/Simple.pm:92):
+    92:       $first -= $start_day;
+
+=end pre
+
