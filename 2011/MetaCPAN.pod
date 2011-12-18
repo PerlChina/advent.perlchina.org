@@ -1,0 +1,27 @@
+=for advent_year 2011
+
+=for advent_day 18
+
+=for advent_title MetaCPAN
+
+=for advent_author Fayland Lam
+
+CPAN 在 2011 年最大的变化便是有了 A<https://metacpan.org/|MetaCPAN>.
+
+MetaCPAN 类似 A<http://search.cpan.org/>, 但是更好用功能更加丰富。一般来说，有了 metacpan 就可以抛弃 search.cpan.org 了。
+
+MetaCPAN 一个非常值得赞赏的功能便是提供了 API. M<MetaCPAN::API>. 有了 official 的 API，我们可以使用 CPAN 其强大的资料库来创建一些非常有趣的应用。
+
+A<http://www.github-meets-cpan.com/> github meets CPAN
+
+A<http://perlresume.org/> Perl resume (automatcially from github/CPAN)
+
+A<http://mapofcpan.org/> map of CPAN
+
+等。
+
+另外一个值得大书特书的地方是，该网站的源码是开放的，写得非常棒。不管是 Perl 新手还是老手，都能从中学到一些知识。
+
+<https://github.com/CPAN-API/metacpan-web>, Plack, Catalyst, Moose, AnyEvent etc.
+
+谢谢。
