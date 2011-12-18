@@ -22,6 +22,18 @@ A<http://mapofcpan.org/> map of CPAN
 
 另外一个值得大书特书的地方是，该网站的源码是开放的，写得非常棒。不管是 Perl 新手还是老手，都能从中学到一些知识。
 
-<https://github.com/CPAN-API/metacpan-web>, Plack, Catalyst, Moose, AnyEvent etc.
+A<https://github.com/CPAN-API/metacpan-web>, Plack, Catalyst, Moose, AnyEvent etc.
+
+最后附上一些使用例子：
+
+=begin code
+
+use MetaCPAN::API;
+
+my $mcpan  = MetaCPAN::API->new();
+my $author = $mcpan->author('XSAWYERX');
+my $dist   = $mcpan->release( distribution => 'MetaCPAN-API' );
+
+=end code
 
 谢谢。
