@@ -1,80 +1,49 @@
 =for advent_year 2011
 
-=for advent_day 6
+=for advent_day 19
 
-=for advent_title BerkeleyDB
+=for advent_title Music::Chord::Note
 
-=for advent_author Fayland Lam
+=for advent_author Joe Jiang
 
-M<BerkeleyDB> 是个高性能的数据库。
+对于喜欢乐器的人来说，常常需要了解和弦，但是如果小时候没有好好学习乐理，就会觉得十分遗憾。
 
-当您需要操作一个极其巨大的文件，需要构造一个 super big 的 hash 或者 array 的时候，内存可能就是您最大的烦恼所在。而 BerkeleyDB 可以通过硬盘空间来保存该 hash 或者 array，到时候可以快速定位和 sort 之类，来完成您的需求。
+有了 M<Music::Chord::Note> 这个模块，就能解决许多人的燃眉之急。
 
-BerkeleyDB 的详细介绍和设计可以参阅 A<http://www.aosabook.org/en/bdb.html|The Architecture of Open Source Applications> 的章节。
+好比你手上有个用键盘播放音乐的软件（我用过 Real Guitar A<http://www.musiclab.com/products/realgtr_info.htm>），你摸索着很快就能弹奏最简单的和弦了（比如 C D G）。但是对于那些复杂的，需要组合多个和弦才能演奏出来的呢（比如 C#m Cm7）？一个一个组合的摸索就变得非常麻烦，这时候你需要的就是有个脚本来帮你列出隐藏在和弦背后的组合。
 
-在 Ubuntu 之类的系统下可以通过 $ sudo apt-get install libberkeleydb-perl 来安装，FreeBSD 可以到 /usr/ports/databases/p5-BerkeleyDB 来 make install, Win32 下不支持，其它的可以 Google 得到安装指南。
-
-在单线程的情况下，一个简单的例子如下：
+安装了 Music::Chord::Note 的话，你就可以这样做：
 
 =begin code
 
-use FindBin qw/$Bin/;
-use BerkeleyDB;
-
-my $berkeleydb_temp_file = "$Bin/tmp.berkeleydb"; # temp file for BerkeleyDB
-tie my %data, 'BerkeleyDB::Hash',
-    -Filename => $berkeleydb_temp_file,
-    -Flags    => DB_CREATE|DB_TRUNCATE
-        or die "Cannot create file: $! $BerkeleyDB::Error\n";
-open(my $fh, '<', 'RealBigFile.log') or die "Can't open: $!";
-while (my $line = <$fh>) {
-    ## some code that %data will be a real very big hash
-    ## we just need the first line and the last line which matches the $pattern
-    my $pattern = get_pattern($line);
-    if (exists $data{"start_$pattern"}) {
-        $data{"end_$pattern"} = $line;
-    } else {
-        $data{"start_$pattern"} = $line;
-    }
-}
-close($fh);
-# now working on the %data
+    % perl -MMusic::Chord::Note -le 'print join qq(, ), Music::Chord::Note->new->chord(shift)' Cm7
+    C, D#, G, A#
 
 =end code
 
-你可以不停的 ls -ls 来查看 tmp.berkeleydb 的大小，顺便 monitor 下内存。
+这样看来，只要找到键盘上 C 和 D# 对应的键位就可以近似的演奏出 Cm7 了，如果不行，再同时按下 G 就行了，如果你能再加上 A#，四个键同时按就十分完美了。
 
-BerkeleyDB 对多线程的支持也很不错，支持数千并发线程，最大 256TB 数据。在多线程的情况下，需要使用 BerkeleyDB::Env cds_lock 保证数据安全。简单的例子如下：
+而 D# 就是一个过度音，它的音调应该等同于 Eb，这点可以用另一个方法来证实：
 
 =begin code
 
-my $env = new BerkeleyDB::Env
-    -Home   => $tmp_dir,
-    -Flags  => DB_CREATE|DB_INIT_CDB|DB_INIT_MPOOL
-        or die "cannot open environment: $BerkeleyDB::Error\n";
-my $db = tie my %data, 'BerkeleyDB::Hash',
-    -Filename => $berkeleydb_temp_file,
-    -Flags    => DB_CREATE,
-    -Env      => $env
-        or die "Cannot create file: $! $BerkeleyDB::Error\n";
+    % perl -MMusic::Chord::Note -le 'print Music::Chord::Note->new->scale(shift)' Eb
+    3
 
-my $pm = new Parallel::ForkManager(4);
-foreach my $i (1 .. 1000) {
-    $pm->start and next; # do the fork
-    
-    my $lock = $db->cds_lock();
-    $data{$i} = $i * 2;
-    $db->db_sync();
-    $lock->cds_unlock();
-    
-    $pm->finish; # Terminates the child process
-}
-
-$pm->wait_all_children;
+    % perl -MMusic::Chord::Note -le 'print Music::Chord::Note->new->scale(shift)' D#
+    3
 
 =end code
 
-更多的使用方法请参阅 perldoc M<BerkeleyDB>。
+这样，你就可以更进一步，立即享受演奏复杂和弦的乐趣了。感谢作者 Dai Okabayashi！
 
-谢谢。
+MetaCPAN link A<https://metacpan.org/module/Music::Chord::Note>
 
+最后附上简单的和弦音调列表：
+
+=begin code
+
+    %  perl -MMusic::Chord::Note -le '$cn = Music::Chord::Note->new; print join qq(, ), map { $cn->scale($_) } qw(C Db D Eb E F Gb G A Bb B)'
+    0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11
+
+=end code
