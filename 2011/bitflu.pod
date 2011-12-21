@@ -1,0 +1,24 @@
+=for advent_year 2011
+
+=for advent_day 21
+
+=for advent_title bitflu
+
+=for advent_author Fayland Lam
+
+A<http://bitflu.workaround.ch/|bitflu> 是一个由 Perl 所编写的 BitTorrent 程序。它可以运行在 Unix 和 Linux 下。可以通过 telnet 进程端口来控制下载或上传 torrent。
+
+该程序托管与 github A<https://github.com/adrian-bl/bitflu> 开发相当活跃。几乎每个礼拜都有 bug fixes 或者 features
+
+一般如果你不需要 GUI 界面的话，可以考虑试试该模块。它可以用 telnet localhost 4001 来连接，或者可以开启 web 界面。登陆 telnet 界面后可以用 ? 来获取命令行帮助。常用的有 load 来开始下载，ls 查看下载进程，die 来退出等。
+
+因为该工具由 Perl 编写，代码采用 Plugin 结构，很容易编写自己的扩展，或者做一些私人改动。
+
+附上截屏
+
+<p><img src='http://bitflu.workaround.ch/shots/ss2.png' border='0' /></p>
+
+<p><img src='http://bitflu.workaround.ch/shots/web1.png' border='0' /></p>
+
+
+谢谢。
