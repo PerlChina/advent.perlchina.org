@@ -1,0 +1,20 @@
+=for advent_year 2011
+
+=for advent_day 22
+
+=for advent_title DBI Profile
+
+=for advent_author Fayland Lam
+
+DBI 优化的工具很多。最正统的便是 M<DBI::Profile>，通过设置 DBI_PROFILE 环境变量，或者直接设置 $dbh->{Profile}。环境变量无需更改脚本本身，而通过设 ->{Profile} 可以控制 profile 的范围。如果你选择了输出 M<DBI::ProfileDumper> 到文件，则回头可以用 dbiprof 来查看更加清晰的报告。如果需要直接输出漂亮格式的话，也可以求助 M<DBIx::ProfileManager>。另外 Plack 下也有专门的 M<Plack::Middleware::Debug::DBIProfile> 可以在 web 页面查看。
+
+如果更进一步，可以选择试试 M<DBIx::QueryLog>，该模块可以设置最小记录时间 threshold，可以设置 explain 来直接输出 explain 语句等等。
+
+使用 M<DBIx::Class> 的人可以用 M<DBIx::Class::QueryLog>, 该模块在 Catalyst 或者 Plack 下都有自己的插件。如 M<Plack::Middleware::Debug::DBIC::QueryLog>
+
+如果是需要查询 DBI 的 connect 情况的话，可以试试 DBI_TRACE 或者 Plack 的 M<Plack::Middleware::Debug::DBITrace>。注意别设太大的值，否则你会看不过来的。
+
+另外可以看看日本今年的 dbix advent A<http://perl-users.jp/articles/advent-calendar/2011/dbix/> 不需要懂日语，copy 到 Google Translate 就可以。比如今日介绍的 M<DBIx::Connector> 便是一个很赞的模块。
+
+谢谢。
+
