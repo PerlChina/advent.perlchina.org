@@ -1,4 +1,12 @@
-这次介绍的是 Scott Smith 写的 Getopt::Complete 模块，它能帮助你设计更加易于记忆的命令行接口。
+=for advent_year 2011
+
+=for advent_day 23
+
+=for advent_title Getopt::Complete
+
+=for advent_author Joe Jiang
+
+这次介绍的是 Scott Smith 写的 M<Getopt::Complete> 模块，它能帮助你设计更加易于记忆的命令行接口。
 
 如果你喜欢在命令行做大多数事情的话，没准有一件事还没有尝试过，那就是用 w3m 浏览器查阅圣经。做这样的事情，最好的网站（目前来说）可能还是 YouVersion.com。因为他们有专门为手机浏览器设计的页面 m.youversion.com。当然，那里还有圣经的手机应用可以下载。
 
