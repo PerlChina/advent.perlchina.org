@@ -1,0 +1,69 @@
+这次介绍的是 Scott Smith 写的 Getopt::Complete 模块，它能帮助你设计更加易于记忆的命令行接口。
+
+如果你喜欢在命令行做大多数事情的话，没准有一件事还没有尝试过，那就是用 w3m 浏览器查阅圣经。做这样的事情，最好的网站（目前来说）可能还是 YouVersion.com。因为他们有专门为手机浏览器设计的页面 m.youversion.com。当然，那里还有圣经的手机应用可以下载。
+
+现在的问题是，要准确拼凑 URL 字符串很不容易，不过有了 Getopt::Complete 就不是什么大问题了。
+
+如果你装好了这个模块，又有这样一段可执行脚本（命名为 youversion）在可执行路径下：
+
+=begin code
+
+    #!/usr/bin/perl
+    
+    use Getopt::Complete (
+        book => [qw(gen exod lev num deut josh judg ruth 1sam 2sam 1kgs 2kgs 1chr 2chr ezra neh esth job ps prov eccl song isa jer lam ezek dan hos joel amos obad jonah mic nah hab zeph hag zech mal matt mark luke john acts rom 1cor 2cor gal eph phil col 1thess 2thess 1tim 2tim titus phlm heb jas 1pet 2pet 1john 2john 3john jude rev)],
+        translation => [qw(cunpss cnvs ccb csb niv nlt esv kjv nkjv net web msg cev ncv)],
+        chapter => undef,
+        'verse' => undef,
+    );
+    
+    system qq(w3m http://zh-cn.m.youversion.com/bible/verse/@{[$ARGS{translation} || q(cunpss)]}/@{[$ARGS{book} || q(heb)]}/@{[$ARGS{chapter} || 1]}/$ARGS{verse});
+
+=end code
+
+那么你就可以在输入 youversion 这个词（包括空格）以后按下 TAB 键两次，这时候就会自动补齐 --。然后呢？再次双 TAB！
+
+=begin code
+
+    %  youversion --
+    --book=         --chapter=      --translation=  --verse=
+
+=end code
+
+现在你看到了所有的可选参数，输入 b 然后再次双 TAB，你会看到自动补齐了 book=。没错，再次双 TAB。
+
+=begin code
+
+    %  youversion --book=
+    1chr    2chr    3john   esth    heb     jonah   mark    phlm    zech
+    1cor    2cor    acts    exod    hos     josh    matt    prov    zeph
+    1john   2john   amos    ezek    isa     jude    mic     ps
+    1kgs    2kgs    col     ezra    jas     judg    nah     rev
+    1pet    2pet    dan     gal     jer     lam     neh     rom
+    1sam    2sam    deut    gen     job     lev     num     ruth
+    1thess  2thess  eccl    hab     joel    luke    obad    song
+    1tim    2tim    eph     hag     john    mal     phil    titus
+
+=end code
+
+现在列出了六十六个可选书名。我应该不用再教你怎么补齐其中一个了吧？
+
+当然，并非每个参数都是必须的，有些参数是自动设为一的，比如章节号码。
+
+于是，你可以继续不断尝试输入 TAB 和字母数字，最后也许你会输入这样的一串：
+
+=begin code
+
+    % youversion --book=luke --chapter=2 --verse=11
+
+=end code
+
+那么回车之后你应该看到：
+
+=begin pre
+
+    今天在大卫的城里，为你们生了救主，就是主基督。
+
+=end pre
+
+提前祝大家圣诞快乐！神祝福 ...
