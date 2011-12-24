@@ -1,0 +1,28 @@
+=for advent_year 2011
+
+=for advent_day 24
+
+=for advent_title Solve root directory space problem with Perl
+
+=for advent_author Joe Jiang
+
+如果说 Windows 系统有 DLL 地狱的话，看上去无限美好的 CPAN 其实也有 Dependency 问题，如果你试过安装高依赖性模块应该深有体会。
+
+对于 Unix 系统管理员来说，文件系统的挂接点如果不好好规划，也会有一个目录树挂载地狱。
+
+问题是：如果有一天根目录空间紧张，那么如何找到最应该清理的目录呢？
+
+因为 /proj 目录虽然是隶属于根目录磁盘的，但是 /proj/mounted 却可能是一个挂载点，或者更可怕的是挂载点在 /proj/mounted1/mounted2 这样的位置。
+
+下面的脚本能帮忙找到根目录最大的消费者目录：
+
+=begin code
+
+    % sudo perl -MList::MoreUtils=any -lne 'BEGIN{@m=map {@F=split; qq(^$F[2])} map {$1 if m{(.*)}} qx{mount|tail --line=+2}; open STDIN, q(find / -maxdepth 3 -mindepth 1 |)} $p=$_; do {print join qq(\t), qx(du -s "$_")=~m{(.*)}} unless any {$p=~m{$_} or $_=~m{$p}} @m' | sort -k1 -nrg | head
+
+=end code
+
+它会通过调用 mount | tail --line=+2 来分析哪些目录是挂载点，然后调用 find / -maxdepth 3 ... 来列出根目录下三级内的所有的文件和目录。然后逐个调用 du -s 来分析目录或文件的大小，并滤掉所有挂载点，最后用 sort 排序输出。
+
+希望你能进一步定制它，使得这个脚本适合你的需要。
+
